@@ -14,6 +14,7 @@ src/scc-wallet
 src/qt/scc-qt
 src/test/fuzz
 !src/test/fuzz/*.*
+src/test/test_scc_fuzzy
 src/test/test_scc
 src/qt/test/test_scc-qt
 src/qt/res/css/colors/*

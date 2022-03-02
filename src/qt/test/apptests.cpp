@@ -16,7 +16,7 @@
 #include <validation.h>
 
 #if defined(HAVE_CONFIG_H)
-#include <config/dash-config.h>
+#include <config/scc-config.h>
 #endif
 
 #include <QAction>

@@ -11,11 +11,11 @@ Running
 For benchmarks purposes you only need to compile `dash_bench`. Beware of configuring without `--enable-debug` as this would impact
 benchmarking by unlatching log printers and lock analysis.
 
-    make -C src bench_dash
+    make -C src bench_scc
 
 After compiling Dash Core, the benchmarks can be run with:
 
-    src/bench/bench_dash
+    src/bench/bench_scc
 
 The output will look similar to:
 ```
@@ -29,7 +29,7 @@ The output will look similar to:
 Help
 ---------------------
 
-    src/bench/bench_dash --help
+    src/bench/bench_scc --help
 
 To print options like scaling factor or per-benchmark filter.
 

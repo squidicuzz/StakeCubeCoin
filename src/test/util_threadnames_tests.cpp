@@ -11,7 +11,7 @@
 #include <mutex>
 
 #if defined(HAVE_CONFIG_H)
-#include <config/dash-config.h>
+#include <config/scc-config.h>
 #endif
 
 #include <boost/test/unit_test.hpp>

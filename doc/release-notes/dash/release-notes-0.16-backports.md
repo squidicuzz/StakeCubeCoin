@@ -100,7 +100,7 @@
 - [`6eef194443`](https://github.com/dashpay/dash/commit/6eef194443) Move NotifyNumConnectionsChanged logic to private method.
 - [`f9bf204829`](https://github.com/dashpay/dash/commit/f9bf204829) --- Begin backporting bitcoin#14335
 - [`9591199629`](https://github.com/dashpay/dash/commit/9591199629) Merge #13503: Document FreeBSD quirk. Fix FreeBSD build: Use std::min<int>(...) to allow for compilation under certain FreeBSD versions.
-- [`544552e749`](https://github.com/dashpay/dash/commit/544552e749) bench_bitcoin -> bench_dash
+- [`544552e749`](https://github.com/dashpay/dash/commit/544552e749) bench_bitcoin -> bench_scc
 - [`af1dc378cd`](https://github.com/dashpay/dash/commit/af1dc378cd) More of 11220
 - [`48f8f4c353`](https://github.com/dashpay/dash/commit/48f8f4c353) Fix 11867
 - [`561451810e`](https://github.com/dashpay/dash/commit/561451810e) Merge #11867: Improve node network test

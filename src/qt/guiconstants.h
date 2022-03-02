@@ -37,10 +37,10 @@ static const int TOOLTIP_WRAP_THRESHOLD = 80;
 
 #define QAPP_ORG_NAME "Dash"
 #define QAPP_ORG_DOMAIN "dash.org"
-#define QAPP_APP_NAME_DEFAULT "Dash-Qt"
-#define QAPP_APP_NAME_TESTNET "Dash-Qt-testnet"
-#define QAPP_APP_NAME_DEVNET "Dash-Qt-%s"
-#define QAPP_APP_NAME_REGTEST "Dash-Qt-regtest"
+#define QAPP_APP_NAME_DEFAULT "SCC-Qt"
+#define QAPP_APP_NAME_TESTNET "SCC-Qt-testnet"
+#define QAPP_APP_NAME_DEVNET "SCC-Qt-%s"
+#define QAPP_APP_NAME_REGTEST "SCC-Qt-regtest"
 
 /* One gigabyte (GB) in bytes */
 static constexpr uint64_t GB_BYTES{1000000000};

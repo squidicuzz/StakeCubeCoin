@@ -4,7 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include <config/dash-config.h>
+#include <config/scc-config.h>
 #endif
 
 #include <interfaces/node.h>
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     // Don't remove this, it's needed to access
     // QApplication:: and QCoreApplication:: in the tests
     BitcoinApplication app(*node);
-    app.setApplicationName("Dash-Qt-test");
+    app.setApplicationName("SCC-Qt-test");
 
 #if USE_OPENSSL
     SSL_library_init();
