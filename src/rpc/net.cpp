@@ -255,8 +255,8 @@ static UniValue addnode(const JSONRPCRequest& request)
                 },
                 RPCResults{},
                 RPCExamples{
-                    HelpExampleCli("addnode", "\"192.168.0.6:9999\" \"onetry\"")
-            + HelpExampleRpc("addnode", "\"192.168.0.6:9999\", \"onetry\"")
+                    HelpExampleCli("addnode", "\"192.168.0.6:40000\" \"onetry\"")
+            + HelpExampleRpc("addnode", "\"192.168.0.6:40000\", \"onetry\"")
                 },
             }.ToString());
 
@@ -300,9 +300,9 @@ static UniValue disconnectnode(const JSONRPCRequest& request)
                 },
                 RPCResults{},
                 RPCExamples{
-                    HelpExampleCli("disconnectnode", "\"192.168.0.6:9999\"")
+                    HelpExampleCli("disconnectnode", "\"192.168.0.6:40000\"")
             + HelpExampleCli("disconnectnode", "\"\" 1")
-            + HelpExampleRpc("disconnectnode", "\"192.168.0.6:9999\"")
+            + HelpExampleRpc("disconnectnode", "\"192.168.0.6:40000\"")
             + HelpExampleRpc("disconnectnode", "\"\", 1")
                 },
             }.ToString());
@@ -349,7 +349,7 @@ static UniValue getaddednodeinfo(const JSONRPCRequest& request)
             "    \"connected\" : true|false,          (boolean) If connected\n"
             "    \"addresses\" : [                    (list of objects) Only when connected = true\n"
             "       {\n"
-            "         \"address\" : \"192.168.0.201:9999\",  (string) The dash server IP and port we're connected to\n"
+            "         \"address\" : \"192.168.0.201:40000\",  (string) The dash server IP and port we're connected to\n"
             "         \"connected\" : \"outbound\"           (string) connection, inbound or outbound\n"
             "       }\n"
             "     ]\n"

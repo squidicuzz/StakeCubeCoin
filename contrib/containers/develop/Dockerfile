@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install $APT_ARGS nano openssh-client zsh gdb && r
 ENV DEBIAN_FRONTEND="dialog"
 
 # Expose Dash P2P and RPC ports for main network and test networks
-EXPOSE 9998 9999 19998 19999
+EXPOSE 9998 40000 19998 39995
 
 # We're done, switch back to non-privileged user
 USER dash

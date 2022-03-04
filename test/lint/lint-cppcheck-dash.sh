@@ -83,7 +83,6 @@ FILES=$(git ls-files -- "src/batchedlogger.*" \
                         "src/saltedhasher.*" \
                         "src/stacktraces.*" \
                         "src/statsd_client.*" \
-                        "src/test/block_reward_reallocation_tests.cpp" \
                         "src/test/bls_tests.cpp" \
                         "src/test/dip0020opcodes_tests.cpp" \
                         "src/test/dynamic_activation*.cpp" \
