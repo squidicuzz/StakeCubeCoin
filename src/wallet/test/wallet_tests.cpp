@@ -639,7 +639,7 @@ BOOST_FIXTURE_TEST_CASE(CreateTransactionTest, CreateTransactionTestSetup)
         }
     };
 
-    // First run the tests with only one input containing 100k duffs
+    // First run the tests with only one input containing 100k olegs
     {
         coinControl.SetNull();
         coinControl.Select(GetCoins({{100000, false}})[0]);

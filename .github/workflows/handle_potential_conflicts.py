@@ -32,7 +32,7 @@ def main():
         this_pr_num = conflict['number']
         print(this_pr_num)
 
-        r = requests.get(f'https://api.github.com/repos/dashpay/dash/pulls/{this_pr_num}')
+        r = requests.get(f'https://api.github.com/repos/stakecube/stakecubecoin/pulls/{this_pr_num}')
         print(r.json()['head']['label'])
 
         mergable_state = r.json()['mergeable_state']
@@ -57,7 +57,7 @@ def main():
 
 
 def get_label(pr_num):
-    return requests.get(f'https://api.github.com/repos/dashpay/dash/pulls/{pr_num}').json()['head']['label']
+    return requests.get(f'https://api.github.com/repos/stakecube/stakecubecoin/pulls/{pr_num}').json()['head']['label']
 
 
 if __name__ == "__main__":

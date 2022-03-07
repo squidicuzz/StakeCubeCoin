@@ -186,7 +186,7 @@ UniValue stop(const JSONRPCRequest& jsonRequest)
     if (jsonRequest.fHelp || jsonRequest.params.size() > 1)
         throw std::runtime_error(
             RPCHelpMan{"stop",
-                "\nStop Dash Core server.",
+                "\nStop SCC Core server.",
                 {},
                 RPCResults{},
                 RPCExamples{""},
@@ -197,7 +197,7 @@ UniValue stop(const JSONRPCRequest& jsonRequest)
     if (jsonRequest.params[0].isNum()) {
         UninterruptibleSleep(std::chrono::milliseconds{jsonRequest.params[0].get_int()});
     }
-    return "Dash Core server stopping";
+    return "SCC Core server stopping";
 }
 
 static UniValue uptime(const JSONRPCRequest& jsonRequest)

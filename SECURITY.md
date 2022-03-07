@@ -4,19 +4,18 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.17    | :white_check_mark: |
-| 0.16    | :white_check_mark: |
-| < 0.16  | :x:                |
+| v3.2.0  | :white_check_mark: |
+| v3.1.0  | :white_check_mark: |
+| < v3    | :x:                |
 
 ## Reporting a Vulnerability
 
-To report security issues send an email to security@dash.org (not for support).
+To report security issues create a private support ticket in the [StakeCube Discord](https://discord.gg/buBjVpy).
 
 The following keys may be used to communicate sensitive information to developers:
 
 | Name | Fingerprint |
 |------|-------------|
-| UdjinM6 | 3F5D 48C9 F002 93CD 365A 3A98 8359 2BD1 400D 58D9 |
-| Pasta | 2959 0362 EC87 8A81 FD3C 202B 5252 7BED ABE8 7984 |
+| JSKitty | 94B7 5BC9 7F63 051C6 0857 7AC3 28CA 5D97 1C1 44DD |
 
 You can import a key by running the following command with that individual’s fingerprint: `gpg --recv-keys "<fingerprint>"` Ensure that you put quotes around fingerprints containing spaces.

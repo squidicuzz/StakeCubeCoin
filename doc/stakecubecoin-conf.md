@@ -1,6 +1,6 @@
-# `dash.conf` Configuration File
+# `stakecubecoin.conf` Configuration File
 
-The configuration file is used by `dashd`, `dash-qt` and `dash-cli`.
+The configuration file is used by `sccd`, `scc-qt` and `scc-cli`.
 
 All command-line options (except for `-?`, `-help`, `-version` and `-conf`) may be specified in a configuration file, and all configuration file options (except for `includeconf`) may also be specified on the command line. Command-line options override values set in the configuration file and configuration file options override values set in the GUI.
 
@@ -47,16 +47,16 @@ rpcport=4000
 
 ## Configuration File Path
 
-The configuration file is not automatically created; you can create it using your favorite text editor. By default, the configuration file name is `dash.conf` and it is located in the Dash data directory, but both the dash data directory and the configuration file path may be changed using the `-datadir` and `-conf` command-line options.
+The configuration file is not automatically created; you can create it using your favorite text editor. By default, the configuration file name is `stakecubecoin.conf` and it is located in the SCC data directory, but both the scc data directory and the configuration file path may be changed using the `-datadir` and `-conf` command-line options.
 
-The `includeconf=<file>` option in the `dash.conf` file can be used to include additional configuration files.
+The `includeconf=<file>` option in the `stakecubecoin.conf` file can be used to include additional configuration files.
 
 ### Default configuration file locations
 
 Operating System | Data Directory | Example Path
 -- | -- | --
-Windows | `%APPDATA%\DashCore\` | `C:\Users\username\AppData\Roaming\DashCore\dash.conf`
-Linux | `$HOME/.dashcore/` | `/home/username/.dashcore/dash.conf`
-macOS | `$HOME/Library/Application Support/DashCore/` | `/Users/username/Library/Application Support/DashCore/dash.conf`
+Windows | `%APPDATA%\StakeCubeCoin\` | `C:\Users\username\AppData\Roaming\StakeCubeCoin\stakecubecoin.conf`
+Linux | `$HOME/.stakecubecoin/` | `/home/username/.stakecubecoin/stakecubecoin.conf`
+macOS | `$HOME/Library/Application Support/StakeCubeCoin/` | `/Users/username/Library/Application Support/StakeCubeCoin/stakecubecoin.conf`
 
-You can find an example dash.conf file in [share/examples/dash.conf](../share/examples/dash.conf).
+You can find an example stakecubecoin.conf file in [share/examples/stakecubecoin.conf](../share/examples/stakecubecoin.conf).

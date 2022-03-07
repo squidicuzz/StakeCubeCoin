@@ -12,7 +12,7 @@
  * for both sccd and scc-qt, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string CLIENT_NAME("Dash Core");
+const std::string CLIENT_NAME("SCC Core");
 
 
 #ifdef HAVE_BUILD_INFO

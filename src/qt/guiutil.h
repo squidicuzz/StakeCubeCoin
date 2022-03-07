@@ -193,7 +193,7 @@ namespace GUIUtil
     // Open debug.log
     void openDebugLogfile();
 
-    // Open dash.conf
+    // Open stakecubecoin.conf
     void openConfigfile();
 
     // Browse backup folder
@@ -385,7 +385,7 @@ namespace GUIUtil
     QString getActiveTheme();
 
     /** Check if a dash specific theme is activated (light/dark).*/
-    bool dashThemeActive();
+    bool sccThemeActive();
 
     /** Load the theme and update all UI elements according to the appearance settings. */
     void loadTheme(bool fForce = false);

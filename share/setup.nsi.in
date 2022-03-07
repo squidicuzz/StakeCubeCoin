@@ -46,7 +46,7 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-InstallDir $PROGRAMFILES64\DashCore
+InstallDir $PROGRAMFILES64\StakeCubeCoin
 CRCCheck on
 XPStyle on
 BrandingText " "

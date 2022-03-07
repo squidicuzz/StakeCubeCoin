@@ -1,13 +1,13 @@
 # /etc/conf.d/dashd: config file for /etc/init.d/dashd
 
 # Config file location
-#BITCOIND_CONFIGFILE="/etc/dashcore/dash.conf"
+#BITCOIND_CONFIGFILE="/etc/dashcore/stakecubecoin.conf"
 
 # What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
 #BITCOIND_PIDDIR="/var/run/dashd"
 
 # What filename to give the pidfile
-#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/dashd.pid"
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/sccd.pid"
 
 # Where to write dashd data (be mindful that the blockchain is large)
 #BITCOIND_DATADIR="/var/lib/dashd"

@@ -676,7 +676,7 @@ static UniValue getaddressmempool(const JSONRPCRequest& request)
             "    \"address\"  (string) The base58check encoded address\n"
             "    \"txid\"  (string) The related txid\n"
             "    \"index\"  (number) The related input or output index\n"
-            "    \"satoshis\"  (number) The difference of duffs\n"
+            "    \"satoshis\"  (number) The difference of olegs\n"
             "    \"timestamp\"  (number) The time the transaction entered the mempool (seconds)\n"
             "    \"prevtxid\"  (string) The previous txid (if spending)\n"
             "    \"prevout\"  (string) The previous transaction output index (if spending)\n"
@@ -749,7 +749,7 @@ static UniValue getaddressutxos(const JSONRPCRequest& request)
             "    \"txid\"  (string) The output txid\n"
             "    \"outputIndex\"  (number) The output index\n"
             "    \"script\"  (string) The script hex-encoded\n"
-            "    \"satoshis\"  (number) The number of duffs of the output\n"
+            "    \"satoshis\"  (number) The number of olegs of the output\n"
             "    \"height\"  (number) The block height\n"
             "  }\n"
             "]\n"
@@ -813,7 +813,7 @@ static UniValue getaddressdeltas(const JSONRPCRequest& request)
                 RPCResult{
             "[\n"
             "  {\n"
-            "    \"satoshis\"  (number) The difference of duffs\n"
+            "    \"satoshis\"  (number) The difference of olegs\n"
             "    \"txid\"  (string) The related txid\n"
             "    \"index\"  (number) The related input or output index\n"
             "    \"blockindex\"  (number) The related block index\n"
@@ -899,10 +899,10 @@ static UniValue getaddressbalance(const JSONRPCRequest& request)
                 },
                 RPCResult{
             "{\n"
-            "  \"balance\": xxxxx,              (numeric) The current total balance in duffs\n"
-            "  \"balance_immature\": xxxxx,     (numeric) The current immature balance in duffs\n"
-            "  \"balance_spendable\": xxxxx,    (numeric) The current spendable balance in duffs\n"
-            "  \"received\": xxxxx              (numeric) The total number of duffs received (including change)\n"
+            "  \"balance\": xxxxx,              (numeric) The current total balance in olegs\n"
+            "  \"balance_immature\": xxxxx,     (numeric) The current immature balance in olegs\n"
+            "  \"balance_spendable\": xxxxx,    (numeric) The current spendable balance in olegs\n"
+            "  \"received\": xxxxx              (numeric) The total number of olegs received (including change)\n"
             "}\n"
                 },
                 RPCExamples{

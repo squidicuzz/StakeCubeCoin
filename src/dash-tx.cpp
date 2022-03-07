@@ -102,9 +102,9 @@ static int AppInitRawTx(int argc, char* argv[])
 
     if (argc < 2 || HelpRequested(gArgs)) {
         // First part of help message is specific to this utility
-        std::string strUsage = PACKAGE_NAME " dash-tx utility version " + FormatFullVersion() + "\n\n" +
-            "Usage:  dash-tx [options] <hex-tx> [commands]  Update hex-encoded dash transaction\n" +
-            "or:     dash-tx [options] -create [commands]   Create hex-encoded dash transaction\n" +
+        std::string strUsage = PACKAGE_NAME " scc-tx utility version " + FormatFullVersion() + "\n\n" +
+            "Usage:  scc-tx [options] <hex-tx> [commands]  Update hex-encoded scc transaction\n" +
+            "or:     scc-tx [options] -create [commands]   Create hex-encoded scc transaction\n" +
             "\n";
         strUsage += gArgs.GetHelpMessage();
 
@@ -746,7 +746,7 @@ static int CommandLineRawTx(int argc, char* argv[])
             if (argc < 2)
                 throw std::runtime_error("too few parameters");
 
-            // param: hex-encoded dash transaction
+            // param: hex-encoded scc transaction
             std::string strHexTx(argv[1]);
             if (strHexTx == "-")                 // "-" implies standard input
                 strHexTx = readStdin();

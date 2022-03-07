@@ -434,7 +434,7 @@ static void gobject_vote_conf_help()
 {
     throw std::runtime_error(
         RPCHelpMan{"gobject vote-conf",
-            "Vote on a governance object by masternode configured in dash.conf\n",
+            "Vote on a governance object by masternode configured in stakecubecoin.conf\n",
             {
                 {"governance-hash", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "hash of the governance object"},
                 {"vote", RPCArg::Type::STR, RPCArg::Optional::NO, "vote, possible values: [funding|valid|delete|endorsed]"},
@@ -492,7 +492,7 @@ static UniValue gobject_vote_conf(const JSONRPCRequest& request)
         nFailed++;
         statusObj.pushKV("result", "failed");
         statusObj.pushKV("errorMessage", "Can't find masternode by collateral output");
-        resultsObj.pushKV("dash.conf", statusObj);
+        resultsObj.pushKV("stakecubecoin.conf", statusObj);
         returnObj.pushKV("overall", strprintf("Voted successfully %d time(s) and failed %d time(s).", nSuccessful, nFailed));
         returnObj.pushKV("detail", resultsObj);
         return returnObj;
@@ -516,7 +516,7 @@ static UniValue gobject_vote_conf(const JSONRPCRequest& request)
         nFailed++;
         statusObj.pushKV("result", "failed");
         statusObj.pushKV("errorMessage", "Failure to sign.");
-        resultsObj.pushKV("dash.conf", statusObj);
+        resultsObj.pushKV("stakecubecoin.conf", statusObj);
         returnObj.pushKV("overall", strprintf("Voted successfully %d time(s) and failed %d time(s).", nSuccessful, nFailed));
         returnObj.pushKV("detail", resultsObj);
         return returnObj;
@@ -532,7 +532,7 @@ static UniValue gobject_vote_conf(const JSONRPCRequest& request)
         statusObj.pushKV("errorMessage", exception.GetMessage());
     }
 
-    resultsObj.pushKV("dash.conf", statusObj);
+    resultsObj.pushKV("stakecubecoin.conf", statusObj);
 
     returnObj.pushKV("overall", strprintf("Voted successfully %d time(s) and failed %d time(s).", nSuccessful, nFailed));
     returnObj.pushKV("detail", resultsObj);
@@ -1022,7 +1022,7 @@ static UniValue gobject_getcurrentvotes(const JSONRPCRequest& request)
 #ifdef ENABLE_WALLET
             "  vote-alias         - Vote on a governance object by masternode proTxHash\n"
 #endif // ENABLE_WALLET
-            "  vote-conf          - Vote on a governance object by masternode configured in dash.conf\n"
+            "  vote-conf          - Vote on a governance object by masternode configured in stakecubecoin.conf\n"
 #ifdef ENABLE_WALLET
             "  vote-many          - Vote on a governance object by all masternodes for which the voting key is in the wallet\n"
 #endif // ENABLE_WALLET

@@ -49,25 +49,25 @@ Mining is also possible in disable-wallet mode using the `getblocktemplate` RPC 
 Running
 -------
 
-Dash Core is now available at `./src/dashd`
+SCC Core is now available at `./src/sccd`
 
 Before running, you may create an empty configuration file:
 
-    mkdir -p "/Users/${USER}/Library/Application Support/DashCore"
+    mkdir -p "/Users/${USER}/Library/Application Support/StakeCubeCoin"
 
-    touch "/Users/${USER}/Library/Application Support/DashCore/dash.conf"
+    touch "/Users/${USER}/Library/Application Support/StakeCubeCoin/stakecubecoin.conf"
 
-    chmod 600 "/Users/${USER}/Library/Application Support/DashCore/dash.conf"
+    chmod 600 "/Users/${USER}/Library/Application Support/StakeCubeCoin/stakecubecoin.conf"
 
-The first time you run dashd, it will start downloading the blockchain. This process could take many hours, or even days on slower than average systems.
+The first time you run sccd, it will start downloading the blockchain. This process could take many hours, or even days on slower than average systems.
 
 You can monitor the download process by looking at the debug.log file:
 
-    tail -f $HOME/Library/Application\ Support/DashCore/debug.log
+    tail -f $HOME/Library/Application\ Support/StakeCubeCoin/debug.log
 
 Other commands:
 -------
 
-    ./src/dashd -daemon # Starts the dash daemon.
-    ./src/dash-cli --help # Outputs a list of command-line options.
-    ./src/dash-cli help # Outputs a list of RPC commands when the daemon is running.
+    ./src/sccd -daemon # Starts the scc daemon.
+    ./src/scc-cli --help # Outputs a list of command-line options.
+    ./src/scc-cli help # Outputs a list of RPC commands when the daemon is running.

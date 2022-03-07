@@ -5,7 +5,7 @@
 # See "man systemd.service" for details.
 
 # Note that almost all daemon options could be specified in
-# /etc/dash/dash.conf, except for those explicitly specified as arguments
+# /etc/dash/stakecubecoin.conf, except for those explicitly specified as arguments
 # in ExecStart=
 
 [Unit]
@@ -14,15 +14,15 @@ After=network.target
 
 [Service]
 ExecStart=/usr/bin/dashd -daemon \
-                                                            -pid=/run/dashd/dashd.pid \
-                                                            -conf=/etc/dash/dash.conf  \
+                                                            -pid=/run/dashd/sccd.pid \
+                                                            -conf=/etc/dash/stakecubecoin.conf  \
                                                             -datadir=/var/lib/dashd
 
 # Process management
 ####################
 
 Type=forking
-PIDFile=/run/dashd/dashd.pid
+PIDFile=/run/dashd/sccd.pid
 Restart=on-failure
 
 # Directory creation and permissions

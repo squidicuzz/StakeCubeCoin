@@ -1,85 +1,71 @@
-Dash Core
-==========
+StakeCubeCoin [SCC] integration/staging tree
+========================================
 
-This is the official reference wallet for Dash digital currency and comprises the backbone of the Dash peer-to-peer network. You can [download Dash Core](https://www.dash.org/downloads/) or [build it yourself](#building) using the guides below.
 
-Running
----------------------
-The following are some helpful notes on how to run Dash Core on your native platform.
+![StakeCube Dark Logo](https://stakecube.net/app/download/media/logo-dark.png)
 
-### Unix
+SCC is the coin of [StakeCube.net](https://stakecube.net/)
 
-Unpack the files into a directory and run:
+Brief Specifications
+--------------------
 
-- `bin/dash-qt` (GUI) or
-- `bin/dashd` (headless)
+* Coin Name:       StakeCubeCoin
+* Coin Ticker:     SCC
+* Consensus:       PoW/MN (x11)
+* MN Collateral:   1000 SCC
+* Block reward:    0.5 - 9 SCC
+* MN reward:       70%
+* PoW reward:      30%
+* Block spacing:   120 Seconds
+* Premine:         250000 SCC (1.4%)
+* Total supply:    18 Million
+* RPC port:        39999
+* P2P/MN port:     40000
 
-### Windows
 
-Unpack the files into a directory, and then run dash-qt.exe.
+What is StakeCubeCoin (SCC)?
+-------------------------
 
-### macOS
+StakeCubeCoin is a fork of the Dash codebase; which uses a combination of x11-PoW and Deterministic Masternodes to secure the cryptocurrency's network and blockchain.
 
-Drag Dash Core to your applications folder, and then run Dash Core.
+The StakeCubeCoin blockchain is further secured by Masternodes, which enforce ChainLocks and InstantSend for an extremely fast, secure network monitored by 1000s of Masternodes, constantly producing secure quorums.
 
-### Need Help?
+The first consecutive blocks contain the coins allocated for the user coin swap (From the MUE codebase), destined for holders of the previous PoS/MN version of StakeCubeCoin.
 
-* See the [Dash documentation](https://docs.dash.org)
-for help and more information.
-* Ask for help on [Dash Discord](http://staydashy.com)
-* Ask for help on the [Dash Forum](https://stakecube.net/forum)
+7.5 million (7,500,000) SCC was reserved in the first mined block for swapping user coins.
 
-Building
----------------------
-The following are developer notes on how to build Dash Core on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
+A total of 1,000 SCC is required to run a masternode;
 
-- [macOS Build Notes](build-osx.md)
-- [Unix Build Notes](build-unix.md)
-- [Windows Build Notes](build-windows.md)
-- [OpenBSD Build Notes](build-openbsd.md)
-- [NetBSD Build Notes](build-netbsd.md)
-- [Gitian Building Guide](gitian-building.md)
 
-Development
----------------------
-The Dash Core repo's [root README](/README.md) contains relevant information on the development process and automated testing.
+Issue Tracker
+------------
 
-- [Developer Notes](developer-notes.md)
-- [Productivity Notes](productivity.md)
-- [Release Notes](release-notes.md)
-- [Release Process](release-process.md)
-- Source Code Documentation ***TODO***
-- [Translation Process](translation_process.md)
-- [Translation Strings Policy](translation_strings_policy.md)
-- [Travis CI](travis-ci.md)
-- [JSON-RPC Interface](JSON-RPC-interface.md)
-- [Unauthenticated REST Interface](REST-interface.md)
-- [Shared Libraries](shared-libraries.md)
-- [BIPS](bips.md)
-- [Dnsseed Policy](dnsseed-policy.md)
-- [Benchmarking](benchmarking.md)
+The integrated GitHub issue tracker is used for this project. Upon running into an issue, please submit it [here](https://github.com/stakecube/StakeCubeCoin/issues).
 
-### Resources
-* See the [Dash Developer Documentation](https://dashcore.readme.io/)
-  for technical specifications and implementation details.
-* Discuss on the [Dash Forum](https://stakecube.net/forum), in the Development & Technical Discussion board.
-* Discuss on [Dash Discord](http://staydashy.com)
-* Discuss on [Dash Developers Discord](http://chat.dashdevs.org/)
 
-### Miscellaneous
-- [Assets Attribution](assets-attribution.md)
-- [dash.conf Configuration File](dash-conf.md)
-- [Files](files.md)
-- [Fuzz-testing](fuzzing.md)
-- [Reduce Memory](reduce-memory.md)
-- [Reduce Traffic](reduce-traffic.md)
-- [Tor Support](tor.md)
-- [Init Scripts (systemd/upstart/openrc)](init.md)
-- [ZMQ](zmq.md)
-- [PSBT support](psbt.md)
+Documentation
+-------------
+
+The documentation is a work-in-progress. It is located in the doc folder and [the wiki pages](https://github.com/stakecube/StakeCubeCoin/wiki).
+
+
+Wiki
+----
+
+The answers to most technical questions can be found in the official SCC wiki:
+https://github.com/stakecube/StakeCubeCoin/wiki
+
+This wiki will be updated with SCC specifications, docs, manuals and FAQs.
+
+Additionally, you may join the StakeCube discord server for direct support from the StakeCube team and community:
+https://discord.gg/uej2FZd
+
 
 License
----------------------
-Distributed under the [MIT software license](/COPYING).
-This product includes software developed by the OpenSSL Project for use in the [OpenSSL Toolkit](https://www.openssl.org/). This product includes
-cryptographic software written by Eric Young ([eay@cryptsoft.com](mailto:eay@cryptsoft.com)), and UPnP software written by Thomas Bernard.
+-------
+
+StakeCubeCoin is released under the terms of the MIT license.
+See COPYING for more information or see https://opensource.org/licenses/MIT.
+
+StakeCubeCoin is derived from code developed by the Dashpay team (https://github.com/dashpay/dash) and where possible, have left all copyright notices and trademarks untouched.
+
