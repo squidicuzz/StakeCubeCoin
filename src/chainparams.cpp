@@ -189,7 +189,7 @@ public:
 
         /** PoW **/
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
-        consensus.nPowTargetTimespan           = 24 * 60 * 60; // Dash: 1 day
+        consensus.nPowTargetTimespan           = 24 * 60 * 60; // SCC: 1 day
         consensus.nPowTargetSpacing            = 2 * 60; // 2 minutes  
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting            = false;
@@ -330,28 +330,31 @@ public:
         checkpointData = {
             {
                 // Launch checkpoints
-                {0,     uint256S("000001112c342e635d0e48db15505392e74b2cab902dff9243ade44939da5b47")},
-                {1,     uint256S("00000a3d1238b01735d6cce4f161c0f8afbf4e9da0d0a8b2cfe72e5714084dd7")},
+                {0,      uint256S("000001112c342e635d0e48db15505392e74b2cab902dff9243ade44939da5b47")},
+                {1,      uint256S("00000a3d1238b01735d6cce4f161c0f8afbf4e9da0d0a8b2cfe72e5714084dd7")},
                 // The SuperBlocks update
-                {1000,  uint256S("000000000000439832ca2a8c452fde2674646b39e720da9a253d3c072a2b52b9")},
-                {2000,  uint256S("0000000000002833bd22fb36b0ae5d0b756627bb2648f394b198461749140a42")},
-                {3000,  uint256S("000000000000c22d5d58d8c4e6db75d0b4d500ac1ba3d484e863b36514f1d1d7")},
-                {4000,  uint256S("000000000000a0d6d6e7be5e1a6168bc08ebea36394a840d7b3a9a0708f37748")},
-                {5000,  uint256S("0000000000005c73a59d7203ab44f08ea043d9ee1a8440d148435f17a8672c0d")},
-                {6000,  uint256S("000000000000031f3adff1ae73100663cce2ff648efe82b52466394132089e35")},
-                {6438,  uint256S("000000000000037f22b857984bbd520af912cbf24975c35815710bcb0d3ebb47")},
+                {1000,   uint256S("000000000000439832ca2a8c452fde2674646b39e720da9a253d3c072a2b52b9")},
+                {2000,   uint256S("0000000000002833bd22fb36b0ae5d0b756627bb2648f394b198461749140a42")},
+                {3000,   uint256S("000000000000c22d5d58d8c4e6db75d0b4d500ac1ba3d484e863b36514f1d1d7")},
+                {4000,   uint256S("000000000000a0d6d6e7be5e1a6168bc08ebea36394a840d7b3a9a0708f37748")},
+                {5000,   uint256S("0000000000005c73a59d7203ab44f08ea043d9ee1a8440d148435f17a8672c0d")},
+                {6000,   uint256S("000000000000031f3adff1ae73100663cce2ff648efe82b52466394132089e35")},
+                {6438,   uint256S("000000000000037f22b857984bbd520af912cbf24975c35815710bcb0d3ebb47")},
                 // The StakeCube Protocol (SCP) update
-                {10000, uint256S("00000000000002f5a3089ba562fb42939756818b4e47f53fad042f6f734c5410")},
-                {20000, uint256S("00000000000002742de1ac4e218ccc68dba52976a07d46b4aaf2b8a09b27c020")},
-                {30000, uint256S("000000000000038eb91445c2125d2fd5fbb6dadf5d9f07d3b55b310446773c5d")},
-                {40000, uint256S("00000000000021718c8fc16f28e997b51cbe54cdc3a98f9b547143a41f8e85f6")},
-                {50000, uint256S("0000000000001f3bd04b01d0f38274ea3b7c8baaa0fd2c61644cf268b8c19327")},
-                {60000, uint256S("000000000000045f81b9960f202b6b01ee84c14c6f3a3f40b87208cb22c0352d")},
-                {70000, uint256S("00000000000006d174130512a8b18e24a74fde341d4dcf1cd99c9e8a388e9059")},
-                {80000, uint256S("0000000000002c62043577372f6d94aebd38960f8692809d2a06889e2299f3c9")},
-                {90000, uint256S("00000000000004f7d71ff39d4d8deb45a353e6b9d2f2fc6050fe78d634ccc78a")},
+                {10000,  uint256S("00000000000002f5a3089ba562fb42939756818b4e47f53fad042f6f734c5410")},
+                {20000,  uint256S("00000000000002742de1ac4e218ccc68dba52976a07d46b4aaf2b8a09b27c020")},
+                {30000,  uint256S("000000000000038eb91445c2125d2fd5fbb6dadf5d9f07d3b55b310446773c5d")},
+                {40000,  uint256S("00000000000021718c8fc16f28e997b51cbe54cdc3a98f9b547143a41f8e85f6")},
+                {50000,  uint256S("0000000000001f3bd04b01d0f38274ea3b7c8baaa0fd2c61644cf268b8c19327")},
+                {60000,  uint256S("000000000000045f81b9960f202b6b01ee84c14c6f3a3f40b87208cb22c0352d")},
+                {70000,  uint256S("00000000000006d174130512a8b18e24a74fde341d4dcf1cd99c9e8a388e9059")},
+                {80000,  uint256S("0000000000002c62043577372f6d94aebd38960f8692809d2a06889e2299f3c9")},
+                {90000,  uint256S("00000000000004f7d71ff39d4d8deb45a353e6b9d2f2fc6050fe78d634ccc78a")},
                 {100000, uint256S("00000000000011e634d6f2351351cfdecce8210c4fd319b2b0a57fede65548b2")},
                 {105302, uint256S("00000000000006000db09a96981ed231c3bdabb6b12f2b113a6ae4a5af2cf292")},
+                // Pre-Rebase Major Fork blocks
+                {332700, uint256S("000000000000096b62af7c9d6270b73914acc63dc7cc1efc81c0ecc7260b3a5f")},
+                {337454, uint256S("00000000000047666318810cf56c9dae48e2aa458ec2a88b42c4d089aae0559d")},
                 // The Rebase Upgrade
                 {341600, uint256S("0000000000000030aeb5dabf699fc981569a48653183501b81a10eb3226e63d0")}
                 // Some future update...
@@ -400,8 +403,8 @@ public:
         consensus.DIP0008Height = 78800; // 000000000e9329d964d80e7dab2e704b43b6bd2b91fea1e9315d38932e55fb55
         consensus.MinBIP9WarningHeight = 80816;  // dip8 activation height + miner confirmation window
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // SCC: 1 day
+        consensus.nPowTargetSpacing = 2 * 60; // SCC: 2 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nPowKGWHeight = 4002; // nPowKGWHeight >= nPowDGWHeight means "no KGW"
@@ -478,21 +481,20 @@ public:
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
         vSeeds.clear();
-        // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("testnet-seed.dashdot.io"); // Just a static list of stable node(s), only supports x9
+        // TODO: Testnet Seeds
 
-        // Testnet Dash addresses start with 'y'
+        // Testnet SCC addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Testnet Dash script addresses start with '8' or '9'
+        // Testnet SCC script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Testnet Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Testnet SCC BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
-        // Testnet Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Testnet SCC BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        // Testnet Dash BIP44 coin type is '1' (All coin's testnet default)
+        // Testnet SCC BIP44 coin type is '1' (All coin's testnet default)
         nExtCoinType = 1;
 
         // long living quorum params
@@ -568,8 +570,8 @@ public:
         consensus.DIP0008Height = 2; // DIP0008 activated immediately on devnet
         consensus.MinBIP9WarningHeight = 2018; // dip8 activation height + miner confirmation window
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // SCC: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // SCC: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nPowKGWHeight = 0; // nPowKGWHeight >= nPowDGWHeight means "no KGW"
@@ -658,20 +660,19 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        //vSeeds.push_back(CDNSSeedData("dashevo.org",  "devnet-seed.dashevo.org"));
 
-        // Testnet Dash addresses start with 'y'
+        // Testnet SCC addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Testnet Dash script addresses start with '8' or '9'
+        // Testnet SCC script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Testnet Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Testnet SCC BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
-        // Testnet Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Testnet SCC BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        // Testnet Dash BIP44 coin type is '1' (All coin's testnet default)
+        // Testnet SCC BIP44 coin type is '1' (All coin's testnet default)
         nExtCoinType = 1;
 
         // long living quorum params
@@ -797,8 +798,8 @@ public:
         consensus.DIP0008Height = 432;
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 1
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // Dash: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // Dash: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // SCC: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // SCC: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.nPowKGWHeight = 15200; // same as mainnet
@@ -896,18 +897,18 @@ public:
             0
         };
 
-        // Regtest Dash addresses start with 'y'
+        // Regtest SCC addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Regtest Dash script addresses start with '8' or '9'
+        // Regtest SCC script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Regtest private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Regtest Dash BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Regtest SCC BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
-        // Regtest Dash BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Regtest SCC BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        // Regtest Dash BIP44 coin type is '1' (All coin's testnet default)
+        // Regtest SCC BIP44 coin type is '1' (All coin's testnet default)
         nExtCoinType = 1;
 
         // long living quorum params
