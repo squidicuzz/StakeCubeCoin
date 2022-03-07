@@ -24,7 +24,7 @@ TMPFILE="hashes.tmp"
 
 SIGNATUREFILENAME="SHA256SUMS.asc"
 RCSUBDIR="test"
-HOST1="https://github.com/dashpay/dash/releases/download/v"
+HOST1="https://github.com/stakecube/StakeCubeCoin/releases/download/v"
 HOST2="https://pasta.keybase.pub/Dash-Core-Releases/"
 BASEDIR=""
 VERSIONPREFIX=""

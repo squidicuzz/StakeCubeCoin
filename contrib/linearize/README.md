@@ -3,7 +3,7 @@ Construct a linear, no-fork, best version of the Dash blockchain.
 
 ## Step 0: Install dash_hash
 
-https://github.com/dashpay/dash_hash
+https://github.com/stakecube/StakeCubeCoin_hash
 
 ## Step 1: Download hash list
 

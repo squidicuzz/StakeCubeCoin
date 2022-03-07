@@ -40,7 +40,7 @@ RUN pip3 install \
     yq
 
 # dash_hash
-RUN git clone --depth 1 --no-tags https://github.com/dashpay/dash_hash
+RUN git clone --depth 1 --no-tags https://github.com/stakecube/StakeCubeCoin_hash
 RUN cd dash_hash && python3 setup.py install
 
 ARG USER_ID=1000

@@ -40,7 +40,7 @@ def main():
             print(f'{this_pr_num} needs rebase. Skipping conflict check')
             continue
 
-        r = requests.get(f'https://github.com/dashpay/dash/branches/pre_mergeable/{our_pr_label}...{get_label(this_pr_num)}')
+        r = requests.get(f'https://github.com/stakecube/StakeCubeCoin/branches/pre_mergeable/{our_pr_label}...{get_label(this_pr_num)}')
         if "These branches can be automatically merged." in r.text:
             good.append(this_pr_num)
         elif "Can’t automatically merge" in r.text:
