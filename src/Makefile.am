@@ -712,13 +712,13 @@ nodist_libscc_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # sccd binary #
-sccd_SOURCES = dashd.cpp
+sccd_SOURCES = sccd.cpp
 sccd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 sccd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 sccd_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-sccd_SOURCES += dashd-res.rc
+sccd_SOURCES += sccd-res.rc
 endif
 
 # Libraries below may be listed more than once to resolve circular dependencies (see
@@ -741,13 +741,13 @@ sccd_LDADD = \
 sccd_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(BLS_LIBS) $(GMP_LIBS)
 
 # scc-cli binary #
-scc_cli_SOURCES = dash-cli.cpp
+scc_cli_SOURCES = scc-cli.cpp
 scc_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
 scc_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 scc_cli_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-scc_cli_SOURCES += dash-cli-res.rc
+scc_cli_SOURCES += scc-cli-res.rc
 endif
 
 scc_cli_LDADD = \
@@ -759,13 +759,13 @@ scc_cli_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVE
 #
 
 # scc-tx binary #
-scc_tx_SOURCES = dash-tx.cpp
+scc_tx_SOURCES = scc-tx.cpp
 scc_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 scc_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 scc_tx_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-scc_tx_SOURCES += dash-tx-res.rc
+scc_tx_SOURCES += scc-tx-res.rc
 endif
 
 scc_tx_LDADD = \
@@ -780,13 +780,13 @@ scc_tx_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(CRYPTO_LIBS) $(BLS_LIBS) $(GMP_
 #
 
 # scc-wallet binary #
-scc_wallet_SOURCES = dash-wallet.cpp
+scc_wallet_SOURCES = scc-wallet.cpp
 scc_wallet_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 scc_wallet_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 scc_wallet_LDFLAGS = $(LDFLAGS_WRAP_EXCEPTIONS) $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-scc_wallet_SOURCES += dash-wallet-res.rc
+scc_wallet_SOURCES += scc-wallet-res.rc
 endif
 
 # Libraries below may be listed more than once to resolve circular dependencies (see

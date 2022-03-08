@@ -1257,7 +1257,7 @@
   <tabstop>deleteButton_s</tabstop>
  </tabstops>
  <resources>
-  <include location="../dash.qrc"/>
+  <include location="../scc.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -1183,7 +1183,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../dash.qrc"/>
+  <include location="../scc.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

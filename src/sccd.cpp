@@ -49,7 +49,7 @@ static bool AppInit(int argc, char* argv[])
     //
     // Parameters
     //
-    // If Qt is used, parameters/stakecubecoin.conf are parsed in qt/dash.cpp's main()
+    // If Qt is used, parameters/stakecubecoin.conf are parsed in qt/scc.cpp's main()
     SetupServerArgs();
     std::string error;
     if (!gArgs.ParseParameters(argc, argv, error)) {
