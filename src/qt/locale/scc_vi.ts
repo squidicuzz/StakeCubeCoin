@@ -232,7 +232,7 @@
     </message>
     <message>
         <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR SCC&lt;/b&gt;!</source>
-        <translation>Chú ý: Nếu bạn mã hoá ví và mất mật khẩu, bạn sẽ &lt;b&gt;MẤT TẤT CẢ DASH CỦA BẠN&lt;/b&gt;!</translation>
+        <translation>Chú ý: Nếu bạn mã hoá ví và mất mật khẩu, bạn sẽ &lt;b&gt;MẤT TẤT CẢ SCC CỦA BẠN&lt;/b&gt;!</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -309,7 +309,7 @@
     </message>
     <message>
         <source>SCC Core</source>
-        <translation>Dash Core</translation>
+        <translation>SCC Core</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -333,7 +333,7 @@
     </message>
     <message>
         <source>Send coins to a SCC address</source>
-        <translation>Gửi tiền vào địa chỉ Dash</translation>
+        <translation>Gửi tiền vào địa chỉ SCC</translation>
     </message>
     <message>
         <source>&amp;Receive</source>
@@ -569,7 +569,7 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to SCC network</source>
-        <translation><numerusform>%n kết nối hiện thời tới mạng lưới của Dash</numerusform></translation>
+        <translation><numerusform>%n kết nối hiện thời tới mạng lưới của SCC</numerusform></translation>
     </message>
     <message>
         <source>Network activity disabled</source>
@@ -1200,7 +1200,7 @@
     </message>
     <message>
         <source>Recent transactions may not yet be visible, and therefore your wallet's balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the SCC network, as detailed below.</source>
-        <translation>Những giao dịch mới có thể chưa hiện ra, và do đó số dư trong ví của bạn có thể chưa chính xác. Những thông tin này sẽ chính xác một khi ví của bạn đã hoàn tất việc đồng bộ với mạng lưới của Dash, như cụ thể bên dưới.</translation>
+        <translation>Những giao dịch mới có thể chưa hiện ra, và do đó số dư trong ví của bạn có thể chưa chính xác. Những thông tin này sẽ chính xác một khi ví của bạn đã hoàn tất việc đồng bộ với mạng lưới của SCC, như cụ thể bên dưới.</translation>
     </message>
     <message>
         <source>Attempting to spend SCC that are affected by not-yet-displayed transactions will not be accepted by the network.</source>
@@ -1603,7 +1603,7 @@ https://www.transifex.com/projects/p/scc/</translation>
     </message>
     <message>
         <source>0 SCC / 0 Rounds</source>
-        <translation>0 DASH / 0 Vòng</translation>
+        <translation>0 SCC / 0 Vòng</translation>
     </message>
     <message>
         <source>Submitted Denom:</source>
@@ -2398,7 +2398,7 @@ https://www.transifex.com/projects/p/scc/</translation>
     <name>ReceiveCoinsDialog</name>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the SCC network.</source>
-        <translation>Một thông điệp tuỳ chọn để đính vào yêu cầu thanh toán, nó sẽ hiển thị khi yêu cầu được mở. Chú ý: Thông điệp sẽ không được gửi thông qua mạng lưới Dash.</translation>
+        <translation>Một thông điệp tuỳ chọn để đính vào yêu cầu thanh toán, nó sẽ hiển thị khi yêu cầu được mở. Chú ý: Thông điệp sẽ không được gửi thông qua mạng lưới SCC.</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
@@ -2410,7 +2410,7 @@ https://www.transifex.com/projects/p/scc/</translation>
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened.&lt;br&gt;Note: The message will not be sent with the payment over the SCC network.</source>
-        <translation>Một thông điệp tuỳ chọn để đính vào yêu cầu thanh toán, nó sẽ hiển thị khi yêu cầu được mở.&lt;br&gt;Chú ý: Thông điệp sẽ không được gửi thông qua mạng lưới Dash.</translation>
+        <translation>Một thông điệp tuỳ chọn để đính vào yêu cầu thanh toán, nó sẽ hiển thị khi yêu cầu được mở.&lt;br&gt;Chú ý: Thông điệp sẽ không được gửi thông qua mạng lưới SCC.</translation>
     </message>
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
@@ -2918,7 +2918,7 @@ https://www.transifex.com/projects/p/scc/</translation>
     </message>
     <message>
         <source>A message that was attached to the scc: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the SCC network.</source>
-        <translation>Một thông điệp được đính với scc: URI đó sẽ được lưu trữ với các giao dịch cho các bạn tham khảo. Lưu ý: Thông điệp này sẽ không được gửi qua mạng Dash. </translation>
+        <translation>Một thông điệp được đính với scc: URI đó sẽ được lưu trữ với các giao dịch cho các bạn tham khảo. Lưu ý: Thông điệp này sẽ không được gửi qua mạng SCC. </translation>
     </message>
     <message>
         <source>This is an unauthenticated payment request.</source>
@@ -3007,7 +3007,7 @@ https://www.transifex.com/projects/p/scc/</translation>
     </message>
     <message>
         <source>Sign the message to prove you own this SCC address</source>
-        <translation>Ký vào thông điệp để chứng tỏ bạn sở hữu địa chỉ Dash</translation>
+        <translation>Ký vào thông điệp để chứng tỏ bạn sở hữu địa chỉ SCC</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -4248,7 +4248,7 @@ https://www.transifex.com/projects/p/scc/</translation>
     </message>
     <message>
         <source>SCC Core</source>
-        <translation>Dash Core</translation>
+        <translation>SCC Core</translation>
     </message>
     <message>
         <source>The %s developers</source>

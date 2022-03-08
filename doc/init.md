@@ -4,11 +4,11 @@ Sample init scripts and service configuration for sccd
 Sample scripts and configuration files for systemd, Upstart and OpenRC
 can be found in the contrib/init folder.
 
-    contrib/init/dashd.service:    systemd service unit configuration
-    contrib/init/dashd.openrc:     OpenRC compatible SysV style init script
-    contrib/init/dashd.openrcconf: OpenRC conf.d file
-    contrib/init/dashd.conf:       Upstart service configuration file
-    contrib/init/dashd.init:       CentOS compatible SysV style init script
+    contrib/init/sccd.service:    systemd service unit configuration
+    contrib/init/sccd.openrc:     OpenRC compatible SysV style init script
+    contrib/init/sccd.openrcconf: OpenRC conf.d file
+    contrib/init/sccd.conf:       Upstart service configuration file
+    contrib/init/sccd.init:       CentOS compatible SysV style init script
 
 Service User
 ---------------------------------
@@ -54,9 +54,9 @@ Paths
 All three configurations assume several paths that might need to be adjusted.
 
 Binary:              `/usr/bin/sccd`
-Configuration file:  `/etc/dashcore/stakecubecoin.conf`
-Data directory:      `/var/lib/dashd`
-PID file:            `/var/run/dashd/sccd.pid` (OpenRC and Upstart) or `/run/dashd/sccd.pid` (systemd)
+Configuration file:  `/etc/stakecubecoin/stakecubecoin.conf`
+Data directory:      `/var/lib/sccd`
+PID file:            `/var/run/sccd/sccd.pid` (OpenRC and Upstart) or `/run/sccd/sccd.pid` (systemd)
 Lock file:           `/var/lock/subsys/sccd` (CentOS)
 
 The configuration file, PID directory (if applicable) and data directory
@@ -73,10 +73,10 @@ scccore user and group to do so (e.g. when `-sysperms` is specified). This does 
 for the listing of files under the directory.
 
 NOTE: It is not currently possible to override `datadir` in
-`/etc/dash/stakecubecoin.conf` with the current systemd, OpenRC, and Upstart init
+`/etc/stakecubecoin/stakecubecoin.conf` with the current systemd, OpenRC, and Upstart init
 files out-of-the-box. This is because the command line options specified in the
 init files take precedence over the configurations in
-`/etc/dash/stakecubecoin.conf`. However, some init systems have their own
+`/etc/stakecubecoin/stakecubecoin.conf`. However, some init systems have their own
 configuration mechanisms that would allow for overriding the command line
 options specified in the init files (e.g. setting `BITCOIND_DATADIR` for
 OpenRC).
@@ -104,7 +104,7 @@ NOTE: When installing for systemd in Debian/Ubuntu the .service file needs to be
 
 ### OpenRC
 
-Rename dashd.openrc to sccd and drop it in /etc/init.d.  Double
+Rename sccd.openrc to sccd and drop it in /etc/init.d.  Double
 check ownership and permissions and make it executable.  Test it with
 `/etc/init.d/sccd start` and configure it to run on startup with
 `rc-update add sccd`
@@ -113,7 +113,7 @@ check ownership and permissions and make it executable.  Test it with
 
 Upstart is the default init system for Debian/Ubuntu versions older than 15.04. If you are using version 15.04 or newer and haven't manually configured upstart you should follow the systemd instructions instead.
 
-Drop dashd.conf in /etc/init.  Test by running `service sccd start`
+Drop sccd.conf in /etc/init.  Test by running `service sccd start`
 it will automatically start on reboot.
 
 NOTE: This script is incompatible with CentOS 5 and Amazon Linux 2014 as they
@@ -121,7 +121,7 @@ use old versions of Upstart and do not supply the start-stop-daemon utility.
 
 ### CentOS
 
-Copy dashd.init to /etc/init.d/dashd. Test by running `service sccd start`.
+Copy sccd.init to /etc/init.d/sccd. Test by running `service sccd start`.
 
 Using this script, you can adjust the path and flags to the sccd program by
 setting the SCCD and FLAGS environment variables in the file

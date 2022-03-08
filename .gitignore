@@ -136,7 +136,7 @@ test/cache/*
 .autotools
 /doc/doxygen/
 
-libdashconsensus.pc
+libsccconsensus.pc
 contrib/devtools/split-debug.sh
 src/qt/scc-qt.bash
 qa/pull-tester/tests-config.sh

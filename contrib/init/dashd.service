@@ -1,47 +1,47 @@
 # It is not recommended to modify this file in-place, because it will
 # be overwritten during package upgrades. If you want to add further
 # options or overwrite existing ones then use
-# $ systemctl edit dashd.service
+# $ systemctl edit sccd.service
 # See "man systemd.service" for details.
 
 # Note that almost all daemon options could be specified in
-# /etc/dash/stakecubecoin.conf, except for those explicitly specified as arguments
+# /etc/stakecubecoin/stakecubecoin.conf, except for those explicitly specified as arguments
 # in ExecStart=
 
 [Unit]
-Description=Dash daemon
+Description=SCC daemon
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/dashd -daemon \
-                                                            -pid=/run/dashd/sccd.pid \
-                                                            -conf=/etc/dash/stakecubecoin.conf  \
-                                                            -datadir=/var/lib/dashd
+ExecStart=/usr/bin/sccd -daemon \
+                                                            -pid=/run/sccd/sccd.pid \
+                                                            -conf=/etc/stakecubecoin/stakecubecoin.conf  \
+                                                            -datadir=/var/lib/sccd
 
 # Process management
 ####################
 
 Type=forking
-PIDFile=/run/dashd/sccd.pid
+PIDFile=/run/sccd/sccd.pid
 Restart=on-failure
 
 # Directory creation and permissions
 ####################################
 
-# Run as dash:dash
-User=dashcore
-Group=dashcore
+# Run as scc:scc
+User=scccore
+Group=scccore
 
-# /run/dashd
-RuntimeDirectory=dashd
+# /run/sccd
+RuntimeDirectory=sccd
 RuntimeDirectoryMode=0710
 
-# /etc/dash
-ConfigurationDirectory=dash
+# /etc/scc
+ConfigurationDirectory=scc
 ConfigurationDirectoryMode=0710
 
-# /var/lib/dashd
-StateDirectory=dashd
+# /var/lib/sccd
+StateDirectory=sccd
 StateDirectoryMode=0710
 
 # Hardening measures

@@ -12,14 +12,14 @@ Checks intra quorum connections
 
 import time
 
-from test_framework.test_framework import DashTestFramework
+from test_framework.test_framework import SCCTestFramework
 from test_framework.util import assert_greater_than_or_equal, connect_nodes, wait_until
 
 
-class LLMQConnections(DashTestFramework):
+class LLMQConnections(SCCTestFramework):
     def set_test_params(self):
-        self.set_dash_test_params(15, 14, fast_dip3_enforcement=True)
-        self.set_dash_llmq_test_params(5, 3)
+        self.set_scc_test_params(15, 14, fast_dip3_enforcement=True)
+        self.set_scc_llmq_test_params(5, 3)
 
     def run_test(self):
         self.nodes[0].spork("SPORK_17_QUORUM_DKG_ENABLED", 0)

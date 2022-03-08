@@ -12,7 +12,7 @@ import random
 import struct
 import time
 
-from test_framework.test_framework import DashTestFramework
+from test_framework.test_framework import SCCTestFramework
 from test_framework.mininode import P2PInterface
 from test_framework.util import assert_equal, assert_raises_rpc_error
 from test_framework.messages import (
@@ -80,7 +80,7 @@ class TestP2PConn(P2PInterface):
                 self.send_message(self.txes[inv.hash])
 
 
-class DashZMQTest (DashTestFramework):
+class DashZMQTest (SCCTestFramework):
     def set_test_params(self):
         # That's where the zmq publisher will listen for subscriber
         self.address = "tcp://127.0.0.1:28333"
@@ -89,7 +89,7 @@ class DashZMQTest (DashTestFramework):
         node0_extra_args.append("-whitelist=127.0.0.1")
         node0_extra_args.append("-watchquorums")  # have to watch quorums to receive recsigs and trigger zmq
 
-        self.set_dash_test_params(4, 3, fast_dip3_enforcement=True, extra_args=[node0_extra_args, [], [], []])
+        self.set_scc_test_params(4, 3, fast_dip3_enforcement=True, extra_args=[node0_extra_args, [], [], []])
 
     def skip_test_if_missing_module(self):
         self.skip_if_no_py3_zmq()
@@ -97,7 +97,7 @@ class DashZMQTest (DashTestFramework):
         self.skip_if_no_wallet()
 
     def run_test(self):
-        # Check that dashd has been built with ZMQ enabled.
+        # Check that sccd has been built with ZMQ enabled.
         config = configparser.ConfigParser()
         config.read_file(open(self.options.configfile))
         import zmq

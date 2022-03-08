@@ -12,10 +12,10 @@ static const int MODEL_UPDATE_DELAY = 250;
 /* AskPassphraseDialog -- Maximum passphrase length */
 static const int MAX_PASSPHRASE_SIZE = 1024;
 
-/* DashGUI -- Size of icons in status bar */
+/* SCCGUI -- Size of icons in status bar */
 static const int STATUSBAR_ICONSIZE = 18;
 
-/* DashGUI -- Size of button icons e.g. in SendCoinEntry or SignVerifyMessageDialog */
+/* SCCGUI -- Size of button icons e.g. in SendCoinEntry or SignVerifyMessageDialog */
 static const int BUTTON_ICONSIZE = 23;
 
 static const bool DEFAULT_SPLASHSCREEN = true;
@@ -35,8 +35,8 @@ static const int TOOLTIP_WRAP_THRESHOLD = 80;
 /* Number of frames in spinner animation */
 #define SPINNER_FRAMES 90
 
-#define QAPP_ORG_NAME "Dash"
-#define QAPP_ORG_DOMAIN "dash.org"
+#define QAPP_ORG_NAME "SCC"
+#define QAPP_ORG_DOMAIN "scc.org"
 #define QAPP_APP_NAME_DEFAULT "SCC-Qt"
 #define QAPP_APP_NAME_TESTNET "SCC-Qt-testnet"
 #define QAPP_APP_NAME_DEVNET "SCC-Qt-%s"

@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
 #
-#  dashd The Dash Core server.
+#  sccd The SCC Core server.
 #
 #
 # chkconfig: 345 80 20
-# description: dashd
-# processname: dashd
+# description: sccd
+# processname: sccd
 #
 
 # Source function library.
 . /etc/init.d/functions
 
-# you can override defaults in /etc/sysconfig/dashd, see below
-if [ -f /etc/sysconfig/dashd ]; then
-        . /etc/sysconfig/dashd
+# you can override defaults in /etc/sysconfig/sccd, see below
+if [ -f /etc/sysconfig/sccd ]; then
+        . /etc/sysconfig/sccd
 fi
 
 RETVAL=0
 
-prog=dashd
-# you can override the lockfile via BITCOIND_LOCKFILE in /etc/sysconfig/dashd
-lockfile=${BITCOIND_LOCKFILE-/var/lock/subsys/dashd}
+prog=sccd
+# you can override the lockfile via BITCOIND_LOCKFILE in /etc/sysconfig/sccd
+lockfile=${BITCOIND_LOCKFILE-/var/lock/subsys/sccd}
 
-# dashd defaults to /usr/bin/dashd, override with BITCOIND_BIN
-dashd=${BITCOIND_BIN-/usr/bin/dashd}
+# sccd defaults to /usr/bin/sccd, override with BITCOIND_BIN
+sccd=${BITCOIND_BIN-/usr/bin/sccd}
 
-# dashd opts default to -disablewallet, override with BITCOIND_OPTS
-dashd_opts=${BITCOIND_OPTS--disablewallet}
+# sccd opts default to -disablewallet, override with BITCOIND_OPTS
+sccd_opts=${BITCOIND_OPTS--disablewallet}
 
 start() {
     echo -n $"Starting $prog: "
-    daemon $DAEMONOPTS $dashd $dashd_opts
+    daemon $DAEMONOPTS $sccd $sccd_opts
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch $lockfile

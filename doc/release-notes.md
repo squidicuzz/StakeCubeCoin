@@ -40,12 +40,12 @@ a couple of build issues and a rare crash on some linux systems.
 0.17.0.3 Change log
 ===================
 
-- [`6a54af0df7`](https://github.com/stakecube/stakecubecoin/commit/6a54af0df7) Bump to v3.2.0
-- [`97e8461234`](https://github.com/stakecube/stakecubecoin/commit/97e8461234) doc: Archive v3.1.0 release notes
-- [`3661f36bbd`](https://github.com/stakecube/stakecubecoin/commit/3661f36bbd) Merge #14416: Fix OSX dmg issue (10.12 to 10.14) (#4177)
-- [`575e0a3070`](https://github.com/stakecube/stakecubecoin/commit/575e0a3070) qt: Add `QFont::Normal` as a supported font weight when no other font weights were found (#4175)
-- [`ce4a73b790`](https://github.com/stakecube/stakecubecoin/commit/ce4a73b790) rpc: Fix `upgradetohd` help text (#4170)
-- [`2fa8ddf160`](https://github.com/stakecube/stakecubecoin/commit/2fa8ddf160) Translations 202105 (add missing) (#4169)
+- [`6a54af0df7`](https://github.com/stakecube/StakeCubeCoin/commit/6a54af0df7) Bump to v3.2.0
+- [`97e8461234`](https://github.com/stakecube/StakeCubeCoin/commit/97e8461234) doc: Archive v3.1.0 release notes
+- [`3661f36bbd`](https://github.com/stakecube/StakeCubeCoin/commit/3661f36bbd) Merge #14416: Fix OSX dmg issue (10.12 to 10.14) (#4177)
+- [`575e0a3070`](https://github.com/stakecube/StakeCubeCoin/commit/575e0a3070) qt: Add `QFont::Normal` as a supported font weight when no other font weights were found (#4175)
+- [`ce4a73b790`](https://github.com/stakecube/StakeCubeCoin/commit/ce4a73b790) rpc: Fix `upgradetohd` help text (#4170)
+- [`2fa8ddf160`](https://github.com/stakecube/StakeCubeCoin/commit/2fa8ddf160) Translations 202105 (add missing) (#4169)
 
 Credits
 =======

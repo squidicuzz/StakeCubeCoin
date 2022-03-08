@@ -20,7 +20,7 @@ Before every minor and major release:
 
 Before every major release:
 
-* Update hardcoded [seeds](/contrib/seeds/README.md). TODO: Give example PR for Dash
+* Update hardcoded [seeds](/contrib/seeds/README.md). TODO: Give example PR for SCC
 * Update [`src/chainparams.cpp`](/src/chainparams.cpp) m_assumed_blockchain_size and m_assumed_chain_state_size with the current size plus some overhead (see [this](#how-to-calculate-m_assumed_blockchain_size-and-m_assumed_chain_state_size) for information on how to calculate them).
 * Update `src/chainparams.cpp` chainTxData with statistics about the transaction count and rate. Use the output of the RPC `getchaintxstats`, see
   [this pull request](https://github.com/bitcoin/bitcoin/pull/12270) for an example. Reviewers can verify the results by running `getchaintxstats <window_block_count> <window_last_block_hash>` with the `window_block_count` and `window_last_block_hash` from your output.
@@ -38,7 +38,7 @@ Check out the source code in the following directory hierarchy.
 	git clone https://github.com/devrandom/gitian-builder.git
 	git clone https://github.com/stakecube/StakeCubeCoin.git
 
-### Dash Core maintainers/release engineers, suggestion for writing release notes
+### SCC Core maintainers/release engineers, suggestion for writing release notes
 
 Write release notes. git shortlog helps a lot, for example:
 
@@ -58,7 +58,7 @@ If you're using the automated script (found in [contrib/gitian-build.py](/contri
 
 Setup Gitian descriptors:
 
-    pushd ./dash
+    pushd ./scc
     export SIGNER="(your Gitian key, ie UdjinM6, Pasta, etc)"
     export VERSION=(new version, e.g. 0.12.3)
     git fetch
@@ -92,10 +92,10 @@ Create the macOS SDK tarball, see the [macOS build instructions](build-osx.md#de
 
 NOTE: Gitian is sometimes unable to download files. If you have errors, try the step below.
 
-By default, Gitian will fetch source files as needed. To cache them ahead of time, make sure you have checked out the tag you want to build in dash, then:
+By default, Gitian will fetch source files as needed. To cache them ahead of time, make sure you have checked out the tag you want to build in scc, then:
 
     pushd ./gitian-builder
-    make -C ../dash/depends download SOURCES_PATH=`pwd`/cache/common
+    make -C ../scc/depends download SOURCES_PATH=`pwd`/cache/common
     popd
 
 Only missing files will be fetched, so this is safe to re-run for each build.
@@ -103,50 +103,50 @@ Only missing files will be fetched, so this is safe to re-run for each build.
 NOTE: Offline builds must use the --url flag to ensure Gitian fetches only from local URLs. For example:
 
     pushd ./gitian-builder
-    ./bin/gbuild --url dash=/path/to/dash,signature=/path/to/sigs {rest of arguments}
+    ./bin/gbuild --url scc=/path/to/scc,signature=/path/to/sigs {rest of arguments}
     popd
 
 The gbuild invocations below <b>DO NOT DO THIS</b> by default.
 
-### Build and sign Dash Core for Linux, Windows, and macOS:
+### Build and sign SCC Core for Linux, Windows, and macOS:
 
     pushd ./gitian-builder
-    ./bin/gbuild --num-make 2 --memory 3000 --commit dash=v${VERSION} ../dash/contrib/gitian-descriptors/gitian-linux.yml
-    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-linux --destination ../gitian.sigs/ ../dash/contrib/gitian-descriptors/gitian-linux.yml
-    mv build/out/dash-*.tar.gz build/out/src/dash-*.tar.gz ../
+    ./bin/gbuild --num-make 2 --memory 3000 --commit scc=v${VERSION} ../scc/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-linux --destination ../gitian.sigs/ ../scc/contrib/gitian-descriptors/gitian-linux.yml
+    mv build/out/scc-*.tar.gz build/out/src/scc-*.tar.gz ../
 
-    ./bin/gbuild --num-make 2 --memory 3000 --commit dash=v${VERSION} ../dash/contrib/gitian-descriptors/gitian-win.yml
-    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../dash/contrib/gitian-descriptors/gitian-win.yml
-    mv build/out/dash-*-win-unsigned.tar.gz inputs/dash-win-unsigned.tar.gz
-    mv build/out/dash-*.zip build/out/dash-*.exe ../
+    ./bin/gbuild --num-make 2 --memory 3000 --commit scc=v${VERSION} ../scc/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../scc/contrib/gitian-descriptors/gitian-win.yml
+    mv build/out/scc-*-win-unsigned.tar.gz inputs/scc-win-unsigned.tar.gz
+    mv build/out/scc-*.zip build/out/scc-*.exe ../
 
-    ./bin/gbuild --num-make 2 --memory 3000 --commit dash=v${VERSION} ../dash/contrib/gitian-descriptors/gitian-osx.yml
-    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../dash/contrib/gitian-descriptors/gitian-osx.yml
-    mv build/out/dash-*-osx-unsigned.tar.gz inputs/dash-osx-unsigned.tar.gz
-    mv build/out/dash-*.tar.gz build/out/dash-*.dmg ../
+    ./bin/gbuild --num-make 2 --memory 3000 --commit scc=v${VERSION} ../scc/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../scc/contrib/gitian-descriptors/gitian-osx.yml
+    mv build/out/scc-*-osx-unsigned.tar.gz inputs/scc-osx-unsigned.tar.gz
+    mv build/out/scc-*.tar.gz build/out/scc-*.dmg ../
     popd
 
 Build output expected:
 
-  1. source tarball (`dash-${VERSION}.tar.gz`)
-  2. linux 32-bit and 64-bit dist tarballs (`dash-${VERSION}-linux[32|64].tar.gz`)
-  3. windows 32-bit and 64-bit unsigned installers and dist zips (`dash-${VERSION}-win[32|64]-setup-unsigned.exe`, `dash-${VERSION}-win[32|64].zip`)
-  4. macOS unsigned installer and dist tarball (`dash-${VERSION}-osx-unsigned.dmg`, `dash-${VERSION}-osx64.tar.gz`)
+  1. source tarball (`scc-${VERSION}.tar.gz`)
+  2. linux 32-bit and 64-bit dist tarballs (`scc-${VERSION}-linux[32|64].tar.gz`)
+  3. windows 32-bit and 64-bit unsigned installers and dist zips (`scc-${VERSION}-win[32|64]-setup-unsigned.exe`, `scc-${VERSION}-win[32|64].zip`)
+  4. macOS unsigned installer and dist tarball (`scc-${VERSION}-osx-unsigned.dmg`, `scc-${VERSION}-osx64.tar.gz`)
   5. Gitian signatures (in `gitian.sigs/${VERSION}-<linux|{win,osx}-unsigned>/(your Gitian key)/`)
 
 ### Verify other gitian builders signatures to your own. (Optional)
 
 Add other gitian builders keys to your gpg keyring, and/or refresh keys.
 
-    gpg --import dash/contrib/gitian-keys/*.pgp
+    gpg --import scc/contrib/gitian-keys/*.pgp
     gpg --refresh-keys
 
 Verify the signatures
 
     pushd ./gitian-builder
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../dash/contrib/gitian-descriptors/gitian-linux.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../dash/contrib/gitian-descriptors/gitian-win.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../dash/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../scc/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../scc/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../scc/contrib/gitian-descriptors/gitian-osx.yml
     popd
 
 ### Next steps:
@@ -167,22 +167,22 @@ Codesigner only: Create Windows/macOS detached signatures:
 
 Codesigner only: Sign the macOS binary:
 
-    transfer dashcore-osx-unsigned.tar.gz to macOS for signing
-    tar xf dashcore-osx-unsigned.tar.gz
+    transfer scccore-osx-unsigned.tar.gz to macOS for signing
+    tar xf scccore-osx-unsigned.tar.gz
     ./detached-sig-create.sh -s "Key ID" -o runtime
     Enter the keychain password and authorize the signature
     Move signature-osx.tar.gz back to the gitian host
 
 Codesigner only: Sign the windows binaries:
 
-    tar xf dashcore-win-unsigned.tar.gz
+    tar xf scccore-win-unsigned.tar.gz
     ./detached-sig-create.sh -key /path/to/codesign.key
     Enter the passphrase for the key when prompted
     signature-win.tar.gz will be created
 
 Codesigner only: Commit the detached codesign payloads:
 
-    cd ~/dashcore-detached-sigs
+    cd ~/scccore-detached-sigs
     checkout the appropriate branch for this release series
     rm -rf *
     tar xf signature-osx.tar.gz
@@ -200,19 +200,19 @@ Non-codesigners: wait for Windows/macOS detached signatures:
 Create (and optionally verify) the signed macOS binary:
 
     pushd ./gitian-builder
-    ./bin/gbuild -i --commit signature=v${VERSION} ../dash/contrib/gitian-descriptors/gitian-osx-signer.yml
-    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../dash/contrib/gitian-descriptors/gitian-osx-signer.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../dash/contrib/gitian-descriptors/gitian-osx-signer.yml
-    mv build/out/dash-osx-signed.dmg ../dash-${VERSION}-osx.dmg
+    ./bin/gbuild -i --commit signature=v${VERSION} ../scc/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../scc/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../scc/contrib/gitian-descriptors/gitian-osx-signer.yml
+    mv build/out/scc-osx-signed.dmg ../scc-${VERSION}-osx.dmg
     popd
 
 Create (and optionally verify) the signed Windows binaries:
 
     pushd ./gitian-builder
-    ./bin/gbuild -i --commit signature=v${VERSION} ../dash/contrib/gitian-descriptors/gitian-win-signer.yml
-    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../dash/contrib/gitian-descriptors/gitian-win-signer.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-signed ../dash/contrib/gitian-descriptors/gitian-win-signer.yml
-    mv build/out/dash-*win64-setup.exe ../dash-${VERSION}-win64-setup.exe
+    ./bin/gbuild -i --commit signature=v${VERSION} ../scc/contrib/gitian-descriptors/gitian-win-signer.yml
+    ./bin/gsign --signer "$SIGNER" --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../scc/contrib/gitian-descriptors/gitian-win-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-signed ../scc/contrib/gitian-descriptors/gitian-win-signer.yml
+    mv build/out/scc-*win64-setup.exe ../scc-${VERSION}-win64-setup.exe
     popd
 
 Commit your signature for the signed macOS/Windows binaries:
@@ -234,20 +234,20 @@ sha256sum * > SHA256SUMS
 
 The list of files should be:
 ```
-dash-${VERSION}-aarch64-linux-gnu.tar.gz
-dash-${VERSION}-riscv64-linux-gnu.tar.gz
-dash-${VERSION}-x86_64-linux-gnu.tar.gz
-dash-${VERSION}-osx64.tar.gz
-dash-${VERSION}-osx.dmg
-dash-${VERSION}.tar.gz
-dash-${VERSION}-win64-setup.exe
-dash-${VERSION}-win64.zip
+scc-${VERSION}-aarch64-linux-gnu.tar.gz
+scc-${VERSION}-riscv64-linux-gnu.tar.gz
+scc-${VERSION}-x86_64-linux-gnu.tar.gz
+scc-${VERSION}-osx64.tar.gz
+scc-${VERSION}-osx.dmg
+scc-${VERSION}.tar.gz
+scc-${VERSION}-win64-setup.exe
+scc-${VERSION}-win64.zip
 ```
 The `*-debug*` files generated by the Gitian build contain debug symbols
 for troubleshooting by developers. It is assumed that anyone that is interested
 in debugging can run Gitian to generate the files for themselves. To avoid
 end-user confusion about which file to pick, as well as save storage
-space *do not upload these to the dash.org server*.
+space *do not upload these to the stakecube.net server*.
 
 - GPG-sign it, delete the unsigned file:
 ```
@@ -257,13 +257,13 @@ rm SHA256SUMS
 (the digest algorithm is forced to sha256 to avoid confusion of the `Hash:` header that GPG adds with the SHA256 used for the files)
 Note: check that SHA256SUMS itself doesn't end up in SHA256SUMS, which is a spurious/nonsensical entry.
 
-- Upload zips and installers, as well as `SHA256SUMS.asc` from last step, to the dash.org server
+- Upload zips and installers, as well as `SHA256SUMS.asc` from last step, to the stakecube.net server
 
-- Update dash.org
+- Update stakecube.net
 
 - Announce the release:
 
-  - Release on Dash forum: https://www.dash.org/forum/topic/official-announcements.54/
+  - Release on SCC forum: https://www.dash.org/forum/topic/official-announcements.54/
 
   - Optionally Discord, twitter, reddit /r/Dashpay, ... but this will usually sort out itself
 
@@ -283,7 +283,7 @@ Both variables are used as a guideline for how much space the user needs on thei
 Note that all values should be taken from a **fully synced** node and have an overhead of 5-10% added on top of its base value.
 
 To calculate `m_assumed_blockchain_size`:
-- For `mainnet` -> Take the size of the Dash Core data directory, excluding `/regtest` and `/testnet3` directories.
+- For `mainnet` -> Take the size of the SCC Core data directory, excluding `/regtest` and `/testnet3` directories.
 - For `testnet` -> Take the size of the `/testnet3` directory.
 
 

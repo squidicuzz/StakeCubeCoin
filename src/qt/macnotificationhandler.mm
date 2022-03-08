@@ -13,7 +13,7 @@
 - (NSString *)__bundleIdentifier
 {
     if (self == [NSBundle mainBundle]) {
-        return @"org.dash.SCC-Qt";
+        return @"org.scc.SCC-Qt";
     } else {
         return [self __bundleIdentifier];
     }

@@ -1,12 +1,12 @@
 # Unit tests
 
 The sources in this directory are unit test cases. Boost includes a
-unit testing framework, and since Dash Core already uses Boost, it makes
+unit testing framework, and since SCC Core already uses Boost, it makes
 sense to simply use this framework rather than require developers to
 configure some other framework (we want as few impediments to creating
 unit tests as possible).
 
-The build system is set up to compile an executable called `test_dash`
+The build system is set up to compile an executable called `test_scc`
 that runs all of the unit tests. The main source file for the test library is found in
 `util/setup_common.cpp`.
 
@@ -17,32 +17,32 @@ and tests weren't explicitly disabled.
 
 After configuring, they can be run with `make check`.
 
-To run the dashd tests manually, launch `src/test/test_dash`. To recompile
+To run the sccd tests manually, launch `src/test/test_scc`. To recompile
 after a test file was modified, run `make` and then run the test again. If you
 modify a non-test file, use `make -C src/test` to recompile only what's needed
-to run the dashd tests.
+to run the sccd tests.
 
-To add more dashd tests, add `BOOST_AUTO_TEST_CASE` functions to the existing
+To add more sccd tests, add `BOOST_AUTO_TEST_CASE` functions to the existing
 .cpp files in the `test/` directory or add new .cpp files that
 implement new `BOOST_AUTO_TEST_SUITE` sections.
 
-To run the dash-qt tests manually, launch `src/qt/test/test_dash-qt`
+To run the scc-qt tests manually, launch `src/qt/test/test_scc-qt`
 
-To add more dash-qt tests, add them to the `src/qt/test/` directory and
+To add more scc-qt tests, add them to the `src/qt/test/` directory and
 the `src/qt/test/test_main.cpp` file.
 
 ### Running individual tests
 
-test_dash has some built-in command-line arguments; for
+test_scc has some built-in command-line arguments; for
 example, to run just the getarg_tests verbosely:
 
-    test_dash --log_level=all --run_test=getarg_tests
+    test_scc --log_level=all --run_test=getarg_tests
 
-... or to run just the doubledash test:
+... or to run just the doublescc test:
 
-    test_dash --run_test=getarg_tests/doubledash
+    test_scc --run_test=getarg_tests/doublescc
 
-Run `test_dash --help` for the full list.
+Run `test_scc --help` for the full list.
 
 ### Adding test cases
 
@@ -59,9 +59,9 @@ see `uint256_tests.cpp`.
 To write to logs from unit tests you need to use specific message methods
 provided by Boost. The simplest is `BOOST_TEST_MESSAGE`.
 
-For debugging you can launch the test_dash executable with `gdb`or `lldb` and
-start debugging, just like you would with dashd:
+For debugging you can launch the test_scc executable with `gdb`or `lldb` and
+start debugging, just like you would with sccd:
 
 ```bash
-gdb src/test/test_dash
+gdb src/test/test_scc
 ```
