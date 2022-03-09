@@ -1,6 +1,6 @@
 usr/local/bin/scc-qt usr/bin
-share/pixmaps/dash32.xpm usr/share/pixmaps
-share/pixmaps/dash16.xpm usr/share/pixmaps
-share/pixmaps/dash128.png usr/share/pixmaps
+share/pixmaps/scc32.xpm usr/share/pixmaps
+share/pixmaps/scc16.xpm usr/share/pixmaps
+share/pixmaps/scc128.png usr/share/pixmaps
 debian/scc-qt.desktop usr/share/applications
 debian/scc-qt.protocol usr/share/kde4/services/

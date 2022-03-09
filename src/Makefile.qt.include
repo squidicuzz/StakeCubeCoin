@@ -97,7 +97,7 @@ QT_MOC = \
   qt/overviewpage.moc \
   qt/rpcconsole.moc
 
-QT_QRC_CPP = qt/qrc_dash.cpp
+QT_QRC_CPP = qt/qrc_scc.cpp
 QT_QRC = qt/scc.qrc
 QT_QRC_LOCALE_CPP = qt/qrc_scc_locale.cpp
 QT_QRC_LOCALE = qt/scc_locale.qrc
@@ -175,9 +175,9 @@ BITCOIN_QT_H = \
   qt/winshutdownmonitor.h
 
 RES_ICONS = \
-  qt/res/icons/dash.ico \
-  qt/res/icons/dash_testnet.ico \
-  qt/res/icons/dash.png \
+  qt/res/icons/scc.ico \
+  qt/res/icons/scc_testnet.ico \
+  qt/res/icons/scc.png \
   qt/res/icons/warning.png \
   qt/res/icons/address-book.png \
   qt/res/icons/transaction0.png \
@@ -315,8 +315,8 @@ RES_IMAGES = \
   qt/res/images/checkbox_partly_checked_light.png \
   qt/res/images/checkbox_partly_checked_hover_light.png \
   qt/res/images/checkbox_partly_checked_disabled_light.png \
-  qt/res/images/dash_logo_toolbar.png \
-  qt/res/images/dash_logo_toolbar_blue.png \
+  qt/res/images/scc_logo_toolbar.png \
+  qt/res/images/scc_logo_toolbar_blue.png \
   qt/res/images/radio_normal_dark.png \
   qt/res/images/radio_normal_hover_dark.png \
   qt/res/images/radio_checked_dark.png \
