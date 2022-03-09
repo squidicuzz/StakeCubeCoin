@@ -735,7 +735,9 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             return false;
 
         if (pool.existsProviderTxConflict(tx)) {
-            return state.DoS(0, false, REJECT_DUPLICATE, "protx-dup");
+            // A ProviderTX is already in the mempool, which conflicts with this new TX, reject
+            // specifically as; "already-in-mempool" for better clarification.
+            return state.DoS(0, false, REJECT_DUPLICATE, "protx-already-in-mempool");
         }
 
         constexpr unsigned int scriptVerifyFlags = STANDARD_SCRIPT_VERIFY_FLAGS;
