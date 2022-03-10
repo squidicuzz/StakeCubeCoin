@@ -2,7 +2,7 @@
 # Copyright (c) 2018-2020 The Dash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Tests around dash governance objects."""
+"""Tests around scc governance objects."""
 
 import json
 import time
@@ -22,7 +22,7 @@ def validate_object(prepared, rpc_prepared):
     assert_equal(prepared["data"], rpc_prepared["data"])
 
 
-class DashGovernanceTest (SCCTestFramework):
+class SCCGovernanceTest (SCCTestFramework):
     def set_test_params(self):
         self.set_scc_test_params(2, 1)
 
@@ -36,7 +36,7 @@ class DashGovernanceTest (SCCTestFramework):
             "end_epoch": proposal_time + 24 * 60 * 60,
             "payment_amount": amount,
             "payment_address": self.nodes[0].getnewaddress(),
-            "url": "https://dash.org"
+            "url": "https://stakecube.net"
         }
         proposal_hex = ''.join(format(x, '02x') for x in json.dumps(proposal_template).encode())
         collateral_hash = self.nodes[0].gobject("prepare", parent_hash, proposal_rev, proposal_time, proposal_hex)
@@ -100,4 +100,4 @@ class DashGovernanceTest (SCCTestFramework):
 
 
 if __name__ == '__main__':
-    DashGovernanceTest().main()
+    SCCGovernanceTest().main()

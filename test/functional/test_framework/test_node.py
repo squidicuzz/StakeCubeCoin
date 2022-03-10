@@ -551,7 +551,7 @@ class TestNodeCLI():
         self.binary = binary
         self.datadir = datadir
         self.input = None
-        self.log = logging.getLogger('TestFramework.dashcli')
+        self.log = logging.getLogger('TestFramework.scccli')
 
     def __call__(self, *options, input=None):
         # TestNodeCLI is callable with scc-cli command-line options

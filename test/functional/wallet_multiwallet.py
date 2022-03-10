@@ -349,7 +349,7 @@ class MultiWalletTest(BitcoinTestFramework):
         )
         self.stop_node(
             i=0,
-            expected_stderr='Error: Error loading {}: Wallet requires newer version of Dash Core'.format(
+            expected_stderr='Error: Error loading {}: Wallet requires newer version of SCC Core'.format(
                 wallet_dir('high_minversion', 'wallet.dat')),
         )
 
