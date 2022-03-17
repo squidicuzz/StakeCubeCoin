@@ -263,7 +263,7 @@ public:
         nDefaultPort = 40000;
         nPruneAfterHeight = 100000;
         m_assumed_blockchain_size = 5;
-        m_assumed_chain_state_size = 1;
+        m_assumed_chain_state_size = 5;
 
         genesis = CreateGenesisBlock(1601898626, 433472, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();

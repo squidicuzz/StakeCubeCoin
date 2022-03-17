@@ -126,7 +126,7 @@ Intro::Intro(QWidget *parent, uint64_t blockchain_size, uint64_t chain_state_siz
     ui->lblExplanation1->setText(ui->lblExplanation1->text()
         .arg(tr(PACKAGE_NAME))
         .arg(m_blockchain_size)
-        .arg(2018)
+        .arg(2020)
         .arg("SCC")
     );
     ui->lblExplanation2->setText(ui->lblExplanation2->text().arg(tr(PACKAGE_NAME)));
