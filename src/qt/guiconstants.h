@@ -35,8 +35,8 @@ static const int TOOLTIP_WRAP_THRESHOLD = 80;
 /* Number of frames in spinner animation */
 #define SPINNER_FRAMES 90
 
-#define QAPP_ORG_NAME "SCC"
-#define QAPP_ORG_DOMAIN "scc.org"
+#define QAPP_ORG_NAME "StakeCubeCoin"
+#define QAPP_ORG_DOMAIN "stakecube.net"
 #define QAPP_APP_NAME_DEFAULT "SCC-Qt"
 #define QAPP_APP_NAME_TESTNET "SCC-Qt-testnet"
 #define QAPP_APP_NAME_DEVNET "SCC-Qt-%s"
