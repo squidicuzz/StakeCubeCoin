@@ -151,6 +151,13 @@ private:
     QAction* unlockWalletAction = nullptr;
     QAction* lockWalletAction = nullptr;
     QAction* aboutQtAction = nullptr;
+    QAction* openSiteStakeCube = nullptr;
+    QAction* openSiteNews = nullptr;
+    QAction* openSiteStats = nullptr;
+    QAction* openSiteSCP = nullptr;
+    QAction* openSiteSCPscan = nullptr;
+    QAction* openSiteDiscord = nullptr;
+    QAction* openSiteDiscordSCP = nullptr;
     QAction* openInfoAction = nullptr;
     QAction* openRPCConsoleAction = nullptr;
     QAction* openGraphAction = nullptr;
@@ -327,6 +334,14 @@ public Q_SLOTS:
 #endif // ENABLE_WALLET
     /** Show configuration dialog */
     void optionsClicked();
+    /** Linked Resources */
+    void openStakeCube();
+    void openNews();
+    void openStats();
+    void openSCP();
+    void openSCPscan();
+    void openDiscord();
+    void openDiscordSCP();
     /** Show about dialog */
     void aboutClicked();
     /** Show debug window */

@@ -64,6 +64,8 @@
 #include <QToolBar>
 #include <QToolButton>
 #include <QUrlQuery>
+#include <QDesktopServices>
+#include <QUrl>
 #include <QVBoxLayout>
 #include <QWindow>
 
@@ -444,6 +446,33 @@ void BitcoinGUI::createActions()
     showCoinJoinHelpAction->setMenuRole(QAction::NoRole);
     showCoinJoinHelpAction->setStatusTip(tr("Show the %1 basic information").arg(strCoinJoinName));
 
+    // General Sites
+
+    openSiteStakeCube = new QAction(tr("&Official Website"), this);
+    openSiteStakeCube->setStatusTip(tr("Open the project's Official site. (StakeCube.net)"));
+
+    openSiteNews = new QAction(tr("&News and Updates"), this);
+    openSiteNews->setStatusTip(tr("Open the SC news site. (StakeCube.info)"));
+
+    openSiteStats = new QAction(tr("&Stats Website"), this);
+    openSiteStats->setStatusTip(tr("Open the SCC stats site. (StakeCubeCoin.net)"));
+
+    // SCP Sites
+
+    openSiteSCP = new QAction(tr("&SCP Wallet"), this);
+    openSiteSCP->setStatusTip(tr("Download the most powerful SCC wallet to-date. (SCPscan.net/download)"));
+
+    openSiteSCPscan = new QAction(tr("&SCPscan"), this);
+    openSiteSCPscan->setStatusTip(tr("Open the Official explorer for SCP. (SCPscan.net)"));
+
+    // Socials
+
+    openSiteDiscord = new QAction(tr("&SC Discord"), this);
+    openSiteDiscord->setStatusTip(tr("Join the Official SC Discord server. (Discord.gg/wkHk38C7zv)"));
+
+    openSiteDiscordSCP = new QAction(tr("&SCP Discord"), this);
+    openSiteDiscordSCP->setStatusTip(tr("Join the Official SCP Discord server. (Discord.gg/pxqWTHtAkb)"));
+
     connect(quitAction, &QAction::triggered, qApp, QApplication::quit);
     connect(aboutAction, &QAction::triggered, this, &BitcoinGUI::aboutClicked);
     connect(aboutQtAction, &QAction::triggered, qApp, QApplication::aboutQt);
@@ -451,6 +480,17 @@ void BitcoinGUI::createActions()
     connect(toggleHideAction, &QAction::triggered, this, &BitcoinGUI::toggleHidden);
     connect(showHelpMessageAction, &QAction::triggered, this, &BitcoinGUI::showHelpMessageClicked);
     connect(showCoinJoinHelpAction, &QAction::triggered, this, &BitcoinGUI::showCoinJoinHelpClicked);
+
+    // Helpful resources and links
+    connect(openSiteStakeCube, &QAction::triggered, this, &BitcoinGUI::openStakeCube);
+    connect(openSiteNews, &QAction::triggered, this, &BitcoinGUI::openNews);
+    connect(openSiteStats, &QAction::triggered, this, &BitcoinGUI::openStats);
+
+    connect(openSiteSCP, &QAction::triggered, this, &BitcoinGUI::openSCP);
+    connect(openSiteSCPscan, &QAction::triggered, this, &BitcoinGUI::openSCPscan);
+
+    connect(openSiteDiscord, &QAction::triggered, this, &BitcoinGUI::openDiscord);
+    connect(openSiteDiscordSCP, &QAction::triggered, this, &BitcoinGUI::openDiscordSCP);
 
     // Jump directly to tabs in RPC-console
     connect(openInfoAction, &QAction::triggered, this, &BitcoinGUI::showInfo);
@@ -632,6 +672,20 @@ void BitcoinGUI::createMenuBar()
             rpcConsole->setTabFocus(tab_type);
             showDebugWindow();
         });
+    }
+
+    QMenu *scLinks = appMenuBar->addMenu(tr("&StakeCube Links"));
+    if(walletFrame)
+    {
+        scLinks->addAction(openSiteStakeCube);
+        scLinks->addAction(openSiteNews);
+        scLinks->addAction(openSiteStats);
+        scLinks->addSeparator();
+        scLinks->addAction(openSiteSCP);
+        scLinks->addAction(openSiteSCPscan);
+        scLinks->addSeparator();
+        scLinks->addAction(openSiteDiscord);
+        scLinks->addAction(openSiteDiscordSCP);
     }
 
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
@@ -1045,6 +1099,42 @@ void BitcoinGUI::optionsClicked()
     dlg.exec();
 
     updateCoinJoinVisibility();
+}
+
+void BitcoinGUI::openStakeCube()
+{
+    QDesktopServices::openUrl(QUrl("https://stakecube.net/"));
+}
+
+void BitcoinGUI::openNews()
+{
+    QDesktopServices::openUrl(QUrl("https://stakecube.info/"));
+}
+
+void BitcoinGUI::openStats()
+{
+    QDesktopServices::openUrl(QUrl("https://stakecubecoin.net/"));
+}
+
+void BitcoinGUI::openSCP()
+{
+    QDesktopServices::openUrl(QUrl("https://scpscan.net/download.html"));
+}
+
+void BitcoinGUI::openSCPscan()
+{
+    QDesktopServices::openUrl(QUrl("https://scpscan.net/"));
+}
+
+
+void BitcoinGUI::openDiscord()
+{
+    QDesktopServices::openUrl(QUrl("https://discord.gg/wkHk38C7zv"));
+}
+
+void BitcoinGUI::openDiscordSCP()
+{
+    QDesktopServices::openUrl(QUrl("https://discord.gg/pxqWTHtAkb"));
 }
 
 void BitcoinGUI::aboutClicked()
