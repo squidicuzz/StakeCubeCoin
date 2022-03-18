@@ -49,8 +49,8 @@ WalletFrame {
 }
 
 QWidget { /* override text selection background color for all text widgets */
-    selection-color: #363637;
-    selection-background-color: #313438;
+    selection-color: #727272;
+    selection-background-color: #25272b2c;
 }
 
 QCheckBox,
@@ -482,7 +482,7 @@ QPushButton - Special case, tabbar replacement buttons
 /* Sign/Verify dialog buttons */
 #btnSignMessage,
 #btnVerifyMessage {
-    border-color: #00599a;
+    border-color: #0fcbd575;
     color: #818181;
 }
 
@@ -502,7 +502,7 @@ QPushButton - Special case, tabbar replacement buttons
 /* Sign/Verify dialog buttons */
 #btnSignMessage:hover:checked,
 #btnVerifyMessage:hover:checked {
-    border-color: #313438;
+    border-color: #1dffb4;
     color: #cccccc;
 }
 
@@ -522,7 +522,7 @@ QPushButton - Special case, tabbar replacement buttons
 /* Sign/Verify dialog buttons */
 #btnSignMessage:hover:!checked,
 #btnVerifyMessage:hover:!checked {
-    border-color: #00599a;
+    border-color: #0fcad5;
     color: #cccccc;
 }
 
@@ -542,7 +542,7 @@ QPushButton - Special case, tabbar replacement buttons
 /* Sign/Verify dialog buttons */
 #btnSignMessage:checked,
 #btnVerifyMessage:checked {
-    border-color: #313438;
+    border-color: #1dffb4;
     color: #cccccc;
 }
 
@@ -922,7 +922,7 @@ RPCConsole QWidget#detailWidget {
 }
 
 #rpcAutoCompleter::item:selected {
-    background-color: #25272b;
+    background-color: #25272b2c;
     color: #cccccc;
 }
 
