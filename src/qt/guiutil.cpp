@@ -159,7 +159,7 @@ static const std::map<ThemedColor, QColor> themedDarkColors = {
     { ThemedColor::GREEN, QColor(94, 140, 65) },
     { ThemedColor::BAREADDRESS, QColor(140, 140, 140) },
     { ThemedColor::TX_STATUS_OPENUNTILDATE, QColor(64, 64, 255) },
-    { ThemedColor::BACKGROUND_WIDGET, QColor(45, 45, 46) },
+    { ThemedColor::BACKGROUND_WIDGET, QColor(32, 34, 37) },
     { ThemedColor::BORDER_WIDGET, QColor(74, 74, 75) },
     { ThemedColor::BACKGROUND_NETSTATS, QColor(45, 45, 46, 230) },
     { ThemedColor::BORDER_NETSTATS, QColor(74, 74, 75) },
