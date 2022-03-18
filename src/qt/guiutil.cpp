@@ -86,7 +86,7 @@ static QString stylesheetDirectory = defaultStylesheetDirectory;
 // The name of the traditional theme
 static const QString traditionalTheme = "Traditional";
 // The theme to set by default if settings are missing or incorrect
-static const QString defaultTheme = "Light";
+static const QString defaultTheme = "Dark";
 // The prefix a theme name should have if we want to apply dark colors and styles to it
 static const QString darkThemePrefix = "Dark";
 // The theme to set as a base one for non-traditional themes
