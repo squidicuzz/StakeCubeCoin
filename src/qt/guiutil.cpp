@@ -188,13 +188,13 @@ static const std::map<ThemedStyle, QString> themedDarkStyles = {
 QColor getThemedQColor(ThemedColor color)
 {
     QString theme = QSettings().value("theme", "").toString();
-    return theme.startsWith(lightThemePrefix) ? themedDarkColors.at(color) : themedColors.at(color);
+    return theme.startsWith(lightThemePrefix) ? themedColors.at(color) : themedDarkColors.at(color);
 }
 
 QString getThemedStyleQString(ThemedStyle style)
 {
     QString theme = QSettings().value("theme", "").toString();
-    return theme.startsWith(lightThemePrefix) ? themedDarkStyles.at(style) : themedStyles.at(style);
+    return theme.startsWith(lightThemePrefix) ? themedStyles.at(style) : themedDarkStyles.at(style);
 }
 
 QIcon getIcon(const QString& strIcon, const ThemedColor color, const ThemedColor colorAlternative, const QString& strIconPath)
