@@ -182,7 +182,7 @@ public:
         consensus.BIP66Height   = 1; // Strict DER signatures (activated immediately)
         consensus.DIP0001Height = 2; // Initial Scaling of the Network (activated immediately)
         consensus.DIP0003Height = 2; // Deterministic Masternode Lists (activated immediately)
-        consensus.DIP0008Height = 468; // ChainLocks Enforcement (activated immediately)
+        consensus.DIP0008Height = 468; // ChainLocks Enforcement (activated upon the first quorum merkle root)
         consensus.DIP0003EnforcementHeight = 2;
         consensus.DIP0003EnforcementHash   = uint256S("000003173edcde96b0fb18664bb7ca1d1232aa89ce2f5511db210d2b0560aaf2");
         consensus.MinBIP9WarningHeight     = 2;
