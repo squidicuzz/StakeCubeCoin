@@ -168,7 +168,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks  = 21600; // ~(60*24*30)/2
         consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nSuperblockStartBlock       = 10000; // Hardfork date to re-enable SuperBlocks logic (controlling via spork instead of chain-params)
-        consensus.nSuperblockStartHash        = uint256();
+        consensus.nSuperblockStartHash        = uint256S("00000000000002f5a3089ba562fb42939756818b4e47f53fad042f6f734c5410");
         consensus.nSuperblockCycle            = 21600; // ~(60*24*30)/2
 
         /** Governance **/
@@ -177,14 +177,14 @@ public:
 
         /** Height or Time Based Activations **/
         consensus.BIP34Height   = 1; // Block v2 (activated immediately)
-        consensus.BIP34Hash     = uint256();
+        consensus.BIP34Hash     = uint256S("00000a3d1238b01735d6cce4f161c0f8afbf4e9da0d0a8b2cfe72e5714084dd7");
         consensus.BIP65Height   = 1; // OP_CHECKLOCKTIMEVERIFY (activated immediately)
         consensus.BIP66Height   = 1; // Strict DER signatures (activated immediately)
         consensus.DIP0001Height = 2; // Initial Scaling of the Network (activated immediately)
         consensus.DIP0003Height = 2; // Deterministic Masternode Lists (activated immediately)
-        consensus.DIP0008Height = 500000; // ChainLocks Enforcement (activated immediately)
+        consensus.DIP0008Height = 468; // ChainLocks Enforcement (activated immediately)
         consensus.DIP0003EnforcementHeight = 2;
-        consensus.DIP0003EnforcementHash   = uint256();
+        consensus.DIP0003EnforcementHash   = uint256S("000003173edcde96b0fb18664bb7ca1d1232aa89ce2f5511db210d2b0560aaf2");
         consensus.MinBIP9WarningHeight     = 2;
 
         /** PoW **/
@@ -246,10 +246,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nFalloffCoeff   = 5; // this corresponds to 10 periods
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("00000000000000000000000000000000000000000000007a16180efd7a755124");  // Blk 341,600
+        consensus.nMinimumChainWork = uint256S("00000000000000000000000000000000000000000000007c39c794455cff7714");  // Blk 351,900
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0000000000000030aeb5dabf699fc981569a48653183501b81a10eb3226e63d0"); // Blk 341,600
+        consensus.defaultAssumeValid = uint256S("0000000000001e9897473309a12dc708e119cf1d2ea5e81dd53782eaee017815"); // Blk 351,900
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -312,7 +312,7 @@ public:
         // SCC BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
 
-        // SCC BIP44 coin type is '5'
+        // SCC BIP44 coin type is '522'
         nExtCoinType = 522;
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
@@ -379,16 +379,17 @@ public:
                 {332700, uint256S("000000000000096b62af7c9d6270b73914acc63dc7cc1efc81c0ecc7260b3a5f")},
                 {337454, uint256S("00000000000047666318810cf56c9dae48e2aa458ec2a88b42c4d089aae0559d")},
                 // The Rebase Upgrade
-                {341600, uint256S("0000000000000030aeb5dabf699fc981569a48653183501b81a10eb3226e63d0")}
+                {341600, uint256S("0000000000000030aeb5dabf699fc981569a48653183501b81a10eb3226e63d0")},
+                {351900, uint256S("0000000000001e9897473309a12dc708e119cf1d2ea5e81dd53782eaee017815")}
                 // Some future update...
             }
         };
 
         chainTxData = ChainTxData{
-            1615889778, // * UNIX timestamp of last known number of transactions (Block 1)
-            178606,          // * total number of transactions between genesis and that timestamp
+            1647874171, // * UNIX timestamp of last known number of transactions (Block 1)
+            646614,     // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            0.01        // * estimated number of transactions per second after that timestamp
+            0.0153      // * estimated number of transactions per second after that timestamp
         };
     }
 };
