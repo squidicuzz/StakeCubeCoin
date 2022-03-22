@@ -246,10 +246,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nFalloffCoeff   = 5; // this corresponds to 10 periods
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("00000000000000000000000000000000000000000000007c39c794455cff7714");  // Blk 351,900
+        consensus.nMinimumChainWork = uint256S("00000000000000000000000000000000000000000000007c4a7a82d260897efa");  // Blk 352,204
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0000000000001e9897473309a12dc708e119cf1d2ea5e81dd53782eaee017815"); // Blk 351,900
+        consensus.defaultAssumeValid = uint256S("0000000000000d5b73d6730cc0227f5291c76a05dda08328e70b0bd4ff1e0a59"); // Blk 352,204
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -380,7 +380,11 @@ public:
                 {337454, uint256S("00000000000047666318810cf56c9dae48e2aa458ec2a88b42c4d089aae0559d")},
                 // The Rebase Upgrade
                 {341600, uint256S("0000000000000030aeb5dabf699fc981569a48653183501b81a10eb3226e63d0")},
-                {351900, uint256S("0000000000001e9897473309a12dc708e119cf1d2ea5e81dd53782eaee017815")}
+                {351900, uint256S("0000000000001e9897473309a12dc708e119cf1d2ea5e81dd53782eaee017815")},
+                // Post-Rebase Minor Fork blocks
+                {352202, uint256S("0000000000001a7b4d26b3870ae73857a691b940e91db367496749f9f51d14f3")},
+                {352203, uint256S("0000000000000df4086a9ce561db70c9fc48e7ee10107d6df56accee3099a526")},
+                {352204, uint256S("0000000000000d5b73d6730cc0227f5291c76a05dda08328e70b0bd4ff1e0a59")}
                 // Some future update...
             }
         };
