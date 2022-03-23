@@ -2,7 +2,7 @@ StakeCubeCoin [SCC] integration/staging tree
 ========================================
 
 
-![StakeCube Dark Logo](https://stakecube.net/app/download/media/logo-dark.png)
+![StakeCube Logo](https://stakecube.net/public/v3/sc-light-bg-512x125.png)
 
 SCC is the coin of [StakeCube.net](https://stakecube.net/)
 
@@ -46,19 +46,10 @@ The integrated GitHub issue tracker is used for this project. Upon running into 
 Documentation
 -------------
 
-The documentation is a work-in-progress. It is located in the doc folder and [the wiki pages](https://github.com/stakecube/StakeCubeCoin/wiki).
-
-
-Wiki
-----
-
-The answers to most technical questions can be found in the official SCC wiki:
-https://github.com/stakecube/StakeCubeCoin/wiki
-
-This wiki will be updated with SCC specifications, docs, manuals and FAQs.
+The documentation is a work-in-progress. It is located in the doc folder.
 
 Additionally, you may join the StakeCube discord server for direct support from the StakeCube team and community:
-https://discord.gg/uej2FZd
+https://discord.gg/zB3xBhe
 
 
 License
