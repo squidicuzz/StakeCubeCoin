@@ -79,6 +79,7 @@ This means you cannot use a directory that is located directly on the host Windo
 
 Build using:
 
+    sudo bash -c "echo 0 > /proc/sys/fs/binfmt_misc/status" # WSL2 only
     PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g') # strip out problematic Windows %PATH% imported var
     cd depends
     make HOST=x86_64-w64-mingw32
