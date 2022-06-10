@@ -32,7 +32,7 @@ packages:
 - "binutils-riscv64-linux-gnu"
 - "g++-8-riscv64-linux-gnu"
 remotes:
-- "url": "https://github.com/stakecube/StakeCubeCoin.git"
+- "url": "https://github.com/LiquidsLabs/StakeCubeCoin.git"
   "dir": "StakeCubeCoin"
 files: []
 script: |
@@ -40,7 +40,7 @@ script: |
 
   WRAP_DIR=$HOME/wrapped
   HOSTS="x86_64-linux-gnu aarch64-linux-gnu riscv64-linux-gnu"
-  CONFIGFLAGS="--enable-glibc-back-compat --enable-reduce-exports --disable-bench --disable-gui-tests --enable-crash-hooks"
+  CONFIGFLAGS="--enable-glibc-back-compat --enable-reduce-exports --disable-bench --disable-gui-tests --disable-tests --enable-crash-hooks"
   FAKETIME_HOST_PROGS="gcc g++"
   FAKETIME_PROGS="date ar ranlib nm"
   HOST_CFLAGS="-O2 -g"

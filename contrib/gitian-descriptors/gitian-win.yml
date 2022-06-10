@@ -24,7 +24,7 @@ packages:
 - "python3"
 - "ccache"
 remotes:
-- "url": "https://github.com/stakecube/StakeCubeCoin.git"
+- "url": "https://github.com/LiquidsLabs/StakeCubeCoin.git"
   "dir": "StakeCubeCoin"
 files: []
 script: |

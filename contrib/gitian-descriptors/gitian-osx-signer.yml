@@ -9,7 +9,7 @@ packages:
 - "faketime"
 - "xorriso"
 remotes:
-- "url": "https://github.com/stakecube/StakeCubeCoin-detached-sigs.git"
+- "url": "https://github.com/LiquidsLabs/StakeCubeCoin-detached-sigs.git"
   "dir": "signature"
 files:
 - "scccore-osx-unsigned.tar.gz"
