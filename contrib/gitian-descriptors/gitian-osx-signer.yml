@@ -2,17 +2,17 @@
 name: "scc-dmg-signer"
 distro: "ubuntu"
 suites:
-- "focal"
+- "bionic"
 architectures:
 - "amd64"
 packages:
 - "faketime"
 - "xorriso"
 remotes:
-- "url": "https://github.com/stakecube/StakeCubeCoin-detached-sigs.git"
+- "url": "https://github.com/LiquidsLabs/StakeCubeCoin-detached-sigs.git"
   "dir": "signature"
 files:
-- "scccore-osx-unsigned.tar.gz"
+- "scc-osx-unsigned.tar.gz"
 script: |
   set -e -o pipefail
 
@@ -31,8 +31,8 @@ script: |
     chmod +x ${WRAP_DIR}/${prog}
   done
 
-  UNSIGNED=scccore-osx-unsigned.tar.gz
-  SIGNED=scccore-osx-signed.dmg
+  UNSIGNED=scc-osx-unsigned.tar.gz
+  SIGNED=scc-osx-signed.dmg
 
   tar -xf ${UNSIGNED}
   OSX_VOLNAME="$(cat osx_volname)"
