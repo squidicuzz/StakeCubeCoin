@@ -1473,7 +1473,7 @@ bool CheckProUpRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CVal
     return true;
 }
 
-bool CheckProUpRevTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValidationState& state)
+bool CheckProUpRevTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValidationState& state, bool check_sigs)
 {
     if (tx.nType != TRANSACTION_PROVIDER_UPDATE_REVOKE) {
         return state.DoS(100, false, REJECT_INVALID, "bad-protx-type");
