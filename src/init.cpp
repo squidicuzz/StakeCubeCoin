@@ -20,6 +20,7 @@
 #include <node/coinstats.h>
 #include <compat/sanity.h>
 #include <consensus/validation.h>
+#include "crypto/progpow.h"
 #include <fs.h>
 #include <hash.h>
 #include <httpserver.h>
@@ -1904,6 +1905,15 @@ bool AppInitMain(InitInterfaces& interfaces)
 
     if (gArgs.IsArgSet("-maxuploadtarget")) {
         nMaxOutboundLimit = gArgs.GetArg("-maxuploadtarget", DEFAULT_MAX_UPLOAD_TARGET)*1024*1024;
+    }
+
+    // ********************************************************* Prepare ProgPow test in regtest mode
+    if (Params().GetConsensus().IsRegtest()) {
+        Consensus::Params &mutableParams = const_cast<Consensus::Params &>(Params().GetConsensus());
+        if (IsArgSet("-ppswitchtime"))
+            mutableParams.nPPSwitchTime = GetArg("-ppswitchtime", INT_MAX);
+        else if (IsArgSet("-ppswitchtimefromnow"))
+            mutableParams.nPPSwitchTime = GetArg("-ppswitchtimefromnow", 0) + (uint32_t)GetTime();
     }
 
     // ********************************************************* Step 7a: Load sporks
