@@ -12,6 +12,8 @@
 
 #include <math.h>
 
+static CBigNum bnProofOfWorkProgPowLimit(~arith_uint256(0) >> 28);
+
 unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const Consensus::Params& params) {
     const CBlockIndex *BlockLastSolved = pindexLast;
     const CBlockIndex *BlockReading = pindexLast;
@@ -179,6 +181,13 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         return GetNextWorkRequiredBTC(pindexLast, pblock, params);
     }
 
+    if (pblock->IsProgPow()) {
+        if (pindexLast->nTime < params.nPPSwitchTime) {
+            // first ProgPOW block ever
+            return params.nInitialPPDifficulty;
+        }
+    }
+
     // Note: GetNextWorkRequiredBTC has it's own special difficulty rule,
     // so we only apply this to post-BTC algos.
     if (params.fPowAllowMinDifficultyBlocks) {
@@ -196,11 +205,33 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         }
     }
 
+    unsigned int TimeDaySeconds = 60 * 60 * 24;
+    int64_t PastSecondsMin = TimeDaySeconds * 0.25; // 21600
+    int64_t PastSecondsMax = TimeDaySeconds * 7;// 604800
+    uint32_t PastBlocksMin = PastSecondsMin / params.nPowTargetSpacing; // 36 blocks
+    uint32_t PastBlocksMax = PastSecondsMax / params.nPowTargetSpacing; // 1008 blocks
+
+    if (pblock->IsProgPow()) {
+        if (pblock->nTime < params.nPPSwitchTime) {
+            // transition to progpow happened recently, look for the first PP block
+            const CBlockIndex *pindex = pindexLast;
+            while (pindex && pindex->nTime >= params.nPPSwitchTime)
+                pindex = pindex->pprev;
+
+            if (pindex) {
+                uint32_t numberOfPPBlocks = pindexLast->nHeight - pindex->nHeight;
+                if (numberOfPPBlocks < params.DifficultyAdjustmentInterval(true)/2)
+                    // do not retarget if too few PP blocks
+                    return params.nInitialPPDifficulty;
+            }
+        }
+    }
+
     if (pindexLast->nHeight + 1 < params.nPowDGWHeight) {
         return KimotoGravityWell(pindexLast, params);
     }
 
-    return DarkGravityWave(pindexLast, params);
+    return GetNextWorkRequiredSCC(pindexLast, pblock);
 }
 
 // for DIFF_BTC only!
@@ -246,4 +277,100 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&
         return false;
 
     return true;
+}
+
+unsigned int GetNextWorkRequiredSCC(const CBlockIndex* pindexLast, const CBlockHeader* pblock)
+{
+    const Consensus::Params& consensus = Params().GetConsensus();
+
+    if (consensus.fPowNoRetargeting)
+        return pindexLast->nBits;
+
+    /* current difficulty formula, pivx - DarkGravity v3, written by Evan Duffield - evan@dashpay.io */
+    const CBlockIndex* BlockLastSolved = pindexLast;
+    const CBlockIndex* BlockReading = pindexLast;
+    int64_t nActualTimespan = 0;
+    int64_t LastBlockTime = 0;
+    int64_t PastBlocksMin = 24;
+    int64_t PastBlocksMax = 24;
+    int64_t CountBlocks = 0;
+    arith_uint256 PastDifficultyAverage;
+    arith_uint256 PastDifficultyAveragePrev;
+    const arith_uint256& powLimit = UintToArith256(consensus.powLimit);
+
+    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
+        return powLimit.GetCompact();
+    }
+
+    if (pblock->IsProgPow()) {
+        const arith_uint256& bnTargetLimit = UintToArith256(consensus.powLimit);
+        const int64_t& nTargetTimespan = consensus.nPowTargetTimespan;
+
+        int64_t nActualSpacing = 0;
+        if (pindexLast->nHeight != 0)
+            nActualSpacing = pindexLast->GetBlockTime() - pindexLast->pprev->GetBlockTime();
+        if (nActualSpacing < 0)
+            nActualSpacing = 1;
+
+        // ppcoin: target change every block
+        // ppcoin: retarget with exponential moving toward target spacing
+        arith_uint256 bnNew;
+        bnNew.SetCompact(pindexLast->nBits);
+
+        int64_t nInterval = nTargetTimespan / consensus.nPowTargetSpacing;
+        bnNew *= ((nInterval - 1) * consensus.nPowTargetSpacing + nActualSpacing + nActualSpacing);
+        bnNew /= ((nInterval + 1) * consensus.nPowTargetSpacing);
+
+        if (bnNew <= 0 || bnNew > bnTargetLimit)
+            bnNew = bnTargetLimit;
+
+        return bnNew.GetCompact();
+    }
+
+    for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
+        if (PastBlocksMax > 0 && i > PastBlocksMax) {
+            break;
+        }
+        CountBlocks++;
+
+        if (CountBlocks <= PastBlocksMin) {
+            if (CountBlocks == 1) {
+                PastDifficultyAverage.SetCompact(BlockReading->nBits);
+            } else {
+                PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks) + (arith_uint256().SetCompact(BlockReading->nBits))) / (CountBlocks + 1);
+            }
+            PastDifficultyAveragePrev = PastDifficultyAverage;
+        }
+
+        if (LastBlockTime > 0) {
+            int64_t Diff = (LastBlockTime - BlockReading->GetBlockTime());
+            nActualTimespan += Diff;
+        }
+        LastBlockTime = BlockReading->GetBlockTime();
+
+        if (BlockReading->pprev == NULL) {
+            assert(BlockReading);
+            break;
+        }
+        BlockReading = BlockReading->pprev;
+    }
+
+    arith_uint256 bnNew(PastDifficultyAverage);
+
+    int64_t _nTargetTimespan = CountBlocks * consensus.nPowTargetSpacing;
+
+    if (nActualTimespan < _nTargetTimespan / 3)
+        nActualTimespan = _nTargetTimespan / 3;
+    if (nActualTimespan > _nTargetTimespan * 3)
+        nActualTimespan = _nTargetTimespan * 3;
+
+    // Retarget
+    bnNew *= nActualTimespan;
+    bnNew /= _nTargetTimespan;
+
+    if (bnNew > powLimit) {
+        bnNew = powLimit;
+    }
+
+    return bnNew.GetCompact();
 }
