@@ -7,6 +7,8 @@
 #define BITCOIN_PRIMITIVES_BLOCK_H
 
 #include <primitives/transaction.h>
+#include <consensus/params.h>
+#include "crypto/progpow.h"
 #include <serialize.h>
 #include <uint256.h>
 
@@ -28,6 +30,11 @@ public:
     uint32_t nBits;
     uint32_t nNonce;
 
+    // SCC - ProgPow 
+    uint32_t nHeight;
+    uint64_t nNonce64;
+    uint256 mix_hash;
+
     CBlockHeader()
     {
         SetNull();
@@ -43,6 +50,10 @@ public:
         nTime = 0;
         nBits = 0;
         nNonce = 0;
+        // SCC - ProgPow
+        nNonce64 = 0;
+        nHeight  = 0;
+        mix_hash.SetNull();
     }
 
     bool IsNull() const
@@ -51,6 +62,15 @@ public:
     }
 
     uint256 GetHash() const;
+
+    uint256 GetHashFull(uint256& mix_hash) const;
+
+    bool IsProgPow() const;
+
+    CProgPowHeader GetProgPowHeader() const;
+    uint256 GetProgPowHeaderHash() const;
+    uint256 GetProgPowHashFull(uint256& mix_hash) const;
+    uint256 GetProgPowHashLight() const;
 
     int64_t GetBlockTime() const
     {
@@ -101,6 +121,13 @@ public:
         block.nTime          = nTime;
         block.nBits          = nBits;
         block.nNonce         = nNonce;
+        if (IsProgPow()) {
+            block.nHeight    = nHeight;
+            block.nNonce64   = nNonce64;
+            block.mix_hash   = mix_hash;
+        } else {
+            block.nNonce     = nNonce;
+        }
         return block;
     }
 

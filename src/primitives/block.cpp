@@ -4,6 +4,9 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <primitives/block.h>
+#include <consensus/params.h>
+#include <chainparams.h>
+#include "crypto/progpow.h"
 
 #include <hash.h>
 #include <streams.h>
@@ -11,21 +14,67 @@
 
 uint256 CBlockHeader::GetHash() const
 {
-    std::vector<unsigned char> vch(80);
-    CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
-    ss << *this;
-    return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
+    uint256 powHash;
+    if (IsProgPow()) {
+        powHash = progpow_hash_light(GetProgPowHeader());
+    } else {
+        std::vector<unsigned char> vch(80);
+        CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
+        ss << *this;
+        return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
+    }
+}
+
+
+uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
+    if (IsProgPow()) {
+        return GetProgPowHashFull(mix_hash);
+    }
+    return GetHash();
+}
+
+bool CBlockHeader::IsProgPow() const {
+    const Consensus::Params& consensus = Params().GetConsensus();
+    // This isnt ideal, but suffers from the same issue as the IsMTP() call above. Also can't get
+    // chainActive/mapBlockIndex in the consensus library (without disabling binary hardening)..
+    return (nTime >= consensus.nPPSwitchTime);
+}
+
+CProgPowHeader CBlockHeader::GetProgPowHeader() const {
+    return CProgPowHeader {
+        nVersion,
+        hashPrevBlock,
+        hashMerkleRoot,
+        nTime,
+        nBits,
+        nHeight,
+        nNonce64,
+        mix_hash
+    };
+}
+
+uint256 CBlockHeader::GetProgPowHeaderHash() const 
+{
+    return SerializeHash(GetProgPowHeader());
+}
+
+uint256 CBlockHeader::GetProgPowHashFull(uint256& mix_hash) const {
+    return progpow_hash_full(GetProgPowHeader(), mix_hash);
+}
+
+uint256 CBlockHeader::GetProgPowHashLight() const {
+    return progpow_hash_light(GetProgPowHeader());
 }
 
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
+    s << strprintf("CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, nNonce64=%u, vtx=%u)\n",
         GetHash().ToString(),
         nVersion,
         hashPrevBlock.ToString(),
         hashMerkleRoot.ToString(),
-        nTime, nBits, nNonce,
+        nTime, nBits, nNonce, nNonce64,
         vtx.size());
     for (const auto& tx : vtx) {
         s << "  " << tx->ToString() << "\n";
