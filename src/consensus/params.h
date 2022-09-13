@@ -116,6 +116,13 @@ struct Params {
     int nPowKGWHeight;
     int nPowDGWHeight;
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
+    
+    /** switch to ProgPoW (PP) time */
+    uint32_t nPPSwitchTime;
+    uint32_t SWITCH_PROGPOW_BLOCK_HEADER = INT_MAX;
+    /** initial difficulty for ProgPoW */
+    int nInitialPPDifficulty;
+
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
 

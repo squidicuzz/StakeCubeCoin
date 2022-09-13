@@ -198,6 +198,10 @@ public:
         consensus.nRuleChangeActivationThreshold = 1512; // 75% of 2016
         consensus.nMinerConfirmationWindow       = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
+        /** Prog PoW **/
+        consensus.nPPSwitchTime = SWITCH_PROGPOW_BLOCK_HEADER;
+        consensus.nPPSwitchTime = INT_MAX; //set for later
+        consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit        = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
@@ -439,6 +443,11 @@ public:
         consensus.nPowDGWHeight = 4002; // TODO: make sure to drop all spork6 related code on next testnet reset
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+
+        /** Prog PoW **/
+        consensus.nPPSwitchTime = INT_MAX;           
+        consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
+
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -606,6 +615,12 @@ public:
         consensus.nPowDGWHeight = 0;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        
+        //** Prog PoW **/
+        // this can be overridden with either -ppswitchtime or -ppswitchtimefromnow flags
+        consensus.nPPSwitchTime = INT_MAX;
+        consensus.nInitialPPDifficulty = 0x2000ffff;
+
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
