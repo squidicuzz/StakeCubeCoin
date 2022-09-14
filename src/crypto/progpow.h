@@ -26,7 +26,7 @@ public:
     uint64_t nNonce64;
     uint256 mix_hash;
 
-    ADD_SERIALIZE_METHODS;
+    SERIALIZE_METHODS(CProgPowHeader, obj);
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action) {
