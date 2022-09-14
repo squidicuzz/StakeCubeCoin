@@ -524,7 +524,7 @@ crypto_libscc_crypto_base_a_SOURCES = \
   crypto/siphash.cpp \
   crypto/siphash.h
 
-crypto_libscc_crypto_a_SOURCES += \
+crypto_libscc_crypto_base_a_SOURCES += \
   crypto/progpow/include/ethash/ethash.h \
   crypto/progpow/include/ethash/ethash.hpp \
   crypto/progpow/include/ethash/hash_types.h \
