@@ -394,6 +394,12 @@ bool CBlockTreeDB::LoadBlockIndexGuts(const Consensus::Params& consensusParams, 
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
 
+                // SCC - ProgPoW
+                if (diskindex.nTime >= consensusParams.nPPSwitchTime) {
+                    pindexNew->nNonce64 = diskindex.nNonce64;
+                    pindexNew->mix_hash = diskindex.mix_hash;
+                }
+
                 if (!CheckProofOfWork(pindexNew->GetBlockHash(), pindexNew->nBits, consensusParams))
                     return error("%s: CheckProofOfWork failed: %s", __func__, pindexNew->ToString());
 

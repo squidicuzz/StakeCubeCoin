@@ -3601,10 +3601,24 @@ static bool FindUndoPos(CValidationState &state, int nFile, FlatFilePos &pos, un
 
 static bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true)
 {
-    // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
-        return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
-
+    if (fCheckPOW)
+    {
+        uint256 final_hash;
+        if (block.IsProgPow())
+        {
+            uint256 exp_mix_hash;
+            final_hash = block.GetProgPowHashFull(exp_mix_hash);
+            if (exp_mix_hash != block.mix_hash)
+            {
+                return state.DoS(50, false, REJECT_INVALID, "invalid-mixhash", false, "mix_hash validity failed");
+            }
+        } else {
+            final_hash = block.GetHash();
+        }
+        // Check proof of work matches claimed amount
+        if (!CheckProofOfWork(final_hash, block.nBits, consensusParams))
+            return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+    }
     // Check DevNet
     if (!consensusParams.hashDevnetGenesisBlock.IsNull() &&
             block.hashPrevBlock == consensusParams.hashGenesisBlock &&
