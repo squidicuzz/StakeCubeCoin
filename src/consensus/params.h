@@ -119,6 +119,7 @@ struct Params {
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
     
     /** switch to ProgPoW (PP) time */
+    uint32_t nSCCGenTime;
     uint32_t nPPSwitchTime;
     uint32_t SWITCH_PROGPOW_BLOCK_HEADER = INT_MAX;
     /** initial difficulty for ProgPoW */

@@ -200,6 +200,7 @@ public:
         consensus.nMinerConfirmationWindow       = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         /** Prog PoW **/
+        consensus.nSCCGenTime = 1601898626; //SCC Genesis block time
         consensus.nPPSwitchTime = 1663246600; //Thursday, September 15, 2022 12:56:40 PM GMT
         consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
 
