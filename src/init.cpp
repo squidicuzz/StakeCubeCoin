@@ -1908,12 +1908,12 @@ bool AppInitMain(InitInterfaces& interfaces)
     }
 
     // ********************************************************* Prepare ProgPow test in regtest mode
-    if (Params().GetConsensus().IsRegtest()) {
+    if (Params().NetworkIDString() == CBaseChainParams::REGTEST) {
         Consensus::Params &mutableParams = const_cast<Consensus::Params &>(Params().GetConsensus());
-        if (IsArgSet("-ppswitchtime"))
-            mutableParams.nPPSwitchTime = GetArg("-ppswitchtime", INT_MAX);
-        else if (IsArgSet("-ppswitchtimefromnow"))
-            mutableParams.nPPSwitchTime = GetArg("-ppswitchtimefromnow", 0) + (uint32_t)GetTime();
+        if (gArgs.IsArgSet("-ppswitchtime"))
+            mutableParams.nPPSwitchTime = gArgs.GetArg("-ppswitchtime", INT_MAX);
+        else if (gArgs.IsArgSet("-ppswitchtimefromnow"))
+            mutableParams.nPPSwitchTime = gArgs.GetArg("-ppswitchtimefromnow", 0) + (uint32_t)GetTime();
     }
 
     // ********************************************************* Step 7a: Load sporks

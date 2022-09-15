@@ -45,6 +45,10 @@
 /** ProgPow **/
 std::map<std::string, CBlock> mapPPBlockTemplates;
 
+namespace {
+BlockManager g_blockman;
+}
+
 /**
  * Return average network hashes per second based on the last 'lookup' blocks,
  * or from the last difficulty change if 'lookup' is nonpositive.
@@ -149,9 +153,11 @@ UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGen
                 ++pblock->nNonce64;
                 --nMaxTries;
             }
-        while (nMaxTries > 0 && pblock->nNonce < std::numeric_limits<uint32_t>::max() && !CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus()) && !ShutdownRequested()) {
-            ++pblock->nNonce;
-            --nMaxTries;
+        } else {
+            while (nMaxTries > 0 && pblock->nNonce < std::numeric_limits<uint32_t>::max() && !CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus()) && !ShutdownRequested()) {
+                ++pblock->nNonce;
+                --nMaxTries;
+            }
         }
         if (nMaxTries == 0 || ShutdownRequested()) {
             break;
@@ -347,7 +353,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                                 },
                         },
                         "\"template_request\""},
-                    {"reward_address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "address for reward in coinbase (meaningful only if block solution is later submitter with pprpcsb)\n"},
+                    {"reward_address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "address for reward in coinbase (meaningful only if block solution is later submitted with pprpcsb)\n"},
                 },
                 RPCResult{
             "{\n"
@@ -595,7 +601,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         if (!(IsValidDestination(rewardAddress)))
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect reward address");
 
-        CMutableTransaction coinbaseTx = *pblock->vtx[0];
+        CMutableTransaction coinbaseTx(*pblock->vtx[0]);
         coinbaseTx.vout[0].scriptPubKey = GetScriptForDestination(rewardAddress);
         pblock->vtx[0] = MakeTransactionRef(CTransaction(coinbaseTx));
 
@@ -855,8 +861,8 @@ UniValue pprpcsb(const JSONRPCRequest& request)
     bool fBlockPresent{false};
     {
         LOCK(cs_main);
-        BlockMap::iterator mi{mapBlockIndex.find(blockHash)};
-        if (mi != mapBlockIndex.end())
+        BlockMap::iterator mi{g_blockman.m_block_index.find(blockHash)};
+        if (mi != g_blockman.m_block_index.end())
         {
             CBlockIndex* indexptr{mi->second};
             if (indexptr->IsValid(BLOCK_VALID_SCRIPTS))
@@ -871,11 +877,6 @@ UniValue pprpcsb(const JSONRPCRequest& request)
         }
         // Otherwise, we might only have the header - process the block before returning
         fBlockPresent = true;
-
-        mi = mapBlockIndex.find(blockptr->hashPrevBlock);
-        if (mi != mapBlockIndex.end()) {
-            UpdateUncommittedBlockStructures(*blockptr, mi->second, Params().GetConsensus());
-        }
     }
 
     // Process block

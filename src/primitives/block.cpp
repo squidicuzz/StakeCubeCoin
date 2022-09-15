@@ -12,20 +12,6 @@
 #include <streams.h>
 #include <tinyformat.h>
 
-uint256 CBlockHeader::GetHash() const
-{
-    uint256 powHash;
-    if (IsProgPow()) {
-        powHash = progpow_hash_light(GetProgPowHeader());
-    } else {
-        std::vector<unsigned char> vch(80);
-        CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
-        ss << *this;
-        return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
-    }
-}
-
-
 uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
     if (IsProgPow()) {
         return GetProgPowHashFull(mix_hash);
@@ -64,6 +50,19 @@ uint256 CBlockHeader::GetProgPowHashFull(uint256& mix_hash) const {
 
 uint256 CBlockHeader::GetProgPowHashLight() const {
     return progpow_hash_light(GetProgPowHeader());
+}
+
+uint256 CBlockHeader::GetHash() const
+{
+    uint256 powHash;
+    if (IsProgPow()) {
+        powHash = progpow_hash_light(GetProgPowHeader());
+    } else {
+        std::vector<unsigned char> vch(80);
+        CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
+        ss << *this;
+        return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
+    }
 }
 
 std::string CBlock::ToString() const

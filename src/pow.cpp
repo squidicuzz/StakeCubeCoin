@@ -12,7 +12,7 @@
 
 #include <math.h>
 
-static CBigNum bnProofOfWorkProgPowLimit(~arith_uint256(0) >> 28);
+arith_uint256 bnProofOfWorkProgPowLimit(~arith_uint256(0) >> 28);
 
 unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const Consensus::Params& params) {
     const CBlockIndex *BlockLastSolved = pindexLast;
@@ -166,119 +166,6 @@ unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockH
    return CalculateNextWorkRequired(pindexLast, pindexFirst->GetBlockTime(), params);
 }
 
-unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
-{
-    assert(pindexLast != nullptr);
-    assert(pblock != nullptr);
-    const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
-
-    // this is only active on devnets
-    if (pindexLast->nHeight < params.nMinimumDifficultyBlocks) {
-        return bnPowLimit.GetCompact();
-    }
-
-    if (pindexLast->nHeight + 1 < params.nPowKGWHeight) {
-        return GetNextWorkRequiredBTC(pindexLast, pblock, params);
-    }
-
-    if (pblock->IsProgPow()) {
-        if (pindexLast->nTime < params.nPPSwitchTime) {
-            // first ProgPOW block ever
-            return params.nInitialPPDifficulty;
-        }
-    }
-
-    // Note: GetNextWorkRequiredBTC has it's own special difficulty rule,
-    // so we only apply this to post-BTC algos.
-    if (params.fPowAllowMinDifficultyBlocks) {
-        // recent block is more than 2 hours old
-        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + 2 * 60 * 60) {
-            return bnPowLimit.GetCompact();
-        }
-        // recent block is more than 10 minutes old
-        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 4) {
-            arith_uint256 bnNew = arith_uint256().SetCompact(pindexLast->nBits) * 10;
-            if (bnNew > bnPowLimit) {
-                return bnPowLimit.GetCompact();
-            }
-            return bnNew.GetCompact();
-        }
-    }
-
-    unsigned int TimeDaySeconds = 60 * 60 * 24;
-    int64_t PastSecondsMin = TimeDaySeconds * 0.25; // 21600
-    int64_t PastSecondsMax = TimeDaySeconds * 7;// 604800
-    uint32_t PastBlocksMin = PastSecondsMin / params.nPowTargetSpacing; // 36 blocks
-    uint32_t PastBlocksMax = PastSecondsMax / params.nPowTargetSpacing; // 1008 blocks
-
-    if (pblock->IsProgPow()) {
-        if (pblock->nTime < params.nPPSwitchTime) {
-            // transition to progpow happened recently, look for the first PP block
-            const CBlockIndex *pindex = pindexLast;
-            while (pindex && pindex->nTime >= params.nPPSwitchTime)
-                pindex = pindex->pprev;
-
-            if (pindex) {
-                uint32_t numberOfPPBlocks = pindexLast->nHeight - pindex->nHeight;
-                if (numberOfPPBlocks < params.DifficultyAdjustmentInterval(true)/2)
-                    // do not retarget if too few PP blocks
-                    return params.nInitialPPDifficulty;
-            }
-        }
-    }
-
-    if (pindexLast->nHeight + 1 < params.nPowDGWHeight) {
-        return KimotoGravityWell(pindexLast, params);
-    }
-
-    return GetNextWorkRequiredSCC(pindexLast, pblock);
-}
-
-// for DIFF_BTC only!
-unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
-{
-    if (params.fPowNoRetargeting)
-        return pindexLast->nBits;
-
-    // Limit adjustment step
-    int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
-    if (nActualTimespan < params.nPowTargetTimespan/4)
-        nActualTimespan = params.nPowTargetTimespan/4;
-    if (nActualTimespan > params.nPowTargetTimespan*4)
-        nActualTimespan = params.nPowTargetTimespan*4;
-
-    // Retarget
-    const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
-    arith_uint256 bnNew;
-    bnNew.SetCompact(pindexLast->nBits);
-    bnNew *= nActualTimespan;
-    bnNew /= params.nPowTargetTimespan;
-
-    if (bnNew > bnPowLimit)
-        bnNew = bnPowLimit;
-
-    return bnNew.GetCompact();
-}
-
-bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
-{
-    bool fNegative;
-    bool fOverflow;
-    arith_uint256 bnTarget;
-
-    bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
-
-    // Check range
-    if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
-        return false;
-
-    // Check proof of work matches claimed amount
-    if (UintToArith256(hash) > bnTarget)
-        return false;
-
-    return true;
-}
-
 unsigned int GetNextWorkRequiredSCC(const CBlockIndex* pindexLast, const CBlockHeader* pblock)
 {
     const Consensus::Params& consensus = Params().GetConsensus();
@@ -373,4 +260,118 @@ unsigned int GetNextWorkRequiredSCC(const CBlockIndex* pindexLast, const CBlockH
     }
 
     return bnNew.GetCompact();
+}
+
+unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
+{
+    assert(pindexLast != nullptr);
+    assert(pblock != nullptr);
+    const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+
+    // this is only active on devnets
+    if (pindexLast->nHeight < params.nMinimumDifficultyBlocks) {
+        return bnPowLimit.GetCompact();
+    }
+
+    if (pindexLast->nHeight + 1 < params.nPowKGWHeight) {
+        return GetNextWorkRequiredBTC(pindexLast, pblock, params);
+    }
+
+    if (pblock->IsProgPow()) {
+        if (pindexLast->nTime < params.nPPSwitchTime) {
+            // first ProgPOW block ever
+            return params.nInitialPPDifficulty;
+        }
+        return GetNextWorkRequiredSCC(pindexLast, pblock); //set for progpow but can set later to replace DGW
+    }
+
+    // Note: GetNextWorkRequiredBTC has it's own special difficulty rule,
+    // so we only apply this to post-BTC algos.
+    if (params.fPowAllowMinDifficultyBlocks) {
+        // recent block is more than 2 hours old
+        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + 2 * 60 * 60) {
+            return bnPowLimit.GetCompact();
+        }
+        // recent block is more than 10 minutes old
+        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 4) {
+            arith_uint256 bnNew = arith_uint256().SetCompact(pindexLast->nBits) * 10;
+            if (bnNew > bnPowLimit) {
+                return bnPowLimit.GetCompact();
+            }
+            return bnNew.GetCompact();
+        }
+    }
+
+    unsigned int TimeDaySeconds = 60 * 60 * 24;
+    int64_t PastSecondsMin = TimeDaySeconds * 0.25; // 21600
+    int64_t PastSecondsMax = TimeDaySeconds * 7;// 604800
+    uint32_t PastBlocksMin = PastSecondsMin / params.nPowTargetSpacing; // 36 blocks
+    uint32_t PastBlocksMax = PastSecondsMax / params.nPowTargetSpacing; // 1008 blocks
+
+    if (pblock->IsProgPow()) {
+        if (pblock->nTime < params.nPPSwitchTime) {
+            // transition to progpow happened recently, look for the first PP block
+            const CBlockIndex *pindex = pindexLast;
+            while (pindex && pindex->nTime >= params.nPPSwitchTime)
+                pindex = pindex->pprev;
+
+            if (pindex) {
+                uint32_t numberOfPPBlocks = pindexLast->nHeight - pindex->nHeight;
+                if (numberOfPPBlocks < params.DifficultyAdjustmentInterval()/2)
+                    // do not retarget if too few PP blocks
+                    return params.nInitialPPDifficulty;
+            }
+        }
+    }
+
+    if (pindexLast->nHeight + 1 < params.nPowDGWHeight) {
+        return KimotoGravityWell(pindexLast, params);
+    }
+
+    return DarkGravityWave(pindexLast, params);
+}
+
+// for DIFF_BTC only!
+unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
+{
+    if (params.fPowNoRetargeting)
+        return pindexLast->nBits;
+
+    // Limit adjustment step
+    int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
+    if (nActualTimespan < params.nPowTargetTimespan/4)
+        nActualTimespan = params.nPowTargetTimespan/4;
+    if (nActualTimespan > params.nPowTargetTimespan*4)
+        nActualTimespan = params.nPowTargetTimespan*4;
+
+    // Retarget
+    const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+    arith_uint256 bnNew;
+    bnNew.SetCompact(pindexLast->nBits);
+    bnNew *= nActualTimespan;
+    bnNew /= params.nPowTargetTimespan;
+
+    if (bnNew > bnPowLimit)
+        bnNew = bnPowLimit;
+
+    return bnNew.GetCompact();
+}
+
+bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
+{
+    bool fNegative;
+    bool fOverflow;
+    arith_uint256 bnTarget;
+
+    bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
+
+    // Check range
+    if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
+        return false;
+
+    // Check proof of work matches claimed amount
+    if (UintToArith256(hash) > bnTarget)
+        return false;
+
+    return true;
 }

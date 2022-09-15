@@ -7,6 +7,7 @@
 #define BITCOIN_CHAIN_H
 
 #include <arith_uint256.h>
+#include <chainparams.h>
 #include <consensus/params.h>
 #include <flatfile.h>
 #include <primitives/block.h>
@@ -136,74 +137,78 @@ class CBlockIndex
 {
 public:
     //! pointer to the hash of the block, if any. Memory is owned by this CBlockIndex
-    const uint256* phashBlock{nullptr};
+    const uint256* phashBlock;
 
     //! pointer to the index of the predecessor of this block
-    CBlockIndex* pprev{nullptr};
+    CBlockIndex* pprev;
 
     //! pointer to the index of some further predecessor of this block
-    CBlockIndex* pskip{nullptr};
+    CBlockIndex* pskip;
 
     //! height of the entry in the chain. The genesis block has height 0
-    int nHeight{0};
+    int nHeight;
 
     //! Which # file this block is stored in (blk?????.dat)
-    int nFile{0};
+    int nFile;
 
     //! Byte offset within blk?????.dat where this block's data is stored
-    unsigned int nDataPos{0};
+    unsigned int nDataPos;
 
     //! Byte offset within rev?????.dat where this block's undo data is stored
-    unsigned int nUndoPos{0};
+    unsigned int nUndoPos;
 
     //! (memory only) Total amount of work (expected number of hashes) in the chain up to and including this block
-    arith_uint256 nChainWork{};
+    arith_uint256 nChainWork;
 
     //! Number of transactions in this block.
     //! Note: in a potential headers-first mode, this number cannot be relied upon
-    unsigned int nTx{0};
+    unsigned int nTx;
 
     //! (memory only) Number of transactions in the chain up to and including this block.
     //! This value will be non-zero only if and only if transactions for this block and all its parents are available.
     //! Change to 64-bit type when necessary; won't happen before 2030
-    unsigned int nChainTx{0};
+    unsigned int nChainTx;
 
     //! Verification status of this block. See enum BlockStatus
-    uint32_t nStatus{0};
+    uint32_t nStatus;
 
     //! block header
-    int32_t nVersion{0};
-    uint256 hashMerkleRoot{};
-    uint32_t nTime{0};
-    uint32_t nBits{0};
-    uint32_t nNonce{0};
+    int32_t nVersion;
+    uint256 hashMerkleRoot;
+    uint32_t nTime;
+    uint32_t nBits;
+    uint32_t nNonce;
 
     // SCC - ProgPow
-    uint64_t nNonce64{0};
-    uint256 mix_hash{};
+    uint64_t nNonce64;
+    uint256 mix_hash;
 
     //! (memory only) Sequential id assigned to distinguish order in which blocks are received.
-    int32_t nSequenceId{0};
+    int32_t nSequenceId;
 
     //! (memory only) Maximum nTime in the chain up to and including this block.
-    unsigned int nTimeMax{0};
+    unsigned int nTimeMax;
 
     CBlockIndex()
     {
+        SetNull();
     }
 
-    explicit CBlockIndex(const CBlockHeader& block)
-        : nVersion{block.nVersion},
-          hashMerkleRoot{block.hashMerkleRoot},
-          nTime{block.nTime},
-          nBits{block.nBits},
-          nNonce{block.nNonce}
-          if (block.IsProgPow()) {
+    CBlockIndex(const CBlockHeader& block)
+    {
+        SetNull();
+
+        nVersion       = block.nVersion;
+        hashMerkleRoot = block.hashMerkleRoot;
+        nTime          = block.nTime;
+        nBits          = block.nBits;
+        nNonce         = block.nNonce;
+
+        if (block.IsProgPow()) {
             nHeight    = block.nHeight;
             nNonce64   = block.nNonce64;
             mix_hash   = block.mix_hash;
-          }
-    {
+        }
     }
 
     FlatFilePos GetBlockPos() const {
@@ -246,6 +251,33 @@ public:
     uint256 GetBlockHash() const
     {
         return *phashBlock;
+    }
+
+    void SetNull()
+    {
+        phashBlock = nullptr;
+        pprev = nullptr;
+        pskip = nullptr;
+        nHeight = 0;
+        nFile = 0;
+        nDataPos = 0;
+        nUndoPos = 0;
+        nChainWork = arith_uint256();
+        nTx = 0;
+        nChainTx = 0;
+        nStatus = 0;
+        nSequenceId = 0;
+        nTimeMax = 0;
+
+        nVersion       = 0;
+        hashMerkleRoot = uint256();
+        nTime          = 0;
+        nBits          = 0;
+        nNonce         = 0;
+
+        // SCC - ProgPow
+        nNonce64       = 0;
+        mix_hash       = uint256();
     }
 
     /**
@@ -366,11 +398,11 @@ public:
         READWRITE(obj.hashMerkleRoot);
         READWRITE(obj.nTime);
         READWRITE(obj.nBits);
-        if (nTime >= params.nPPSwitchTime) {
-            READWRITE(nNonce64);
-            READWRITE(mix_hash);
+        if (obj.nTime >= Params().GetConsensus().nPPSwitchTime) {
+            READWRITE(obj.nNonce64);
+            READWRITE(obj.mix_hash);
          } else {
-            READWRITE(nNonce);
+            READWRITE(obj.nNonce);
          }
 
     }

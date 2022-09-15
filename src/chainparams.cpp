@@ -8,6 +8,7 @@
 
 #include <chainparamsseeds.h>
 #include <consensus/merkle.h>
+#include "consensus/params.h"
 #include <llmq/params.h>
 #include <tinyformat.h>
 #include <util/ranges.h>
@@ -199,7 +200,6 @@ public:
         consensus.nMinerConfirmationWindow       = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         /** Prog PoW **/
-        consensus.nPPSwitchTime = SWITCH_PROGPOW_BLOCK_HEADER;
         consensus.nPPSwitchTime = INT_MAX; //set for later
         consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
 
