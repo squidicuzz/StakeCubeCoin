@@ -395,7 +395,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts(const Consensus::Params& consensusParams, 
                 pindexNew->nTx            = diskindex.nTx;
 
                 // SCC - ProgPoW
-                if (diskindex.nTime >= consensusParams.nPPSwitchTime) {
+                if (diskindex.nTime > SCC_GEN_TIME && diskindex.nTime >= consensusParams.nPPSwitchTime) {
                     pindexNew->nNonce64 = diskindex.nNonce64;
                     pindexNew->mix_hash = diskindex.mix_hash;
                 }

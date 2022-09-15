@@ -20,10 +20,9 @@ uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
 }
 
 bool CBlockHeader::IsProgPow() const {
-    const Consensus::Params& consensus = Params().GetConsensus();
-    // In case if nTime == ZC_GENESIS_BLOCK_TIME we're being called from CChainParams() constructor and
+    // In case if nTime == SCC_GEN_TIME we're being called from CChainParams() constructor and
     // it is not possible to get Params()
-    return (nTime > consensus.nSCCGenTime && nTime >= consensus.nPPSwitchTime);
+    return (nTime > SCC_GEN_TIME && nTime >= Params().GetConsensus().nPPSwitchTime);
 }
 
 CProgPowHeader CBlockHeader::GetProgPowHeader() const {
@@ -57,6 +56,7 @@ uint256 CBlockHeader::GetHash() const
     uint256 powHash;
     if (IsProgPow()) {
         powHash = progpow_hash_light(GetProgPowHeader());
+        return powHash;
     } else {
         std::vector<unsigned char> vch(80);
         CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);

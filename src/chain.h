@@ -243,7 +243,7 @@ public:
             block.nNonce64   = nNonce64;
             block.mix_hash   = mix_hash;
         } else{
-            block.nNonce         = nNonce;
+            block.nNonce     = nNonce;
         }
         return block;
     }
@@ -398,7 +398,7 @@ public:
         READWRITE(obj.hashMerkleRoot);
         READWRITE(obj.nTime);
         READWRITE(obj.nBits);
-        if (obj.nTime >= Params().GetConsensus().nPPSwitchTime) {
+        if (obj.nTime > SCC_GEN_TIME && obj.nTime >= Params().GetConsensus().nPPSwitchTime) {
             READWRITE(obj.nNonce64);
             READWRITE(obj.mix_hash);
          } else {
