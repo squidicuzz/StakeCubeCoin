@@ -25,6 +25,10 @@ bool CBlockHeader::IsProgPow() const {
     return (nTime > SCC_GEN_TIME && nTime >= Params().GetConsensus().nPPSwitchTime);
 }
 
+bool CBlockHeader::IsFirstProgPow() const {
+    return (IsProgPow() && nTime <= (Params().GetConsensus().nPPSwitchTime + 100000));
+}
+
 CProgPowHeader CBlockHeader::GetProgPowHeader() const {
     return CProgPowHeader {
         nVersion,
@@ -55,7 +59,12 @@ uint256 CBlockHeader::GetHash() const
 {
     uint256 powHash;
     if (IsProgPow()) {
-        powHash = progpow_hash_light(GetProgPowHeader());
+        if(IsFirstProgPow()) {
+            uint256 mix_hash = Params().GetConsensus().powLimit;
+            powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
+        } else {
+            powHash = progpow_hash_light(GetProgPowHeader());
+        }
         return powHash;
     } else {
         std::vector<unsigned char> vch(80);

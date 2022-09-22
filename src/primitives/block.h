@@ -66,6 +66,7 @@ public:
     uint256 GetHashFull(uint256& mix_hash) const;
 
     bool IsProgPow() const;
+    bool IsFirstProgPow() const;
 
     CProgPowHeader GetProgPowHeader() const;
     uint256 GetProgPowHeaderHash() const;
