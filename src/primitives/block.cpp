@@ -12,6 +12,8 @@
 #include <streams.h>
 #include <tinyformat.h>
 
+uint32_t nPPSwitchTime = 1663848108;
+
 uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
     if (IsProgPow()) {
         return GetProgPowHashFull(mix_hash);
@@ -26,7 +28,7 @@ bool CBlockHeader::IsProgPow() const {
 }
 
 bool CBlockHeader::IsFirstProgPow() const {
-    return (IsProgPow() && nTime <= (Params().GetConsensus().nPPSwitchTime + 100000));
+    return (IsProgPow() && nTime <= (Params().GetConsensus().nPPSwitchTime + 86400)); //1 day
 }
 
 CProgPowHeader CBlockHeader::GetProgPowHeader() const {
@@ -55,23 +57,22 @@ uint256 CBlockHeader::GetProgPowHashLight() const {
     return progpow_hash_light(GetProgPowHeader());
 }
 
-uint256 CBlockHeader::GetHash() const
-{
+uint256 CBlockHeader::GetHash() const {
     uint256 powHash;
-    if (IsProgPow()) {
-        if(IsFirstProgPow()) {
+    if (nTime > SCC_GEN_TIME && nTime >= Params().GetConsensus().nPPSwitchTime) {
+        if((nTime > SCC_GEN_TIME) && (nTime >= Params().GetConsensus().nPPSwitchTime + 86400)) {
             uint256 mix_hash = Params().GetConsensus().powLimit;
             powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
         } else {
             powHash = progpow_hash_light(GetProgPowHeader());
         }
-        return powHash;
     } else {
         std::vector<unsigned char> vch(80);
         CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
         ss << *this;
         return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
     }
+    return powHash;
 }
 
 std::string CBlock::ToString() const

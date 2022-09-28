@@ -12,6 +12,8 @@
 #include <serialize.h>
 #include <uint256.h>
 
+extern uint32_t nPPSwitchTime;
+
 /** Nodes collect new transactions into a block, hash them into a hash tree,
  * and scan through nonce values to make the block's hash satisfy proof-of-work
  * requirements.  When they solve the proof-of-work, they broadcast the block
@@ -40,7 +42,27 @@ public:
         SetNull();
     }
 
-    SERIALIZE_METHODS(CBlockHeader, obj) { READWRITE(obj.nVersion, obj.hashPrevBlock, obj.hashMerkleRoot, obj.nTime, obj.nBits, obj.nNonce); }
+    bool IsProgPow() const;
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action) {
+        READWRITE(nVersion);
+        READWRITE(hashPrevBlock);
+        READWRITE(hashMerkleRoot);
+        READWRITE(nTime);
+        READWRITE(nBits);
+        // SCC - ProgPoW
+        // Return std 4byte, if ProgPoW return 8byte
+        if (nTime < nPPSwitchTime) {
+            READWRITE(nNonce);
+        } else {
+            READWRITE(nHeight);
+            READWRITE(nNonce64);
+            READWRITE(mix_hash);
+        }
+    }
 
     void SetNull()
     {
@@ -65,18 +87,19 @@ public:
 
     uint256 GetHashFull(uint256& mix_hash) const;
 
-    bool IsProgPow() const;
     bool IsFirstProgPow() const;
 
     CProgPowHeader GetProgPowHeader() const;
     uint256 GetProgPowHeaderHash() const;
     uint256 GetProgPowHashFull(uint256& mix_hash) const;
     uint256 GetProgPowHashLight() const;
+    uint256 GetPoWHash(int nHeight) const;
 
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;
     }
+
 };
 
 

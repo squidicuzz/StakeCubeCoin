@@ -5,6 +5,7 @@
 #include <crypto/progpow/lib/ethash/ethash-internal.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/lock_guard.hpp>
+#include "sync.h"
 
 #include <memory>
 
@@ -24,11 +25,11 @@ using namespace ethash;
 
 namespace
 {
-boost::mutex shared_context_mutex;
+CCriticalSection shared_context_cs;
 std::shared_ptr<epoch_context> shared_context;
 thread_local std::shared_ptr<epoch_context> thread_local_context;
 
-boost::mutex shared_context_full_mutex;
+CCriticalSection shared_context_full_cs;
 std::shared_ptr<epoch_context_full> shared_context_full;
 thread_local std::shared_ptr<epoch_context_full> thread_local_context_full;
 
@@ -45,7 +46,7 @@ void update_local_context(int epoch_number)
     thread_local_context.reset();
 
     // Local context invalid, check the shared context.
-    boost::lock_guard<boost::mutex> lock{shared_context_mutex};
+    LOCK(shared_context_cs);
 
     if (!shared_context || shared_context->epoch_number != epoch_number)
     {
@@ -66,7 +67,7 @@ void update_local_context_full(int epoch_number)
     thread_local_context_full.reset();
 
     // Local context invalid, check the shared context.
-    boost::lock_guard<boost::mutex> lock{shared_context_full_mutex};
+    LOCK(shared_context_full_cs);
 
     if (!shared_context_full || shared_context_full->epoch_number != epoch_number)
     {

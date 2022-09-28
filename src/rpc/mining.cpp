@@ -353,7 +353,11 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                                 },
                         },
                         "\"template_request\""},
-                    {"reward_address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "address for reward in coinbase (meaningful only if block solution is later submitted with pprpcsb)\n"},
+                    {"reward_address", RPCArg::Type::STR, "", "Address to place into Coinbase",
+                        {
+                            {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "address for reward in coinbase (meaningful only if block solution is later submitted with pprpcsb)\n}"}
+                        },
+                        "\"reward_address\""},                    
                 },
                 RPCResult{
             "{\n"
@@ -419,7 +423,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 },
                 RPCExamples{
                     HelpExampleCli("getblocktemplate", "")
-            + HelpExampleRpc("getblocktemplate", "")
+                    + HelpExampleRpc("getblocktemplate", "")
                 },
             }.ToString());
 
@@ -496,16 +500,16 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     std::string chain = gArgs.GetChainName();
     if (chain != CBaseChainParams::TESTNET) {
         if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
+            throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
 
-    if (::ChainstateActive().IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is in initial sync and waiting for blocks...");
+        if (::ChainstateActive().IsInitialBlockDownload())
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is in initial sync and waiting for blocks...");
 
-    // next bock is a superblock and we need governance info to correctly construct it
-    if (AreSuperblocksEnabled()
-        && !masternodeSync.IsSynced()
-        && CSuperblock::IsValidBlockHeight(::ChainActive().Height() + 1))
-            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME "is syncing with network...");
+        // next bock is a superblock and we need governance info to correctly construct it
+        if (AreSuperblocksEnabled()
+            && !masternodeSync.IsSynced()
+            && CSuperblock::IsValidBlockHeight(::ChainActive().Height() + 1))
+                throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME "is syncing with network...");
     }
 
     static unsigned int nTransactionsUpdatedLast;
@@ -607,7 +611,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         CMutableTransaction coinbaseTx(*pblock->vtx[0]);
         coinbaseTx.vout[0].scriptPubKey = GetScriptForDestination(rewardAddress);
         pblock->vtx[0] = MakeTransactionRef(CTransaction(coinbaseTx));
-
+        
         fRewardAddressSet = true;
     }
 

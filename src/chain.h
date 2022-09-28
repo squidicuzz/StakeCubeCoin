@@ -242,7 +242,7 @@ public:
             block.nHeight    = nHeight;
             block.nNonce64   = nNonce64;
             block.mix_hash   = mix_hash;
-        } else{
+        } else {
             block.nNonce         = nNonce;
         }
         return block;
@@ -251,6 +251,11 @@ public:
     uint256 GetBlockHash() const
     {
         return *phashBlock;
+    }
+
+    uint256 GetBlockPoWHash() const
+    {
+        return GetBlockHeader().GetHash();
     }
 
     void SetNull()
