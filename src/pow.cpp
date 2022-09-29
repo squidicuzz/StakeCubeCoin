@@ -280,10 +280,10 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     }
 
     if (pblock->IsProgPow()) {
-        if (pindexLast->nTime < params.nPPSwitchTime) {
+        /*if (pindexLast->nTime < params.nPPSwitchTime) {
             // first ProgPOW block ever
             return params.nInitialPPDifficulty;
-        }
+        }*/ //test mine first block on initial diff
         return GetNextWorkRequiredSCC(pindexLast, pblock); //set for progpow but can set later to replace DGW
     }
 
