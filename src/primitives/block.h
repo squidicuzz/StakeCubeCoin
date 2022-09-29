@@ -43,6 +43,7 @@ public:
     }
 
     bool IsProgPow() const;
+    bool IsProgPow(int nHeight) const;
 
     ADD_SERIALIZE_METHODS;
 
@@ -55,12 +56,12 @@ public:
         READWRITE(nBits);
         // SCC - ProgPoW
         // Return std 4byte, if ProgPoW return 8byte
-        if (nTime < nPPSwitchTime) {
-            READWRITE(nNonce);
-        } else {
+        if (IsProgPow()) {
             READWRITE(nHeight);
             READWRITE(nNonce64);
             READWRITE(mix_hash);
+        } else {
+            READWRITE(nNonce);
         }
     }
 
