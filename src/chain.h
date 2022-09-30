@@ -191,7 +191,7 @@ public:
 
     CBlockIndex()
     {
-        SetNull();
+	SetNull();
     }
 
     CBlockIndex(const CBlockHeader& block)
