@@ -11,7 +11,7 @@
  */
 
 
-static const int PROTOCOL_VERSION = 70222;
+static const int MIN_PP_PROTO_VERSION = 70222;
 
 //! Min proto for ProgPow
 static const int PROTOCOL_VERSION = 70222;
