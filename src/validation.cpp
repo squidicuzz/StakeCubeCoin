@@ -982,13 +982,8 @@ bool ReadBlockFromDisk(CBlock& block, const FlatFilePos& pos, const Consensus::P
     }
 
     // Check the header
-    if(block.IsProgPow()) {
-        if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
-            return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
-    } else {
-    	if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
-            return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
-    }
+    if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+        return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 return true;
 }
 

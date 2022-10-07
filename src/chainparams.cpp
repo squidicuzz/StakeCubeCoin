@@ -200,6 +200,7 @@ public:
         consensus.nMinerConfirmationWindow       = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         /** Prog PoW **/
+        consensus.nPPSwitchHeight = INT_MAX; //placeholder set to disconnect peers.
         consensus.nPPSwitchTime = 1665157085; //Thursday, September 29, 2022 4:05:00 PM GMT
         consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
 

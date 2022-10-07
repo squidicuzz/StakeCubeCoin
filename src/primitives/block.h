@@ -43,7 +43,6 @@ public:
     }
 
     bool IsProgPow() const;
-    bool IsProgPow(int nHeight) const;
 
     ADD_SERIALIZE_METHODS;
 
@@ -94,7 +93,6 @@ public:
     uint256 GetProgPowHeaderHash() const;
     uint256 GetProgPowHashFull(uint256& mix_hash) const;
     uint256 GetProgPowHashLight() const;
-    uint256 GetPoWHash(int nHeight) const;
 
     int64_t GetBlockTime() const
     {
