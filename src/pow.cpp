@@ -189,7 +189,6 @@ unsigned int GetNextWorkRequiredSCC(const CBlockIndex* pindexLast, const CBlockH
         return powLimit.GetCompact();
     }
 
-    if (pblock->IsProgPow()) {
         const arith_uint256& bnTargetLimit = UintToArith256(consensus.powLimit);
         const int64_t& nTargetTimespan = consensus.nPowTargetTimespan;
 
@@ -214,54 +213,7 @@ unsigned int GetNextWorkRequiredSCC(const CBlockIndex* pindexLast, const CBlockH
             bnNew = bnTargetLimit;
 
         return bnNew.GetCompact();
-    }
 
-    for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
-        if (PastBlocksMax > 0 && i > PastBlocksMax) {
-            break;
-        }
-        CountBlocks++;
-
-        if (CountBlocks <= PastBlocksMin) {
-            if (CountBlocks == 1) {
-                PastDifficultyAverage.SetCompact(BlockReading->nBits);
-            } else {
-                PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks) + (arith_uint256().SetCompact(BlockReading->nBits))) / (CountBlocks + 1);
-            }
-            PastDifficultyAveragePrev = PastDifficultyAverage;
-        }
-
-        if (LastBlockTime > 0) {
-            int64_t Diff = (LastBlockTime - BlockReading->GetBlockTime());
-            nActualTimespan += Diff;
-        }
-        LastBlockTime = BlockReading->GetBlockTime();
-
-        if (BlockReading->pprev == NULL) {
-            assert(BlockReading);
-            break;
-        }
-        BlockReading = BlockReading->pprev;
-    }
-
-    arith_uint256 bnNew(PastDifficultyAverage);
-
-    int64_t _nTargetTimespan = CountBlocks * consensus.nPowTargetSpacing;
-
-    if (nActualTimespan < _nTargetTimespan / 3)
-        nActualTimespan = _nTargetTimespan / 3;
-    if (nActualTimespan > _nTargetTimespan * 3)
-        nActualTimespan = _nTargetTimespan * 3;
-
-    // Retarget
-    bnNew *= nActualTimespan;
-    bnNew /= _nTargetTimespan;
-
-    if (bnNew > powLimit) {
-        bnNew = powLimit;
-    }
-
-    return bnNew.GetCompact();
 }
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
@@ -279,13 +231,12 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         return GetNextWorkRequiredBTC(pindexLast, pblock, params);
     }
 
-    if (pblock->IsProgPow()) {
-        /*if (pindexLast->nTime < params.nPPSwitchTime) {
+        if (pindexLast->nTime < params.nPPSwitchTime) {
             // first ProgPOW block ever
             return params.nInitialPPDifficulty;
-        }*/ //test mine first block on initial diff
-        return GetNextWorkRequiredSCC(pindexLast, pblock); //set for progpow but can set later to replace DGW
-    }
+        } else if (pindexLast->nTime > params.nPPSwitchTime) {
+            return GetNextWorkRequiredSCC(pindexLast, pblock);
+        }
 
     // Note: GetNextWorkRequiredBTC has it's own special difficulty rule,
     // so we only apply this to post-BTC algos.
