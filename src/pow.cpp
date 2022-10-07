@@ -235,12 +235,12 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     // Hardcode diff at progpow switchover (asic -> gpu)
     if (pblock->IsProgPow()) {
         if (pindexLast->nTime <= params.nPPSwitchTime) {
-            return 0x1d016e81;
+            return params.nInitialPPDifficulty;
         } else if (pindexLast->nTime > params.nPPSwitchTime) {
             return GetNextWorkRequiredSCC(pindexLast, pblock);
         }
     }
-    
+
     return DarkGravityWave(pindexLast, params);
 }
 

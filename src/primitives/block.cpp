@@ -28,7 +28,7 @@ bool CBlockHeader::IsProgPow() const {
 }
 
 bool CBlockHeader::IsFirstProgPow() const {
-    return (IsProgPow() && nTime <= (Params().GetConsensus().nPPSwitchTime + 6400)); //1 day
+    return (IsProgPow() && nTime <= (Params().GetConsensus().nPPSwitchTime + 6400)); //1 hr 45 mins ish
 }
 
 CProgPowHeader CBlockHeader::GetProgPowHeader() const {
