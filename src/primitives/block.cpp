@@ -12,7 +12,7 @@
 #include <streams.h>
 #include <tinyformat.h>
 
-uint32_t nPPSwitchTime = 1663848108;
+uint32_t nPPSwitchTime = 1665157085;
 
 uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
     if (IsProgPow()) {
