@@ -121,7 +121,6 @@ struct Params {
     /** switch to ProgPoW (PP) time */
     uint32_t nPPSwitchHeight;
     uint32_t nPPSwitchTime;
-    uint32_t SWITCH_PROGPOW_BLOCK_HEADER = INT_MAX;
     /** initial difficulty for ProgPoW */
     int nInitialPPDifficulty;
 
