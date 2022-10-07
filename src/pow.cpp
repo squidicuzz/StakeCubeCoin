@@ -223,64 +223,24 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
 
     // this is only active on devnets
-    if (pindexLast->nHeight < params.nMinimumDifficultyBlocks) {
-        return bnPowLimit.GetCompact();
-    }
-
     if (pindexLast->nHeight + 1 < params.nPowKGWHeight) {
         return GetNextWorkRequiredBTC(pindexLast, pblock, params);
     }
 
-        if (pindexLast->nTime < params.nPPSwitchTime) {
-            // first ProgPOW block ever
-            return params.nInitialPPDifficulty;
-        } else if (pindexLast->nTime > params.nPPSwitchTime) {
-            return GetNextWorkRequiredSCC(pindexLast, pblock);
-        }
-
-    // Note: GetNextWorkRequiredBTC has it's own special difficulty rule,
-    // so we only apply this to post-BTC algos.
-    if (params.fPowAllowMinDifficultyBlocks) {
-        // recent block is more than 2 hours old
-        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + 2 * 60 * 60) {
-            return bnPowLimit.GetCompact();
-        }
-        // recent block is more than 10 minutes old
-        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 4) {
-            arith_uint256 bnNew = arith_uint256().SetCompact(pindexLast->nBits) * 10;
-            if (bnNew > bnPowLimit) {
-                return bnPowLimit.GetCompact();
-            }
-            return bnNew.GetCompact();
-        }
-    }
-
-    unsigned int TimeDaySeconds = 60 * 60 * 24;
-    int64_t PastSecondsMin = TimeDaySeconds * 0.25; // 21600
-    int64_t PastSecondsMax = TimeDaySeconds * 7;// 604800
-    uint32_t PastBlocksMin = PastSecondsMin / params.nPowTargetSpacing; // 36 blocks
-    uint32_t PastBlocksMax = PastSecondsMax / params.nPowTargetSpacing; // 1008 blocks
-
-    if (pblock->IsProgPow()) {
-        if (pblock->nTime < params.nPPSwitchTime) {
-            // transition to progpow happened recently, look for the first PP block
-            const CBlockIndex *pindex = pindexLast;
-            while (pindex && pindex->nTime >= params.nPPSwitchTime)
-                pindex = pindex->pprev;
-
-            if (pindex) {
-                uint32_t numberOfPPBlocks = pindexLast->nHeight - pindex->nHeight;
-                if (numberOfPPBlocks < params.DifficultyAdjustmentInterval()/2)
-                    // do not retarget if too few PP blocks
-                    return params.nInitialPPDifficulty;
-            }
-        }
-    }
-
+    // KimotoGravityWell
     if (pindexLast->nHeight + 1 < params.nPowDGWHeight) {
         return KimotoGravityWell(pindexLast, params);
     }
 
+    // Hardcode diff at progpow switchover (asic -> gpu)
+    if (pblock->IsProgPow()) {
+        if (pindexLast->nTime <= params.nPPSwitchTime) {
+            return 0x1d016e81;
+        } else if (pindexLast->nTime > params.nPPSwitchTime) {
+            return GetNextWorkRequiredSCC(pindexLast, pblock);
+        }
+    }
+    
     return DarkGravityWave(pindexLast, params);
 }
 
