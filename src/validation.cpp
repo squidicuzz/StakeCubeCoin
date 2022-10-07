@@ -183,6 +183,17 @@ CBlockIndex* LookupBlockIndex(const uint256& hash)
     return it == g_blockman.m_block_index.end() ? nullptr : it->second;
 }
 
+int GetNHeight(const CBlockHeader &block) {
+    CBlockIndex *pindexPrev = NULL;
+    int nHeight = 0;
+    BlockMap::iterator it = g_blockman.m_block_index.find(block.hashPrevBlock);
+    if (it != g_blockman.m_block_index.end()) {
+        pindexPrev = (*it).second;
+        nHeight = pindexPrev->nHeight + 1;
+    }
+    return nHeight;
+}
+
 CBlockIndex* FindForkInGlobalIndex(const CChain& chain, const CBlockLocator& locator)
 {
     AssertLockHeld(cs_main);
@@ -963,11 +974,10 @@ static bool WriteBlockToDisk(const CBlock& block, FlatFilePos& pos, const CMessa
     return true;
 }
 
-bool ReadBlockFromDisk(CBlock& block, const FlatFilePos& pos, const Consensus::Params& consensusParams)
+bool ReadBlockFromDisk(CBlock& block, const FlatFilePos& pos, int nHeight, const Consensus::Params& consensusParams)
 {
     block.SetNull();
 
-    int nHeight = block.nHeight;
     // Open history file to read
     CAutoFile filein(OpenBlockFile(pos, true), SER_DISK, CLIENT_VERSION);
     if (filein.IsNull())
@@ -982,7 +992,7 @@ bool ReadBlockFromDisk(CBlock& block, const FlatFilePos& pos, const Consensus::P
     }
 
     // Check the header
-    if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+    if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 return true;
 }
@@ -995,7 +1005,7 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
         blockPos = pindex->GetBlockPos();
     }
 
-    if (!ReadBlockFromDisk(block, blockPos, consensusParams))
+    if (!ReadBlockFromDisk(block, blockPos, pindex->nHeight, consensusParams))
         return false;
     if (block.GetHash() != pindex->GetBlockHash())
         return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
@@ -3612,13 +3622,13 @@ static bool FindUndoPos(CValidationState &state, int nFile, FlatFilePos &pos, un
 
 static bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true)
 {
-    int nHeight = block.nHeight;
+    int nHeight = GetNHeight(block);
     if (fCheckPOW) {
         uint256 final_hash;
         if (block.IsProgPow()) {
             final_hash = block.GetProgPowHashLight();
         } else {
-            final_hash = block.GetHash();
+            final_hash = block.GetPoWHash(nHeight);
         }
         // Check proof of work matches claimed amount
         if (!CheckProofOfWork(final_hash, block.nBits, consensusParams))

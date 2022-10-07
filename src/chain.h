@@ -255,7 +255,7 @@ public:
 
     uint256 GetBlockPoWHash() const
     {
-        return GetBlockHeader().GetHash();
+        return GetBlockHeader().GetPoWHash(nHeight);
     }
 
     void SetNull()

@@ -21,6 +21,22 @@ uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
     return GetHash();
 }
 
+uint256 CBlockHeader::GetPoWHash(int nHeight) const
+{
+    uint256 powHash, mix_hash;
+    if (nHeight == nPowPPHeight) {
+        powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
+    } else if (IsProgPow(nHeight)) {
+        powHash = progpow_hash_light(GetProgPowHeader());
+    } else  {
+        std::vector<unsigned char> vch(80);
+        CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
+        ss << *this;
+        return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
+    }
+    return powHash;
+}
+
 bool CBlockHeader::IsProgPow() const {
     // In case if nTime == SCC_GEN_TIME we're being called from CChainParams() constructor and
     // it is not possible to get Params()

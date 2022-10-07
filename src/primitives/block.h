@@ -86,6 +86,7 @@ public:
     uint256 GetHash() const;
 
     uint256 GetHashFull(uint256& mix_hash) const;
+    uint256 GetPoWHash(int nHeight) const;
 
     bool IsFirstProgPow() const;
 
