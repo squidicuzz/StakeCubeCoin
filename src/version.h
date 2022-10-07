@@ -13,6 +13,9 @@
 
 static const int PROTOCOL_VERSION = 70222;
 
+//! Min proto for ProgPow
+static const int PROTOCOL_VERSION = 70222;
+
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
 
