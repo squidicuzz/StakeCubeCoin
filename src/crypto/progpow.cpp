@@ -55,8 +55,6 @@ uint256 progpow_hash_full(const CProgPowHeader& header, uint256& mix_hash)
 
 uint256 progpow_hash_light(const CProgPowHeader& header) 
 {
-    assert(!header.mix_hash.IsNull());
-
     const auto header_h256{U256ToH256(SerializeHash(header))};
     const auto mix_h256{U256ToH256(header.mix_hash)};
 
