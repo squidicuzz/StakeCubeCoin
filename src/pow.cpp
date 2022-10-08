@@ -7,6 +7,7 @@
 
 #include <arith_uint256.h>
 #include <chain.h>
+#include <logging.h>
 #include <primitives/block.h>
 #include <uint256.h>
 
@@ -221,6 +222,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     assert(pindexLast != nullptr);
     assert(pblock != nullptr);
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+
+    LogPrintf("nBits GetNextWorkRequired: %i\n", pblock->nBits);
 
     // this is only active on devnets
     if (pindexLast->nHeight + 1 < params.nPowKGWHeight) {

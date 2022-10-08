@@ -3903,7 +3903,7 @@ bool BlockManager::AcceptBlockHeader(const CBlockHeader& block, CValidationState
         if (pindexPrev->nStatus & BLOCK_CONFLICT_CHAINLOCK)
             // it's ok-ish, the other node is probably missing the latest chainlock
             return state.DoS(10, error("%s: prev block %s conflicts with chainlock", __func__, block.hashPrevBlock.ToString()), REJECT_INVALID, "bad-prevblk-chainlock");
-        LogPrintf("nBits AcceptBlockHeader: %i", block.nBits);
+        LogPrintf("nBits AcceptBlockHeader: %i\n", block.nBits);
         if (!ContextualCheckBlockHeader(block, state, chainparams, pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
 
