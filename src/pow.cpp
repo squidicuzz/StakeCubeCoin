@@ -232,13 +232,17 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         return KimotoGravityWell(pindexLast, params);
     }
 
-    // Hardcode diff at progpow switchover (asic -> gpu)
+    /* ProgPow */
+    // Make transition smooth from x11 to progpow
+    // If we hit the switch over timestamp but no block generated yet
+    // we set a low diff. After last block is older than switch time
+    // this will be ignored and continues with GetNextWorkRequiredSCC
+    if (pblock->IsProgPow() && pindexLast->nTime <= params.nPPSwitchTime) {
+        return params.nInitialPPDifficulty;
+    }
+
     if (pblock->IsProgPow()) {
-        if (pindexLast->nTime <= params.nPPSwitchTime) {
-            return params.nInitialPPDifficulty;
-        } else if (pindexLast->nTime > params.nPPSwitchTime) {
-            return GetNextWorkRequiredSCC(pindexLast, pblock);
-        }
+        return GetNextWorkRequiredSCC(pindexLast, pblock);
     }
 
     return DarkGravityWave(pindexLast, params);

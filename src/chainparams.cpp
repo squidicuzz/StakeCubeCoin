@@ -191,7 +191,7 @@ public:
         /** PoW **/
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan           = 24 * 60 * 60; // SCC: 1 day
-        consensus.nPowTargetSpacing            = 2 * 60; // 2 minutes  
+        consensus.nPowTargetSpacing            = 2 * 60; // 2 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting            = false;
         consensus.nPowKGWHeight                = 1;
@@ -447,7 +447,7 @@ public:
 
         /** Prog PoW **/
         consensus.nPPSwitchHeight = INT_MAX;
-        consensus.nPPSwitchTime = 1665169317;      //Friday, October 7, 2022 7:01:57 PM GMT   
+        consensus.nPPSwitchTime = 1665238500;      // Sat Oct 08 2022 14:15:00 GMT+0000
         consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -617,7 +617,7 @@ public:
         consensus.nPowDGWHeight = 0;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
-        
+
         //** Prog PoW **/
         // this can be overridden with either -ppswitchtime or -ppswitchtimefromnow flags
         consensus.nPPSwitchTime = INT_MAX;
