@@ -246,6 +246,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         LogPrintf("ProgPow hit");
         if (pindexLast->nTime <= params.nPPSwitchTime)
             return params.nInitialPPDifficulty;
+        LogPrintf("GetNextWorkRequiredSCC hit");
         return GetNextWorkRequiredSCC(pindexLast, pblock);
     }
     LogPrintf("DarkGravityWave hit");
