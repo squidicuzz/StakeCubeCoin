@@ -233,15 +233,13 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     }
 
     /* ProgPow */
-    // Make transition smooth from x11 to progpow
-    // If we hit the switch over timestamp but no block generated yet
-    // we set a low diff. After last block is older than switch time
-    // this will be ignored and continues with GetNextWorkRequiredSCC
-    if (pblock->IsProgPow() && pindexLast->nTime <= params.nPPSwitchTime) {
-        return params.nInitialPPDifficulty;
-    }
-
+    // Make transition smooth from x11 to ProgPow:
+    // If we hit the nPPSwitchTime but no block generated yet we set a low diff.
+    // After the time of last block is older than nPPSwitchTime (i.e. first PP block)
+    // ...this will be ignored and continues with GetNextWorkRequiredSCC
     if (pblock->IsProgPow()) {
+        if (pindexLast->nTime <= params.nPPSwitchTime)
+            return params.nInitialPPDifficulty;
         return GetNextWorkRequiredSCC(pindexLast, pblock);
     }
 
