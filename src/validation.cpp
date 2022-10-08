@@ -3756,7 +3756,6 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationSta
             return state.DoS(100, error("%s : incorrect proof of work (DGW pre-fork) - %f %f %f at %d", __func__, abs(n1-n2), n1, n2, nHeight),
                             REJECT_INVALID, "bad-diffbits");
     } else {
-        LogPrintf("nBits validation: %i\n", block.nBits);
         if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
             return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, strprintf("incorrect proof of work at %d", nHeight));
     }
@@ -3903,7 +3902,6 @@ bool BlockManager::AcceptBlockHeader(const CBlockHeader& block, CValidationState
         if (pindexPrev->nStatus & BLOCK_CONFLICT_CHAINLOCK)
             // it's ok-ish, the other node is probably missing the latest chainlock
             return state.DoS(10, error("%s: prev block %s conflicts with chainlock", __func__, block.hashPrevBlock.ToString()), REJECT_INVALID, "bad-prevblk-chainlock");
-        LogPrintf("nBits AcceptBlockHeader: %i\n", block.nBits);
         if (!ContextualCheckBlockHeader(block, state, chainparams, pindexPrev, GetAdjustedTime()))
             return error("%s: Consensus::ContextualCheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
 
