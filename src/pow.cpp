@@ -227,11 +227,13 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
     // this is only active on devnets
     if (pindexLast->nHeight + 1 < params.nPowKGWHeight) {
+        LogPrintf("GetNextWorkRequiredBTC hit");
         return GetNextWorkRequiredBTC(pindexLast, pblock, params);
     }
 
     // KimotoGravityWell
     if (pindexLast->nHeight + 1 < params.nPowDGWHeight) {
+        LogPrintf("KimotoGravityWell hit");
         return KimotoGravityWell(pindexLast, params);
     }
 
@@ -241,11 +243,12 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     // After the time of last block is older than nPPSwitchTime (i.e. first PP block)
     // ...this will be ignored and continues with GetNextWorkRequiredSCC
     if (pblock->IsProgPow()) {
+        LogPrintf("ProgPow hit");
         if (pindexLast->nTime <= params.nPPSwitchTime)
             return params.nInitialPPDifficulty;
         return GetNextWorkRequiredSCC(pindexLast, pblock);
     }
-
+    LogPrintf("DarkGravityWave hit");
     return DarkGravityWave(pindexLast, params);
 }
 
