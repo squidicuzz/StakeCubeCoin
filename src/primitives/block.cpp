@@ -24,16 +24,19 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const
 {
     uint256 powHash, mix_hash;
     /*TODO: FIX!*/
-    if (nHeight == IsFirstProgPow()) {
+    std::vector<unsigned char> vch(80);
+    CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
+    ss << *this;
+    if(nHeight == 0) {
+        return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
+    }
+    if (IsFirstProgPow()) {
         powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
         return powHash;
     } else if (IsProgPow()) {
         powHash = progpow_hash_light(GetProgPowHeader());
         return powHash;
-    } else  {
-        std::vector<unsigned char> vch(80);
-        CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
-        ss << *this;
+    } else {
         return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
     }
 }
