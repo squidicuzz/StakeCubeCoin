@@ -1047,7 +1047,7 @@ CAmount GetBlockSubsidy(int nPrevHeight)
     int nHeight = nPrevHeight + 1;
 
     if (nHeight == 0) { nSubsidy = 0 * COIN;
-    } else if (nHeight == 1)                            { nSubsidy = 7500000 * COIN;    // Supply for swap (SCC 2x -> SCC 3x) 
+    } else if (nHeight == 1)                            { nSubsidy = 7500000 * COIN;    // Supply for swap (SCC 2x -> SCC 3x)
     } else if (nHeight > 1       && nHeight <= 5000)    { nSubsidy = 0.1 * COIN;        // Fair start ~7 days (5000/720 = 6,944444)
     } else if (nHeight > 5000    && nHeight <= 250000)  { nSubsidy = 9 * COIN;          // 1 year
     } else if (nHeight > 250000  && nHeight <= 500000)  { nSubsidy = 8 * COIN;
@@ -3802,7 +3802,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
     // once ProgPow always ProgPow
     if (pindexPrev && pindexPrev->nTime >= consensusParams.nPPSwitchTime && block.nTime < consensusParams.nPPSwitchTime)
         return state.Invalid(false, REJECT_INVALID, "bad-blk-progpow-state", "Cannot go back from ProgPOW");
-        
+
     if (block.IsProgPow() && block.nHeight != nHeight)
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-progpow", "ProgPOW height doesn't match chain height");
 
@@ -4967,7 +4967,7 @@ void LoadExternalBlockFile(const CChainParams& chainparams, FILE* fileIn, FlatFi
                     while (range.first != range.second) {
                         std::multimap<uint256, FlatFilePos>::iterator it = range.first;
                         std::shared_ptr<CBlock> pblockrecursive = std::make_shared<CBlock>();
-                        if (ReadBlockFromDisk(*pblockrecursive, it->second, chainparams.GetConsensus()))
+                        if (ReadBlockFromDisk(*pblockrecursive, it->second, block.nHeight, chainparams.GetConsensus()))
                         {
                             LogPrint(BCLog::REINDEX, "%s: Processing out of order child %s of %s\n", __func__, pblockrecursive->GetHash().ToString(),
                                     head.ToString());

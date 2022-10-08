@@ -7,12 +7,11 @@
 #include <consensus/params.h>
 #include <chainparams.h>
 #include "crypto/progpow.h"
+#include <util/system.h>
 
 #include <hash.h>
 #include <streams.h>
 #include <tinyformat.h>
-
-uint32_t nPPSwitchTime = 1665157085;
 
 uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
     if (IsProgPow()) {
@@ -24,9 +23,10 @@ uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
 uint256 CBlockHeader::GetPoWHash(int nHeight) const
 {
     uint256 powHash, mix_hash;
-    if (nHeight == nPowPPHeight) {
+    /*TODO: FIX!*/
+    if (nHeight == IsFirstProgPow()) {
         powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
-    } else if (IsProgPow(nHeight)) {
+    } else if (IsProgPow()) {
         powHash = progpow_hash_light(GetProgPowHeader());
     } else  {
         std::vector<unsigned char> vch(80);
@@ -60,7 +60,7 @@ CProgPowHeader CBlockHeader::GetProgPowHeader() const {
     };
 }
 
-uint256 CBlockHeader::GetProgPowHeaderHash() const 
+uint256 CBlockHeader::GetProgPowHeaderHash() const
 {
     return SerializeHash(GetProgPowHeader());
 }
