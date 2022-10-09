@@ -175,45 +175,37 @@ unsigned int GetNextWorkRequiredSCC(const CBlockIndex* pindexLast, const CBlockH
 
     /* current difficulty formula, pivx - DarkGravity v3, written by Evan Duffield - evan@dashpay.io */
     const CBlockIndex* BlockLastSolved = pindexLast;
-    const CBlockIndex* BlockReading = pindexLast;
-    int64_t nActualTimespan = 0;
-    int64_t LastBlockTime = 0;
     int64_t PastBlocksMin = 24;
-    int64_t PastBlocksMax = 24;
-    int64_t CountBlocks = 0;
-    arith_uint256 PastDifficultyAverage;
-    arith_uint256 PastDifficultyAveragePrev;
     const arith_uint256& powLimit = UintToArith256(consensus.powLimit);
 
     if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
         return powLimit.GetCompact();
     }
 
-        const arith_uint256& bnTargetLimit = UintToArith256(consensus.powLimit);
-        const int64_t& nTargetTimespan = consensus.nPowTargetTimespan;
+    const arith_uint256& bnTargetLimit = UintToArith256(consensus.powLimit);
+    const int64_t& nTargetTimespan = consensus.nPowTargetTimespan;
 
-        int64_t nActualSpacing = 0;
-        if (pindexLast->nHeight != 0)
-            nActualSpacing = pindexLast->GetBlockTime() - pindexLast->pprev->GetBlockTime();
-        if (nActualSpacing < 0)
-            nActualSpacing = 1;
-	//if (nActualSpacing > consensus.nPowTargetSpacing*10)
-          //  nActualSpacing = consensus.nPowTargetSpacing*10;
+    int64_t nActualSpacing = 0;
+    if (pindexLast->nHeight != 0)
+        nActualSpacing = pindexLast->GetBlockTime() - pindexLast->pprev->GetBlockTime();
+    if (nActualSpacing < 0)
+        nActualSpacing = 1;
+    //if (nActualSpacing > consensus.nPowTargetSpacing*10)
+    //  nActualSpacing = consensus.nPowTargetSpacing*10;
 
-        // ppcoin: target change every block
-        // ppcoin: retarget with exponential moving toward target spacing
-        arith_uint256 bnNew;
-        bnNew.SetCompact(pindexLast->nBits);
+    // ppcoin: target change every block
+    // ppcoin: retarget with exponential moving toward target spacing
+    arith_uint256 bnNew;
+    bnNew.SetCompact(pindexLast->nBits);
 
-        int64_t nInterval = nTargetTimespan / consensus.nPowTargetSpacing;
-        bnNew *= ((nInterval - 1) * consensus.nPowTargetSpacing + nActualSpacing + nActualSpacing);
-        bnNew /= ((nInterval + 1) * consensus.nPowTargetSpacing);
+    int64_t nInterval = nTargetTimespan / consensus.nPowTargetSpacing;
+    bnNew *= ((nInterval - 1) * consensus.nPowTargetSpacing + nActualSpacing + nActualSpacing);
+    bnNew /= ((nInterval + 1) * consensus.nPowTargetSpacing);
 
-        if (bnNew <= 0 || bnNew > bnTargetLimit)
-            bnNew = bnTargetLimit;
+    if (bnNew <= 0 || bnNew > bnTargetLimit)
+        bnNew = bnTargetLimit;
 
-        return bnNew.GetCompact();
-
+    return bnNew.GetCompact();
 }
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
