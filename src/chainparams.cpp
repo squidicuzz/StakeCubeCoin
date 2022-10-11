@@ -389,8 +389,14 @@ public:
                 // Post-Rebase Minor Fork blocks
                 {352202, uint256S("0000000000001a7b4d26b3870ae73857a691b940e91db367496749f9f51d14f3")},
                 {352203, uint256S("0000000000000df4086a9ce561db70c9fc48e7ee10107d6df56accee3099a526")},
-                {352204, uint256S("0000000000000d5b73d6730cc0227f5291c76a05dda08328e70b0bd4ff1e0a59")}
-                // Some future update...
+                {352204, uint256S("0000000000000d5b73d6730cc0227f5291c76a05dda08328e70b0bd4ff1e0a59")},
+                // Added in ProgPoW update
+                {372200, uint256S("00000000000008a459f0c6dd16c81b5e550e2cf184b5d3c72762cccbdadc13d9")},
+                {392200, uint256S("00000000000009cd8e131255334b89faeac1f677793f82b6d40ccafcb5c8f8eb")},
+                {412200, uint256S("0000000000001bf066316f9a8da865f3e16f4770d3a36fd007253d0c07599c65")},
+                {432200, uint256S("0000000000004914b4bf906e1e1b869338cdd61b249cab868d4b8640e1dee35c")},
+                {452200, uint256S("0000000000001aacd70727211dbac4a888d34f423497da206d1cad9492ec4594")},
+                {472200, uint256S("00000000000003163bd40055b06f813615f104e2f67f910bc5814d731f9afa20")}
             }
         };
 
