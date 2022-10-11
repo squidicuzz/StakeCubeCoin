@@ -23,7 +23,6 @@ uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
 uint256 CBlockHeader::GetPoWHash(int nHeight) const
 {
     uint256 powHash, mix_hash;
-    /*TODO: FIX!*/
     std::vector<unsigned char> vch(80);
     CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
     ss << *this;

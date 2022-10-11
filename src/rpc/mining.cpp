@@ -504,7 +504,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         if (::ChainstateActive().IsInitialBlockDownload())
             throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is in initial sync and waiting for blocks...");
 
-        // next bock is a superblock and we need governance info to correctly construct it
+        // next block is a superblock and we need governance info to correctly construct it
         if (AreSuperblocksEnabled()
             && !masternodeSync.IsSynced()
             && CSuperblock::IsValidBlockHeight(::ChainActive().Height() + 1))
