@@ -16,6 +16,7 @@
 #include <interfaces/handler.h>
 #include <interfaces/wallet.h>
 #include <llmq/instantsend.h>
+#include <mapport.h>
 #include <masternode/sync.h>
 #include <net.h>
 #include <net_processing.h>
