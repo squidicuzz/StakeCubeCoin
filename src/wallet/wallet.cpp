@@ -4325,7 +4325,6 @@ bool CWallet::TopUpKeyPool(unsigned int kpSize)
             // TODO: implement keypools for all accounts?
             CPubKey pubkey(GenerateNewKey(batch, 0, fInternal));
             AddKeypoolPubkeyWithDB(pubkey, fInternal, batch);
-=
             if (missingInternal + missingExternal > 0) {
                 WalletLogPrintf("keypool added %d keys (%d internal), size=%u (%u internal)\n",
                           missingInternal + missingExternal, missingInternal,
