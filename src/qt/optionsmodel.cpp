@@ -14,10 +14,11 @@
 #include <qt/guiutil.h>
 
 #include <interfaces/node.h>
-#include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
+#include <mapport.h>
 #include <net.h>
 #include <netbase.h>
-#include <txdb.h> // for -dbcache defaults
+#include <txdb.h>       // for -dbcache defaults
+#include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
 
 #ifdef ENABLE_WALLET
 #include <coinjoin/options.h>
@@ -248,6 +249,12 @@ void OptionsModel::Init(bool resetSettings)
         settings.setValue("fUseUPnP", DEFAULT_UPNP);
     if (!m_node.softSetBoolArg("-upnp", settings.value("fUseUPnP").toBool()))
         addOverriddenOption("-upnp");
+    if (!settings.contains("fUseNatpmp")) {
+        settings.setValue("fUseNatpmp", DEFAULT_NATPMP);
+    }
+    if (!gArgs.SoftSetBoolArg("-natpmp", settings.value("fUseNatpmp").toBool())) {
+        addOverriddenOption("-natpmp");
+    }
 
     if (!settings.contains("fListen"))
         settings.setValue("fListen", DEFAULT_LISTEN);
@@ -383,7 +390,13 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
             return settings.value("fUseUPnP");
 #else
             return false;
-#endif
+#endif // USE_UPNP
+        case MapPortNatpmp:
+#ifdef USE_NATPMP
+            return settings.value("fUseNatpmp");
+#else
+            return false;
+#endif // USE_NATPMP
         case MinimizeOnClose:
             return fMinimizeOnClose;
 
@@ -499,7 +512,9 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             break;
         case MapPortUPnP: // core option - can be changed on-the-fly
             settings.setValue("fUseUPnP", value.toBool());
-            m_node.mapPort(value.toBool());
+            break;
+        case MapPortNatpmp: // core option - can be changed on-the-fly
+            settings.setValue("fUseNatpmp", value.toBool());
             break;
         case MinimizeOnClose:
             fMinimizeOnClose = value.toBool();
