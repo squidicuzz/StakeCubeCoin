@@ -594,7 +594,7 @@ static UniValue VoteWithMasternodes(const std::map<uint256, CKey>& keys,
 }
 
 #ifdef ENABLE_WALLET
-static void gobject_vote_many_help(const JSRONRPCRequest& request)
+static void gobject_vote_many_help(const JSONRPCRequest& request)
 {
     RPCHelpMan{"gobject vote-many",
         "Vote on a governance object by all masternodes for which the voting key is present in the local wallet\n"
@@ -768,7 +768,7 @@ static UniValue ListObjects(const std::string& strCachedSignal, const std::strin
     return objResult;
 }
 
-static void gobject_list_help(const JSRONRPCRequest& request)
+static void gobject_list_help(const JSONRPCRequest& request)
 {
     RPCHelpMan{"gobject list",
         "List governance objects (can be filtered by signal and/or object type)\n",

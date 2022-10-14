@@ -540,7 +540,7 @@ static UniValue masternode(const JSONRPCRequest& request)
     }
 
     if (request.fHelp && strCommand.empty()) {
-        masternode_help(request);
+        masternode_help();
     }
 
     if (strCommand == "list") {
