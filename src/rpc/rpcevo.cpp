@@ -912,13 +912,13 @@ static void protx_list_help(const JSONRPCRequest& request)
         "  wallet       - List only ProTx which are found in your wallet at the given chain height.\n"
         "                 This will also include ProTx which failed PoSe verification.\n"
 #endif
+            },
             {"detailed", RPCArg::Type::BOOL, /* default */ "false", "If not specified, only the hashes of the ProTx will be returned."},
             {"height", RPCArg::Type::NUM, /* default */ "current chain-tip", ""},
-            },
-            RPCResults{},
-            RPCExamples{""},
-        }.Check(request);
-    }
+        },
+        RPCResults{},
+        RPCExamples{""},
+    }.Check(request);
 }
 
 #ifdef ENABLE_WALLET
