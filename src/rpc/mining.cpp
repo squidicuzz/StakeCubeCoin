@@ -104,8 +104,7 @@ static UniValue getnetworkhashps(const JSONRPCRequest& request)
                     {"height", RPCArg::Type::NUM, /* default */ "-1", "To estimate at the time of the given height."},
                 },
                 RPCResult{
-            "x             (numeric) Hashes per second estimated\n"
-                },
+                    RPCResult::Type::NUM, "", "Hashes per second estimated"},
                 RPCExamples{
                     HelpExampleCli("getnetworkhashps", "")
             + HelpExampleRpc("getnetworkhashps", "")
@@ -279,8 +278,7 @@ static UniValue prioritisetransaction(const JSONRPCRequest& request)
             "                  considers the transaction as it would have paid a higher (or lower) fee."},
                 },
                 RPCResult{
-            "true              (boolean) Returns true\n"
-                },
+                    RPCResult::Type::BOOL, "", "Returns true"},
                 RPCExamples{
                     HelpExampleCli("prioritisetransaction", "\"txid\" 10000")
             + HelpExampleRpc("prioritisetransaction", "\"txid\", 10000")
@@ -586,7 +584,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         // Need to update only after we know CreateNewBlock succeeded
         pindexPrev = pindexPrevNew;
     }
-    assert(pindexPrev);
+    CHECK_NONFATAL(pindexPrev);
     CBlock* pblock = &pblocktemplate->block; // pointer for convenience
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
@@ -977,8 +975,7 @@ static UniValue submitheader(const JSONRPCRequest& request)
                     {"hexdata", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "the hex-encoded block header data"},
                 },
                 RPCResult{
-            "None"
-                },
+                    RPCResult::Type::NONE, "", "None"},
                 RPCExamples{
                     HelpExampleCli("submitheader", "\"aabbcc\"") +
                     HelpExampleRpc("submitheader", "\"aabbcc\"")
@@ -1027,17 +1024,19 @@ static UniValue estimatesmartfee(const JSONRPCRequest& request)
             "       \"CONSERVATIVE\""},
                 },
                 RPCResult{
-            "{\n"
-            "  \"feerate\" : x.x,     (numeric, optional) estimate fee rate in " + CURRENCY_UNIT + "/kB\n"
-            "  \"errors\": [ str... ] (json array of strings, optional) Errors encountered during processing\n"
-            "  \"blocks\" : n         (numeric) block number where estimate was found\n"
-            "}\n"
-            "\n"
+                    RPCResult::Type::OBJ, "", "",
+                    {
+                        {RPCResult::Type::NUM, "feerate", /* optional */ true, "estimate fee rate in " + CURRENCY_UNIT + "/kB (only present if no errors were encountered)"},
+                        {RPCResult::Type::ARR, "errors", "Errors encountered during processing",
+                            {
+                                {RPCResult::Type::STR, "", "error"},
+                            }},
+                        {RPCResult::Type::NUM, "blocks", "block number where estimate was found\n"
             "The request target will be clamped between 2 and the highest target\n"
             "fee estimation is able to return based on how long it has been running.\n"
             "An error is returned if not enough transactions and blocks\n"
-            "have been observed to make an estimate for any number of blocks.\n"
-                },
+            "have been observed to make an estimate for any number of blocks."},
+                    }},
                 RPCExamples{
                     HelpExampleCli("estimatesmartfee", "6")
                 },
