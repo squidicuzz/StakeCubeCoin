@@ -161,7 +161,7 @@ UniValue help(const JSONRPCRequest& jsonRequest)
                     {"subcommand", RPCArg::Type::STR, /* default */ "all subcommands", "The subcommand to get help on. Please note that not all subcommands support this at the moment"},
                 },
                 RPCResult{
-            "\"text\"     (string) The help text\n"
+                    RPCResult::Type::STR, "", "The help text"
                 },
                 RPCExamples{""},
             }.ToString()
