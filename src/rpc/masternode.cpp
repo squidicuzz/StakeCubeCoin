@@ -585,7 +585,7 @@ static UniValue masternodelist(const JSONRPCRequest& request)
                 strMode != "payee" && strMode != "pubkeyoperator" &&
                 strMode != "status"))
     {
-        masternode_list_help();
+        masternode_list_help(request);
     }
 
     UniValue obj(UniValue::VOBJ);
