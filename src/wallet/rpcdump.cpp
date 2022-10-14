@@ -1531,7 +1531,7 @@ UniValue importmulti(const JSONRPCRequest& mainRequest)
             }.ToString()
         );
 
-    std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
+    std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(mainRequest);
     if (!wallet) return NullUniValue;
     CWallet* const pwallet = wallet.get();
 
