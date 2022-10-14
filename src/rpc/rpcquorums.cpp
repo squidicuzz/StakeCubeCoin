@@ -171,7 +171,7 @@ static void quorum_dkgstatus_help(const JSONRPCRequest& request)
 static UniValue quorum_dkgstatus(const JSONRPCRequest& request)
 {
     if (request.fHelp || (request.params.size() < 1 || request.params.size() > 2)) {
-        quorum_dkgstatus_help();
+        quorum_dkgstatus_help(request);
     }
 
     int detailLevel = 0;
