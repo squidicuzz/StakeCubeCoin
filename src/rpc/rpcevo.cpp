@@ -904,20 +904,21 @@ static void protx_list_help(const JSONRPCRequest& request)
         "\nLists all ProTxs in your wallet or on-chain, depending on the given type.\n",
         {
             {"type", RPCArg::Type::STR, /* default */ "registered",
-    "\nAvailable types:\n"
-    "  registered   - List all ProTx which are registered at the given chain height.\n"
-    "                 This will also include ProTx which failed PoSe verification.\n"
-    "  valid        - List only ProTx which are active/valid at the given chain height.\n"
+        "\nAvailable types:\n"
+        "  registered   - List all ProTx which are registered at the given chain height.\n"
+        "                 This will also include ProTx which failed PoSe verification.\n"
+        "  valid        - List only ProTx which are active/valid at the given chain height.\n"
 #ifdef ENABLE_WALLET
-    "  wallet       - List only ProTx which are found in your wallet at the given chain height.\n"
-    "                 This will also include ProTx which failed PoSe verification.\n"
+        "  wallet       - List only ProTx which are found in your wallet at the given chain height.\n"
+        "                 This will also include ProTx which failed PoSe verification.\n"
 #endif
-        {"detailed", RPCArg::Type::BOOL, /* default */ "false", "If not specified, only the hashes of the ProTx will be returned."},
-        {"height", RPCArg::Type::NUM, /* default */ "current chain-tip", ""},
-        },
-        RPCResults{},
-        RPCExamples{""},
-    }.Check(request);
+            {"detailed", RPCArg::Type::BOOL, /* default */ "false", "If not specified, only the hashes of the ProTx will be returned."},
+            {"height", RPCArg::Type::NUM, /* default */ "current chain-tip", ""},
+            },
+            RPCResults{},
+            RPCExamples{""},
+        }.Check(request);
+    }
 }
 
 #ifdef ENABLE_WALLET
