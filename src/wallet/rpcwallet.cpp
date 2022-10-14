@@ -371,12 +371,6 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
 
 UniValue burn(const JSONRPCRequest& request)
 {
-    std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
-    CWallet* const pwallet = wallet.get();
-    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
-        return NullUniValue;
-    }
-
     EnsureWalletIsUnlocked(pwallet);
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
