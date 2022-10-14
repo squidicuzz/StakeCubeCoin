@@ -386,7 +386,7 @@ UniValue burn(const JSONRPCRequest& request)
                 "<amount> is real and is rounded to the nearest oleg (ex: 0.00000001).\n"
                 "You may use 0 as the <amount> to skip a specific burn amount, for only writing data into the chain.\n"
                 "The maximum size of data that can be included is " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes, post-encoded.\n"
-                + HelpRequiringPassphrase(pwallet) + "\n",
+                + HelpRequiringPassphrase() + "\n",
                 {
                     {"amount", RPCArg::Type::STR, RPCArg::Optional::NO, "The amount of SCC to burn."},
                     {"data", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The optional data to include, up-to " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes."},
@@ -3949,7 +3949,7 @@ UniValue walletprocesspsbt(const JSONRPCRequest& request)
             RPCHelpMan{"walletprocesspsbt",
                 "\nUpdate a PSBT with input information from our wallet and then sign inputs\n"
                 "that we can sign for." +
-                    HelpRequiringPassphrase(pwallet) + "\n",
+                    HelpRequiringPassphrase() + "\n",
                 {
                     {"psbt", RPCArg::Type::STR, RPCArg::Optional::NO, "The transaction base64 string"},
                     {"sign", RPCArg::Type::BOOL, /* default */ "true", "Also sign the transaction when updating"},
