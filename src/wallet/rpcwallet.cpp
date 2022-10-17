@@ -4145,10 +4145,10 @@ static const CRPCCommand commands[] =
     { "hidden",             "generate",                         &generate,                      {"nblocks","maxtries"} }, // Hidden as it isn't functional, just an error to let people know if miner isn't compiled
 #endif //ENABLE_MINER
     { "hidden",             "instantsendtoaddress",             &instantsendtoaddress,          {} },
+    { "hidden",             "burn",                             &burn,                          {"amount","text"} },
     { "rawtransactions",    "fundrawtransaction",               &fundrawtransaction,            {"hexstring","options"} },
     { "wallet",             "abandontransaction",               &abandontransaction,            {"txid"} },
     { "wallet",             "abortrescan",                      &abortrescan,                   {} },
-    { "hidden",             "burn",                             &burn,                          {"amount","text"} },
     { "wallet",             "addmultisigaddress",               &addmultisigaddress,            {"nrequired","keys","label"} },
     { "wallet",             "backupwallet",                     &backupwallet,                  {"destination"} },
     { "wallet",             "createwallet",                     &createwallet,                  {"wallet_name", "disable_private_keys", "blank", "passphrase"} },
