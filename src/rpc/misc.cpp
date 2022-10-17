@@ -1303,7 +1303,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getspentinfo",           &getspentinfo,           {"json"} },
 
     /* Address index */
-    { "addressindex",       "getaddressmempool",      &getaddressmempool,      {"addresses"}  },
+    { "addressindex",       "getaddressmempool",      &getaddressmempool,      {"addresses"} },
     { "addressindex",       "getaddressutxos",        &getaddressutxos,        {"addresses"} },
     { "addressindex",       "getaddressdeltas",       &getaddressdeltas,       {"addresses"} },
     { "addressindex",       "getaddresstxids",        &getaddresstxids,        {"addresses"} },
