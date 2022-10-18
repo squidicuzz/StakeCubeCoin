@@ -420,9 +420,9 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 },
                 RPCExamples{
                     HelpExampleCli("getblocktemplate", "")
-                    + HelpExampleCli("getblocktemplate", "\"template\", \"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
+                    + HelpExampleCli("getblocktemplate", "", "\"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
                     + HelpExampleRpc("getblocktemplate", "")
-                    + HelpExampleRpc("getblocktemplate", "\"template\", \"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
+                    + HelpExampleRpc("getblocktemplate", "", "\"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
                 },
             }.ToString());
 
@@ -1181,7 +1181,7 @@ static const CRPCCommand commands[] =
     { "mining",             "getnetworkhashps",       &getnetworkhashps,       {"nblocks","height"} },
     { "mining",             "getmininginfo",          &getmininginfo,          {} },
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  {"txid","fee_delta"} },
-    { "mining",             "getblocktemplate",       &getblocktemplate,       {"template_request", "reward_address"} },
+    { "mining",             "getblocktemplate",       &getblocktemplate,       {"template_request","reward_address"} },
     { "mining",             "pprpcsb",                &pprpcsb,                {"header_hash","mix_hash", "nonce"} },
     { "mining",             "submitblock",            &submitblock,            {"hexdata","dummy"} },
     { "mining",             "submitheader",           &submitheader,           {"hexdata"} },
