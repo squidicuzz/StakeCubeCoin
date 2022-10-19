@@ -61,7 +61,7 @@ public:
     uint256 proTxHash;
     COutPoint collateralOutpoint;
     uint16_t nOperatorReward{0};
-    CDeterministicMNStateCPtr pdmnState;
+    std::shared_ptr<const CDeterministicMNState> pdmnState;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, bool oldFormat)
@@ -348,8 +348,8 @@ public:
     CDeterministicMNList ApplyDiff(const CBlockIndex* pindex, const CDeterministicMNListDiff& diff) const;
 
     void AddMN(const CDeterministicMNCPtr& dmn, bool fBumpTotalCount = true);
-    void UpdateMN(const CDeterministicMN& oldDmn, const CDeterministicMNStateCPtr& pdmnState);
-    void UpdateMN(const uint256& proTxHash, const CDeterministicMNStateCPtr& pdmnState);
+    void UpdateMN(const CDeterministicMN& oldDmn, const std::shared_ptr<const CDeterministicMNState>& pdmnState);
+    void UpdateMN(const uint256& proTxHash, const std::shared_ptr<const CDeterministicMNState>& pdmnState);
     void UpdateMN(const CDeterministicMN& oldDmn, const CDeterministicMNStateDiff& stateDiff);
     void RemoveMN(const uint256& proTxHash);
 
@@ -435,7 +435,7 @@ public:
 
     std::vector<CDeterministicMNCPtr> addedMNs;
     // keys are all relating to the internalId of MNs
-    std::map<uint64_t, CDeterministicMNStateDiff> updatedMNs;
+    std::map<uint64_t, std::shared_ptr<const CDeterministicMNState>> updatedMNs;
     std::set<uint64_t> removedMns;
 
     template<typename Stream>
