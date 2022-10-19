@@ -420,9 +420,9 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 },
                 RPCExamples{
                     HelpExampleCli("getblocktemplate", "")
-                    + HelpExampleCli("getblocktemplate", "", "\"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
+                    + HelpExampleCli("getblocktemplate", "\"template\", \"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
                     + HelpExampleRpc("getblocktemplate", "")
-                    + HelpExampleRpc("getblocktemplate", "", "\"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
+                    + HelpExampleRpc("getblocktemplate", "\"template\", \"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
                 },
             }.ToString());
 
