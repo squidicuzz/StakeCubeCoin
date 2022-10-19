@@ -350,7 +350,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                                 },
                         },
                         "\"template_request\""},
-                    {"reward_address", RPCArg::Type::STR, "", "Address to place into Coinbase",
+                    {"reward_address", RPCArg::Type::OBJ, "", "Address to place into Coinbase",
                         {
                             {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "address for reward in coinbase (meaningful only if block solution is later submitted with pprpcsb)\n}"}
                         },
