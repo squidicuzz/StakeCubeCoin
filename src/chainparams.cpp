@@ -202,7 +202,7 @@ public:
         /** Prog PoW **/
         consensus.nPPSwitchHeight = 490000; //placeholder set to disconnect peers.
         consensus.nPPSwitchTime = 1666350000; // Friday, October 21, 2022 11:00:00 AM GMT
-        consensus.nInitialPPDifficulty = 0x1d00dade;    //  ~1 MH/s
+        consensus.nInitialPPDifficulty = 0x1d016e81;    //  ~10 MH/s
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit        = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
