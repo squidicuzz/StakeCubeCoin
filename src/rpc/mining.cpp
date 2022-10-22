@@ -352,7 +352,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                                 },
                         },
                         "\"template_request\""},
-                    {"reward_address", RPCArg::Type::STR, "", "Address to place into Coinbase",
+                    {"reward_address", RPCArg::Type::OBJ, "", "Address to place into Coinbase",
                         {
                             {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "address for reward in coinbase (meaningful only if block solution is later submitted with pprpcsb)\n}"}
                         },
@@ -422,7 +422,9 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 },
                 RPCExamples{
                     HelpExampleCli("getblocktemplate", "")
+                    + HelpExampleCli("getblocktemplate", "\"template\", \"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
                     + HelpExampleRpc("getblocktemplate", "")
+                    + HelpExampleRpc("getblocktemplate", "\"template\", \"sfWnK8nQQFodqEuqoVN2e9AK8GoAEU2nHN\"")
                 },
             }.ToString());
 
@@ -1180,7 +1182,7 @@ static const CRPCCommand commands[] =
     { "mining",             "getnetworkhashps",       &getnetworkhashps,       {"nblocks","height"} },
     { "mining",             "getmininginfo",          &getmininginfo,          {} },
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  {"txid","fee_delta"} },
-    { "mining",             "getblocktemplate",       &getblocktemplate,       {"template_request"} },
+    { "mining",             "getblocktemplate",       &getblocktemplate,       {"template_request", "reward_address"} },
     { "mining",             "pprpcsb",                &pprpcsb,                {"header_hash","mix_hash", "nonce"} },
     { "mining",             "submitblock",            &submitblock,            {"hexdata","dummy"} },
     { "mining",             "submitheader",           &submitheader,           {"hexdata"} },

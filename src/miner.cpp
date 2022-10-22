@@ -218,7 +218,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     // Fill in header
     pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
     UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-    pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+    if (nHeight == 491409) {
+        pblock->nBits          = chainparams.GetConsensus().nInitialPPDifficulty;
+    } else {
+        pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+    }
     pblock->nNonce         = 0;
     pblock->nNonce64       = 0;
     pblock->nHeight        = nHeight;
