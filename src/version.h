@@ -10,7 +10,7 @@
  * network protocol versioning
  */
 //! client proto version
-static const int PROTOCOL_VERSION = 70222;
+static const int PROTOCOL_VERSION = 70223;
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -19,7 +19,7 @@ static const int INIT_PROTO_VERSION = 209;
 static const int MIN_PEER_PROTO_VERSION = 70221;
 
 //! minimum proto for ProgPow
-static const int MIN_PP_PROTO_VERSION = 70222;
+static const int MIN_PP_PROTO_VERSION = 70223;
 
 //! minimum proto version of masternode to accept in DKGs
 static const int MIN_MASTERNODE_PROTO_VERSION = 70219;
