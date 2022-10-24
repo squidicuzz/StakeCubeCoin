@@ -132,6 +132,7 @@ builder-image:
       - build-ci/scccore-$BUILD_TARGET/src/qt/test/test_scc-qt.exe
       - build-ci/scccore-$BUILD_TARGET/src/test/test_scc
       - build-ci/scccore-$BUILD_TARGET/src/test/test_scc.exe
+      - build-ci/scccore-$BUILD_TARGET/src/test/fuzz/*
     expire_in: 3 days
 
 .test-template:
