@@ -22,7 +22,7 @@ Before tests can be run locally, SCC Core must be built.  See the [building inst
 
 ### Functional tests
 
-#### Dependencies
+#### Dependencies and prerequisites
 
 Many SCC specific tests require scc_hash. To install it:
 
@@ -33,6 +33,13 @@ The ZMQ functional test requires a python ZMQ library. To install it:
 
 - on Unix, run `sudo apt-get install python3-zmq`
 - on mac OS, run `pip3 install pyzmq`
+
+
+On Windows the `PYTHONUTF8` environment variable must be set to 1:
+
+```cmd
+set PYTHONUTF8=1
+```
 
 #### Running the tests
 
