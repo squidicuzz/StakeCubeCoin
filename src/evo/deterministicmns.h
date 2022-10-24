@@ -490,7 +490,7 @@ public:
     uint256 blockHash;
     int nHeight{-1};
     std::map<uint256, CDeterministicMNCPtr> addedMNs;
-    std::map<uint256, CDeterministicMNStateCPtr> updatedMNs;
+    std::map<uint256, std::shared_ptr<const CDeterministicMNState>> updatedMNs;
     std::set<uint256> removedMns;
 
     template<typename Stream>
