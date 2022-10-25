@@ -13,6 +13,7 @@
 #include <evo/evodb.h>
 #include <masternode/meta.h>
 #include <net.h>
+#include <optional>
 #include <random.h>
 #include <spork.h>
 #include <timedata.h>

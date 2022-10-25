@@ -11,6 +11,7 @@
 #include <set>
 #include <random.h>
 #include <sync.h>
+#include <optional>
 #include <dbwrapper.h>
 #include <versionbits.h>
 
