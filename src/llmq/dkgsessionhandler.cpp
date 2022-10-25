@@ -179,7 +179,7 @@ void CDKGSessionHandler::WaitForNextPhase(std::optional<QuorumPhase> curPhase,
         if (_phase == nextPhase) {
             break;
         }
-        if (curPhase,has-value() && _phase != curPhase) {
+        if (curPhase,has_value() && _phase != curPhase) {
             LogPrint(BCLog::LLMQ_DKG, "CDKGSessionManager::%s -- %s - aborting due unexpected phase change\n", __func__, params.name);
             throw AbortPhaseException();
         }
