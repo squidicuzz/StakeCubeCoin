@@ -24,6 +24,7 @@ ExecStart=/usr/bin/sccd -daemon \
 Type=forking
 PIDFile=/run/sccd/sccd.pid
 Restart=on-failure
+TimeoutStopSec=600
 
 # Directory creation and permissions
 ####################################
