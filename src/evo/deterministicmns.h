@@ -435,7 +435,7 @@ public:
 
     std::vector<CDeterministicMNCPtr> addedMNs;
     // keys are all relating to the internalId of MNs
-    std::map<uint64_t, std::shared_ptr<const CDeterministicMNState>> updatedMNs;
+    std::map<uint64_t, CDeterministicMNStateDiff> updatedMNs;
     std::set<uint64_t> removedMns;
 
     template<typename Stream>
@@ -490,7 +490,7 @@ public:
     uint256 blockHash;
     int nHeight{-1};
     std::map<uint256, CDeterministicMNCPtr> addedMNs;
-    std::map<uint256, CDeterministicMNStateDiff> updatedMNs;
+    std::map<uint256, std::shared_ptr<const CDeterministicMNState>> updatedMNs;
     std::set<uint256> removedMns;
 
     template<typename Stream>
