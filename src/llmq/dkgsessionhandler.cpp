@@ -92,7 +92,7 @@ void CDKGSessionHandler::UpdatedBlockTip(const CBlockIndex* pindexNew)
     bool fNewPhase = (quorumStageInt % params.dkgPhaseBlocks) == 0;
     int phaseInt = quorumStageInt / params.dkgPhaseBlocks + 1;
     QuorumPhase oldPhase = phase;
-    if (fNewPhase && phaseInt >= int(QuorumPhase_Initialized) && phaseInt <= int(QuorumPhase_Idle)) {
+    if (fNewPhase && phaseInt >= int(QuorumPhase::Initialized) && phaseInt <= int(QuorumPhase::Idle)) {
         phase = static_cast<QuorumPhase>(phaseInt);
     }
 
