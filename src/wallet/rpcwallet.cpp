@@ -329,11 +329,11 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
     if (nValue > pwallet->GetBalance().m_mine_trusted)
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds");
 
-    std::string strError;
+    bilingual_str error;
     if (pwallet->IsLocked()) {
-        strError = "Error: Wallet locked, unable to create transaction!";
-        LogPrintf("BurnMoney() : %s", strError);
-        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+        error = strprintf(Untranslated("Error: Wallet locked, unable to create transaction!"));
+        LogPrintf("BurnMoney() : %s", error);
+        throw JSONRPCError(RPC_WALLET_ERROR, error.original);
     }
 
     // Get scriptPubKey
@@ -349,11 +349,11 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
     CRecipient recipient = {scriptPubKey, nValue, false};
     vecSend.push_back(recipient);
     CTransactionRef tx;
-    if (!pwallet->CreateTransaction(*locked_chain, vecSend, tx, nFeeRequired, nChangePosRet, strError, coin_control)) {
+    if (!pwallet->CreateTransaction(*locked_chain, vecSend, tx, nFeeRequired, nChangePosRet, error, coin_control)) {
         if (nValue + nFeeRequired > pwallet->GetBalance().m_mine_trusted)
-            strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired));
-        LogPrintf("BurnMoney() : %s\n", strError);
-        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+            error = strprintf(Untranslated("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!"), FormatMoney(nFeeRequired));
+        LogPrintf("BurnMoney() : %s\n", error);
+        throw JSONRPCError(RPC_WALLET_ERROR, error.original);
     }
 
     mapValue_t mapValue;
