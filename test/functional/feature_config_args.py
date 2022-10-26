@@ -47,19 +47,19 @@ class ConfArgsTest(BitcoinTestFramework):
 
         with open(inc_conf_file_path, 'w', encoding='utf-8') as conf:
             conf.write('nono\n')
-        self.nodes[0].assert_start_raises_init_error(expected_msg='Error reading configuration file: parse error on line 1: nono, if you intended to specify a negated option, use nono=1 instead')
+        self.nodes[0].assert_start_raises_init_error(expected_msg='Error: Error reading configuration file: parse error on line 1: nono, if you intended to specify a negated option, use nono=1 instead')
 
         with open(inc_conf_file_path, 'w', encoding='utf-8') as conf:
             conf.write('server=1\nrpcuser=someuser\nrpcpassword=some#pass')
-        self.nodes[0].assert_start_raises_init_error(expected_msg='Error reading configuration file: parse error on line 3, using # in rpcpassword can be ambiguous and should be avoided')
+        self.nodes[0].assert_start_raises_init_error(expected_msg='Error: Error reading configuration file: parse error on line 3, using # in rpcpassword can be ambiguous and should be avoided')
 
         with open(inc_conf_file_path, 'w', encoding='utf-8') as conf:
             conf.write('server=1\nrpcuser=someuser\nmain.rpcpassword=some#pass')
-        self.nodes[0].assert_start_raises_init_error(expected_msg='Error reading configuration file: parse error on line 3, using # in rpcpassword can be ambiguous and should be avoided')
+        self.nodes[0].assert_start_raises_init_error(expected_msg='Error: Error reading configuration file: parse error on line 3, using # in rpcpassword can be ambiguous and should be avoided')
 
         with open(inc_conf_file_path, 'w', encoding='utf-8') as conf:
             conf.write('server=1\nrpcuser=someuser\n[main]\nrpcpassword=some#pass')
-        self.nodes[0].assert_start_raises_init_error(expected_msg='Error reading configuration file: parse error on line 4, using # in rpcpassword can be ambiguous and should be avoided')
+        self.nodes[0].assert_start_raises_init_error(expected_msg='Error: Error reading configuration file: parse error on line 4, using # in rpcpassword can be ambiguous and should be avoided')
 
         inc_conf_file2_path = os.path.join(self.nodes[0].datadir, 'include2.conf')
         with open(os.path.join(self.nodes[0].datadir, 'stakecubecoin.conf'), 'a', encoding='utf-8') as conf:
