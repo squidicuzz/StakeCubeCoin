@@ -332,7 +332,7 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
     bilingual_str error;
     if (pwallet->IsLocked()) {
         error = strprintf(Untranslated("Error: Wallet locked, unable to create transaction!"));
-        LogPrintf("BurnMoney() : %s", error);
+        LogPrintf("BurnMoney() : %s", error.original);
         throw JSONRPCError(RPC_WALLET_ERROR, error.original);
     }
 
@@ -352,7 +352,7 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
     if (!pwallet->CreateTransaction(*locked_chain, vecSend, tx, nFeeRequired, nChangePosRet, error, coin_control)) {
         if (nValue + nFeeRequired > pwallet->GetBalance().m_mine_trusted)
             error = strprintf(Untranslated("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!"), FormatMoney(nFeeRequired));
-        LogPrintf("BurnMoney() : %s\n", error);
+        LogPrintf("BurnMoney() : %s\n", error.original);
         throw JSONRPCError(RPC_WALLET_ERROR, error.original);
     }
 
