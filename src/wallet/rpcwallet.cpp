@@ -356,11 +356,7 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
     }
 
     mapValue_t mapValue;
-    CValidationState state;
-    if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */)) {
-        strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
-        throw JSONRPCError(RPC_WALLET_ERROR, strError);
-    }
+    pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */);
 
     return tx;
 }
