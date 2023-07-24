@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2015-2021 The Dash Core developers
+# Copyright (c) 2015-2022 The Dash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -52,14 +52,15 @@ class TestP2PConn(P2PInterface):
 class LLMQ_IS_CL_Conflicts(SCCTestFramework):
     def set_test_params(self):
         self.set_scc_test_params(4, 3, fast_dip3_enforcement=True)
-        #disable_mocktime()
+        self.set_dash_llmq_test_params(4, 4)
+        self.supports_cli = False
 
     def run_test(self):
         self.activate_dip8()
 
         self.test_node = self.nodes[0].add_p2p_connection(TestP2PConn())
 
-        self.nodes[0].spork("SPORK_17_QUORUM_DKG_ENABLED", 0)
+        self.nodes[0].sporkupdate("SPORK_17_QUORUM_DKG_ENABLED", 0)
         self.wait_for_sporks_same()
 
         self.mine_quorum()
@@ -72,6 +73,14 @@ class LLMQ_IS_CL_Conflicts(SCCTestFramework):
         self.test_chainlock_overrides_islock(True, False)
         self.test_chainlock_overrides_islock(True, True)
         self.test_chainlock_overrides_islock_overrides_nonchainlock(False)
+        self.activate_dip0024()
+        self.log.info("Activated DIP0024 at height:" + str(self.nodes[0].getblockcount()))
+        self.test_chainlock_overrides_islock_overrides_nonchainlock(False)
+        # At this point, we need to move forward 3 cycles (3 x 24 blocks) so the first 3 quarters can be created (without DKG sessions)
+        self.move_to_next_cycle()
+        self.move_to_next_cycle()
+        self.move_to_next_cycle()
+        self.mine_cycle_quorum()
         self.test_chainlock_overrides_islock_overrides_nonchainlock(True)
 
     def test_chainlock_overrides_islock(self, test_block_conflict, mine_confllicting=False):
@@ -207,7 +216,7 @@ class LLMQ_IS_CL_Conflicts(SCCTestFramework):
         # Ensure spork uniqueness in multiple function runs
         self.bump_mocktime(1)
         # Disable ChainLocks to avoid accidental locking
-        self.nodes[0].spork("SPORK_19_CHAINLOCKS_ENABLED", 4070908800)
+        self.nodes[0].sporkupdate("SPORK_19_CHAINLOCKS_ENABLED", 4070908800)
         self.wait_for_sporks_same()
 
         # Send tx1, which will later conflict with the ISLOCK
@@ -259,7 +268,7 @@ class LLMQ_IS_CL_Conflicts(SCCTestFramework):
             assert_equal(node.getbestblockhash(), islock_tip)
 
         # Check that the CL-ed block overrides the one with islocks
-        self.nodes[0].spork("SPORK_19_CHAINLOCKS_ENABLED", 0)  # Re-enable ChainLocks to accept clsig
+        self.nodes[0].sporkupdate("SPORK_19_CHAINLOCKS_ENABLED", 0)  # Re-enable ChainLocks to accept clsig
         self.test_node.send_clsig(cl)  # relay clsig ASAP to prevent nodes from locking islock-ed tip
         self.wait_for_sporks_same()
         for node in self.nodes:
@@ -316,7 +325,7 @@ class LLMQ_IS_CL_Conflicts(SCCTestFramework):
 
         coinbase.calc_sha256()
 
-        block = create_block(int(tip_hash, 16), coinbase, ntime=bt['curtime'])
+        block = create_block(int(tip_hash, 16), coinbase, ntime=bt['curtime'], version=bt['version'])
         block.vtx += vtx
 
         # Add quorum commitments from template

@@ -7,6 +7,7 @@
 #include <config/scc-config.h>
 #endif
 
+#include <compat.h>
 #include <util/time.h>
 
 #include <atomic>
@@ -77,10 +78,12 @@ std::string FormatISO8601DateTime(int64_t nTime) {
     struct tm ts;
     time_t time_val = nTime;
 #ifdef HAVE_GMTIME_R
-    gmtime_r(&time_val, &ts);
+    if (gmtime_r(&time_val, &ts) == nullptr) {
 #else
-    gmtime_s(&ts, &time_val);
+    if (gmtime_s(&ts, &time_val) != 0) {
 #endif
+        return {};
+    }
     return strprintf("%04i-%02i-%02iT%02i:%02i:%02iZ", ts.tm_year + 1900, ts.tm_mon + 1, ts.tm_mday, ts.tm_hour, ts.tm_min, ts.tm_sec);
 }
 
@@ -88,10 +91,12 @@ std::string FormatISO8601Date(int64_t nTime) {
     struct tm ts;
     time_t time_val = nTime;
 #ifdef HAVE_GMTIME_R
-    gmtime_r(&time_val, &ts);
+    if (gmtime_r(&time_val, &ts) == nullptr) {
 #else
-    gmtime_s(&ts, &time_val);
+    if (gmtime_s(&ts, &time_val) != 0) {
 #endif
+        return {};
+    }
     return strprintf("%04i-%02i-%02i", ts.tm_year + 1900, ts.tm_mon + 1, ts.tm_mday);
 }
 
@@ -104,4 +109,31 @@ std::string FormatISO8601Time(int64_t nTime) {
     gmtime_s(&ts, &time_val);
 #endif
     return strprintf("%02i:%02i:%02iZ", ts.tm_hour, ts.tm_min, ts.tm_sec);
+}
+
+int64_t ParseISO8601DateTime(const std::string& str)
+{
+    static const boost::posix_time::ptime epoch = boost::posix_time::from_time_t(0);
+    static const std::locale loc(std::locale::classic(),
+        new boost::posix_time::time_input_facet("%Y-%m-%dT%H:%M:%SZ"));
+    std::istringstream iss(str);
+    iss.imbue(loc);
+    boost::posix_time::ptime ptime(boost::date_time::not_a_date_time);
+    iss >> ptime;
+    if (ptime.is_not_a_date_time() || epoch > ptime)
+        return 0;
+    return (ptime - epoch).total_seconds();
+}
+
+struct timeval MillisToTimeval(int64_t nTimeout)
+{
+    struct timeval timeout;
+    timeout.tv_sec  = nTimeout / 1000;
+    timeout.tv_usec = (nTimeout % 1000) * 1000;
+    return timeout;
+}
+
+struct timeval MillisToTimeval(std::chrono::milliseconds ms)
+{
+    return MillisToTimeval(count_milliseconds(ms));
 }

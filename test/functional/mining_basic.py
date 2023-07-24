@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Bitcoin Core developers
+# Copyright (c) 2014-2018 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test mining RPCs
@@ -11,10 +11,13 @@
 import copy
 from decimal import Decimal
 
-from test_framework.blocktools import create_coinbase
+from test_framework.blocktools import (
+    create_coinbase,
+)
 from test_framework.messages import (
     CBlock,
     CBlockHeader,
+    BLOCK_HEADER_SIZE
 )
 from test_framework.mininode import (
     P2PDataStore,
@@ -37,9 +40,24 @@ def assert_template(node, block, expect, rehash=True):
 class MiningTest(BitcoinTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
-        self.setup_clean_chain = False
+        self.setup_clean_chain = True
+        self.supports_cli = False
+
+    def mine_chain(self):
+        self.log.info('Create some old blocks')
+        for _ in range(0, 200):
+            self.bump_mocktime(156)
+            self.nodes[0].generate(1)
+        mining_info = self.nodes[0].getmininginfo()
+        assert_equal(mining_info['blocks'], 200)
+        assert_equal(mining_info['currentblocktx'], 0)
+        assert_equal(mining_info['currentblocksize'], 1000)
+        self.restart_node(0)
+        self.connect_nodes(0, 1)
+        self.connect_nodes(1, 0)
 
     def run_test(self):
+        self.mine_chain()
         node = self.nodes[0]
 
         def assert_submitblock(block, result_str_1, result_str_2=None):
@@ -52,8 +70,8 @@ class MiningTest(BitcoinTestFramework):
         mining_info = node.getmininginfo()
         assert_equal(mining_info['blocks'], 200)
         assert_equal(mining_info['chain'], self.chain)
-        assert_equal(mining_info['currentblocksize'], 0)
-        assert_equal(mining_info['currentblocktx'], 0)
+        assert 'currentblocksize' not in mining_info
+        assert 'currentblocktx' not in mining_info
         assert_equal(mining_info['difficulty'], Decimal('4.656542373906925E-10'))
         assert_equal(mining_info['networkhashps'], Decimal('0.01282051282051282'))
         assert_equal(mining_info['pooledtx'], 0)
@@ -128,10 +146,9 @@ class MiningTest(BitcoinTestFramework):
 
         self.log.info("getblocktemplate: Test bad tx count")
         # The tx count is immediately after the block header
-        TX_COUNT_OFFSET = 80
         bad_block_sn = bytearray(block.serialize())
-        assert_equal(bad_block_sn[TX_COUNT_OFFSET], 1)
-        bad_block_sn[TX_COUNT_OFFSET] += 1
+        assert_equal(bad_block_sn[BLOCK_HEADER_SIZE], 1)
+        bad_block_sn[BLOCK_HEADER_SIZE] += 1
         assert_raises_rpc_error(-22, "Block decode failed", node.getblocktemplate, {'data': bad_block_sn.hex(), 'mode': 'proposal'})
 
         self.log.info("getblocktemplate: Test bad bits")
@@ -161,9 +178,9 @@ class MiningTest(BitcoinTestFramework):
         assert_submitblock(bad_block, 'prev-blk-not-found', 'prev-blk-not-found')
 
         self.log.info('submitheader tests')
-        assert_raises_rpc_error(-22, 'Block header decode failed', lambda: node.submitheader(hexdata='xx' * 80))
-        assert_raises_rpc_error(-22, 'Block header decode failed', lambda: node.submitheader(hexdata='ff' * 78))
-        assert_raises_rpc_error(-25, 'Must submit previous header', lambda: node.submitheader(hexdata='ff' * 80))
+        assert_raises_rpc_error(-22, 'Block header decode failed', lambda: node.submitheader(hexdata='xx' * BLOCK_HEADER_SIZE))
+        assert_raises_rpc_error(-22, 'Block header decode failed', lambda: node.submitheader(hexdata='ff' * (BLOCK_HEADER_SIZE-2)))
+        assert_raises_rpc_error(-25, 'Must submit previous header', lambda: node.submitheader(hexdata=super(CBlock, bad_block).serialize().hex()))
 
         block.nTime += 1
         block.solve()

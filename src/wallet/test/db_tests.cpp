@@ -8,17 +8,28 @@
 
 #include <fs.h>
 #include <test/util/setup_common.h>
-#include <wallet/db.h>
+#include <wallet/bdb.h>
 
 
 BOOST_FIXTURE_TEST_SUITE(db_tests, BasicTestingSetup)
+
+static std::shared_ptr<BerkeleyEnvironment> GetWalletEnv(const fs::path& path, std::string& database_filename)
+{
+    fs::path data_file = BDBDataFile(path);
+    database_filename = data_file.filename().string();
+    return GetBerkeleyEnv(data_file.parent_path());
+}
 
 BOOST_AUTO_TEST_CASE(getwalletenv_file)
 {
     std::string test_name = "test_name.dat";
     const fs::path datadir = GetDataDir();
     fs::path file_path = datadir / test_name;
+#if BOOST_VERSION >= 107700
+    std::ofstream f(BOOST_FILESYSTEM_C_STR(file_path));
+#else
     std::ofstream f(file_path.BOOST_FILESYSTEM_C_STR);
+#endif // BOOST_VERSION >= 107700
     f.close();
 
     std::string filename;

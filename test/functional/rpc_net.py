@@ -7,13 +7,12 @@
 Tests correspond to code in rpc/net.cpp.
 """
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import DashTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than_or_equal,
     assert_greater_than,
     assert_raises_rpc_error,
-    connect_nodes,
     p2p_port,
     wait_until,
 )
@@ -24,6 +23,7 @@ from test_framework.messages import (
     NODE_NETWORK,
     NODE_GETUTXO,NODE_BLOOM,
     NODE_NETWORK_LIMITED,
+    NODE_HEADERS_COMPRESSED,
 )
 
 
@@ -42,17 +42,14 @@ def assert_net_servicesnames(servicesflag, servicenames):
         assert "BLOOM" in servicenames
     if servicesflag & NODE_NETWORK_LIMITED:
         assert "NETWORK_LIMITED" in servicenames
+    if servicesflag & NODE_HEADERS_COMPRESSED:
+        assert "HEADERS_COMPRESSED" in servicenames
 
 
-class NetTest(BitcoinTestFramework):
+class NetTest(DashTestFramework):
     def set_test_params(self):
-        self.setup_clean_chain = True
-        self.num_nodes = 2
-
-    def setup_network(self):
-        self.disable_mocktime()
-        self.setup_nodes()
-        connect_nodes(self.nodes[0], 1)
+        self.set_dash_test_params(3, 1, fast_dip3_enforcement=True)
+        self.supports_cli = False
 
     def run_test(self):
         # Wait for one ping/pong to finish so that we can be sure that there is no chatter between nodes for some time
@@ -60,8 +57,9 @@ class NetTest(BitcoinTestFramework):
         self.nodes[0].ping()
         wait_until(lambda: all(['pingtime' in n for n in self.nodes[0].getpeerinfo()]))
         self.log.info('Connect nodes both way')
-        connect_nodes(self.nodes[0], 1)
-        connect_nodes(self.nodes[1], 0)
+        self.connect_nodes(0, 1)
+        self.connect_nodes(1, 0)
+        self.sync_all()
 
         self._test_connection_count()
         self._test_getnettotals()
@@ -73,7 +71,9 @@ class NetTest(BitcoinTestFramework):
 
     def _test_connection_count(self):
         # connect_nodes connects each node to the other
-        assert_equal(self.nodes[0].getconnectioncount(), 2)
+        # and node0 was also connected to node2 (a masternode)
+        # during network setup
+        assert_equal(self.nodes[0].getconnectioncount(), 3)
 
     def _test_getnettotals(self):
         # getnettotals totalbytesrecv and totalbytessent should be
@@ -84,7 +84,7 @@ class NetTest(BitcoinTestFramework):
         net_totals_before = self.nodes[0].getnettotals()
         peer_info = self.nodes[0].getpeerinfo()
         net_totals_after = self.nodes[0].getnettotals()
-        assert_equal(len(peer_info), 2)
+        assert_equal(len(peer_info), 3)
         peers_recv = sum([peer['bytesrecv'] for peer in peer_info])
         peers_sent = sum([peer['bytessent'] for peer in peer_info])
 
@@ -107,7 +107,7 @@ class NetTest(BitcoinTestFramework):
 
     def _test_getnetworkinfo(self):
         assert_equal(self.nodes[0].getnetworkinfo()['networkactive'], True)
-        assert_equal(self.nodes[0].getnetworkinfo()['connections'], 2)
+        assert_equal(self.nodes[0].getnetworkinfo()['connections'], 3)
 
         self.nodes[0].setnetworkactive(state=False)
         assert_equal(self.nodes[0].getnetworkinfo()['networkactive'], False)
@@ -117,8 +117,8 @@ class NetTest(BitcoinTestFramework):
 
         self.nodes[0].setnetworkactive(state=True)
         self.log.info('Connect nodes both way')
-        connect_nodes(self.nodes[0], 1)
-        connect_nodes(self.nodes[1], 0)
+        self.connect_nodes(0, 1)
+        self.connect_nodes(1, 0)
 
         assert_equal(self.nodes[0].getnetworkinfo()['networkactive'], True)
         assert_equal(self.nodes[0].getnetworkinfo()['connections'], 2)
@@ -126,7 +126,18 @@ class NetTest(BitcoinTestFramework):
         # check the `servicesnames` field
         network_info = [node.getnetworkinfo() for node in self.nodes]
         for info in network_info:
-            assert_net_servicesnames(int(info["localservices"]), info["localservicesnames"])
+            assert_net_servicesnames(int(info["localservices"], 16), info["localservicesnames"])
+
+        self.log.info('Test extended connections info')
+        self.connect_nodes(1, 2)
+        self.nodes[1].ping()
+        wait_until(lambda: all(['pingtime' in n for n in self.nodes[1].getpeerinfo()]))
+        assert_equal(self.nodes[1].getnetworkinfo()['connections'], 3)
+        assert_equal(self.nodes[1].getnetworkinfo()['inboundconnections'], 1)
+        assert_equal(self.nodes[1].getnetworkinfo()['outboundconnections'], 2)
+        assert_equal(self.nodes[1].getnetworkinfo()['mnconnections'], 1)
+        assert_equal(self.nodes[1].getnetworkinfo()['inboundmnconnections'], 0)
+        assert_equal(self.nodes[1].getnetworkinfo()['outboundmnconnections'], 1)
 
     def _test_getaddednodeinfo(self):
         assert_equal(self.nodes[0].getaddednodeinfo(), [])
@@ -137,6 +148,13 @@ class NetTest(BitcoinTestFramework):
         added_nodes = self.nodes[0].getaddednodeinfo(ip_port)
         assert_equal(len(added_nodes), 1)
         assert_equal(added_nodes[0]['addednode'], ip_port)
+        # check that node cannot be added again
+        assert_raises_rpc_error(-23, "Node already added", self.nodes[0].addnode, node=ip_port, command='add')
+        # check that node can be removed
+        self.nodes[0].addnode(node=ip_port, command='remove')
+        assert_equal(self.nodes[0].getaddednodeinfo(), [])
+        # check that trying to remove the node again returns an error
+        assert_raises_rpc_error(-24, "Node could not be removed", self.nodes[0].addnode, node=ip_port, command='remove')
         # check that a non-existent node returns an error
         assert_raises_rpc_error(-24, "Node has not been added", self.nodes[0].getaddednodeinfo, '1.1.1.1')
 
@@ -148,7 +166,7 @@ class NetTest(BitcoinTestFramework):
         assert_equal(peer_info[1][0]['addrbind'], peer_info[0][0]['addr'])
         # check the `servicesnames` field
         for info in peer_info:
-            assert_net_servicesnames(int(info[0]["services"]), info[0]["servicesnames"])
+            assert_net_servicesnames(int(info[0]["services"], 16), info[0]["servicesnames"])
 
     def test_service_flags(self):
         self.nodes[0].add_p2p_connection(P2PInterface(), services=(1 << 4) | (1 << 63))
@@ -177,7 +195,8 @@ class NetTest(BitcoinTestFramework):
         node_addresses = self.nodes[0].getnodeaddresses(REQUEST_COUNT)
         assert_equal(len(node_addresses), REQUEST_COUNT)
         for a in node_addresses:
-            assert_greater_than(a["time"], 1527811200) # 1st June 2018
+            # see penalty calculations for ADDRs with nTime <= 100000000 in net_processing.cpp
+            assert_equal(a["time"], self.mocktime - 5 * 24 * 60 * 60 - 2 * 60 * 60)
             assert_equal(a["services"], NODE_NETWORK)
             assert a["address"] in imported_addrs
             assert_equal(a["port"], 8333)

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2021-2022 The Dash Core developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 export LC_ALL=C
 
@@ -9,7 +12,7 @@ DOCKER_IMAGE=${DOCKER_IMAGE:-sccpay/sccd-develop}
 DOCKER_TAG=${DOCKER_TAG:-latest}
 DOCKER_RELATIVE_PATH=contrib/containers/deploy
 
-BUILD_DIR=${BUILD_DIR:-.}
+BASE_BUILD_DIR=${BASE_BUILD_DIR:-.}
 
 
 if [ -d $DOCKER_RELATIVE_PATH/bin ]; then

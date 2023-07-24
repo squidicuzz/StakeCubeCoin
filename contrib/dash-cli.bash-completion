@@ -17,13 +17,8 @@ _scc_rpc() {
     $scc_cli "${rpcargs[@]}" "$@"
 }
 
-# Add wallet accounts to COMPREPLY
 _scc_accounts() {
-    local accounts
     accounts=$(_scc_rpc listaccounts | awk -F '"' '{ print $2 }')
-    COMPREPLY=( "${COMPREPLY[@]}" $( compgen -W "$accounts" -- "$cur" ) )
-}
-
 _scc_cli() {
     local cur prev words=() cword
     local scc_cli
@@ -63,7 +58,7 @@ _scc_cli() {
                 _scc_accounts
                 return 0
                 ;;
-            getbalance|gettxout|importaddress|importpubkey|importprivkey|listreceivedbyaccount|listreceivedbyaddress|listsinceblock)
+            getbalance|gettxout|importaddress|importpubkey|importprivkey|listreceivedbyaddress|listsinceblock)
                 COMPREPLY=( $( compgen -W "true false" -- "$cur" ) )
                 return 0
                 ;;
@@ -80,14 +75,11 @@ _scc_cli() {
                 COMPREPLY=( $( compgen -W "add remove" -- "$cur" ) )
                 return 0
                 ;;
-            fundrawtransaction|getblock|getblockheader|getmempoolancestors|getmempooldescendants|getrawtransaction|gettransaction|listaccounts|listreceivedbyaccount|listreceivedbyaddress|sendrawtransaction)
+            fundrawtransaction|getblock|getblockheader|getmempoolancestors|getmempooldescendants|getrawtransaction|gettransaction|listreceivedbyaddress|sendrawtransaction)
                 COMPREPLY=( $( compgen -W "true false" -- "$cur" ) )
                 return 0
                 ;;
-            move|setaccount)
                 _scc_accounts
-                return 0
-                ;;
         esac
     fi
 
@@ -96,11 +88,11 @@ _scc_cli() {
             _filedir
             return 0
             ;;
-        getaddednodeinfo|getrawmempool|lockunspent|setgenerate)
+        getaddednodeinfo|getrawmempool|lockunspent)
             COMPREPLY=( $( compgen -W "true false" -- "$cur" ) )
             return 0
             ;;
-        getaccountaddress|getaddressesbyaccount|getbalance|getnewaddress|getreceivedbyaccount|listtransactions|move|sendfrom|sendmany)
+        getbalance|getnewaddress|listtransactions|sendmany)
             _scc_accounts
             return 0
             ;;

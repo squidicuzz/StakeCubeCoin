@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2021 The Dash Core developers
+// Copyright (c) 2014-2022 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -132,9 +132,9 @@ int64_t ClientModel::getHeaderTipTime() const
     return cachedBestHeaderTime;
 }
 
-std::vector<CGovernanceObject> ClientModel::getAllGovernanceObjects()
+void ClientModel::getAllGovernanceObjects(std::vector<CGovernanceObject> &obj)
 {
-    return m_node.gov().getAllNewerThan(0);
+    m_node.gov().getAllNewerThan(obj, 0);
 }
 
 void ClientModel::updateNumConnections(int numConnections)
@@ -166,7 +166,7 @@ enum BlockSource ClientModel::getBlockSource() const
 
 QString ClientModel::getStatusBarWarnings() const
 {
-    return QString::fromStdString(m_node.getWarnings("gui"));
+    return QString::fromStdString(m_node.getWarnings());
 }
 
 OptionsModel *ClientModel::getOptionsModel()

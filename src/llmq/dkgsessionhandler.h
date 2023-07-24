@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 The Dash Core developers
+// Copyright (c) 2018-2022 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -16,19 +16,19 @@ class CBlockIndex;
 
 namespace llmq
 {
-
+class CDKGDebugManager;
 class CDKGSession;
 class CDKGSessionManager;
+class CQuorumBlockProcessor;
 
-enum QuorumPhase {
-    QuorumPhase_None = -1,
-    QuorumPhase_Initialized = 1,
-    QuorumPhase_Contribute,
-    QuorumPhase_Complain,
-    QuorumPhase_Justify,
-    QuorumPhase_Commit,
-    QuorumPhase_Finalize,
-    QuorumPhase_Idle,
+enum class QuorumPhase {
+    Initialized = 1,
+    Contribute,
+    Complain,
+    Justify,
+    Commit,
+    Finalize,
+    Idle,
 };
 
 /**
@@ -109,11 +109,15 @@ private:
     mutable CCriticalSection cs;
     std::atomic<bool> stopRequested{false};
 
-    const Consensus::LLMQParams& params;
+    const Consensus::LLMQParams params;
+    CConnman& connman;
+    const int quorumIndex;
     CBLSWorker& blsWorker;
     CDKGSessionManager& dkgManager;
+    CDKGDebugManager& dkgDebugManager;
+    CQuorumBlockProcessor& quorumBlockProcessor;
 
-    QuorumPhase phase GUARDED_BY(cs) {QuorumPhase_Idle};
+    QuorumPhase phase GUARDED_BY(cs) {QuorumPhase::Idle};
     int currentHeight GUARDED_BY(cs) {-1};
     uint256 quorumHash GUARDED_BY(cs);
 
@@ -127,24 +131,12 @@ private:
     CDKGPendingMessages pendingPrematureCommitments;
 
 public:
-    CDKGSessionHandler(const Consensus::LLMQParams& _params, CBLSWorker& _blsWorker, CDKGSessionManager& _dkgManager) :
-            params(_params),
-            blsWorker(_blsWorker),
-            dkgManager(_dkgManager),
-            curSession(std::make_unique<CDKGSession>(_params, _blsWorker, _dkgManager)),
-            pendingContributions((size_t)_params.size * 2, MSG_QUORUM_CONTRIB), // we allow size*2 messages as we need to make sure we see bad behavior (double messages)
-            pendingComplaints((size_t)_params.size * 2, MSG_QUORUM_COMPLAINT),
-            pendingJustifications((size_t)_params.size * 2, MSG_QUORUM_JUSTIFICATION),
-            pendingPrematureCommitments((size_t)_params.size * 2, MSG_QUORUM_PREMATURE_COMMITMENT)
-    {
-        if (params.type == Consensus::LLMQType::LLMQ_NONE) {
-            throw std::runtime_error("Can't initialize CDKGSessionHandler with LLMQ_NONE type.");
-        }
-    }
+    CDKGSessionHandler(const Consensus::LLMQParams& _params, CBLSWorker& _blsWorker, CDKGSessionManager& _dkgManager,
+                       CDKGDebugManager& _dkgDebugManager, CQuorumBlockProcessor& _quorumBlockProcessor, CConnman& _connman, int _quorumIndex);
     ~CDKGSessionHandler() = default;
 
     void UpdatedBlockTip(const CBlockIndex *pindexNew);
-    void ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv);
+    void ProcessMessage(const CNode& pfrom, const std::string& msg_type, CDataStream& vRecv);
 
     void StartThread();
     void StopThread();
@@ -156,7 +148,13 @@ private:
 
     using StartPhaseFunc = std::function<void()>;
     using WhileWaitFunc = std::function<bool()>;
-    void WaitForNextPhase(QuorumPhase curPhase, QuorumPhase nextPhase, const uint256& expectedQuorumHash, const WhileWaitFunc& runWhileWaiting) const;
+    /**
+     * @param curPhase current QuorumPhase
+     * @param nextPhase next QuorumPhase
+     * @param expectedQuorumHash expected QuorumHash, defaults to null
+     * @param shouldNotWait function that returns bool, defaults to function that returns false. If the function returns false, we will wait in the loop, if true, we don't wait
+     */
+    void WaitForNextPhase(std::optional<QuorumPhase> curPhase, QuorumPhase nextPhase, const uint256& expectedQuorumHash=uint256(), const WhileWaitFunc& shouldNotWait=[]{return false;}) const;
     void WaitForNewQuorum(const uint256& oldQuorumHash) const;
     void SleepBeforePhase(QuorumPhase curPhase, const uint256& expectedQuorumHash, double randomSleepFactor, const WhileWaitFunc& runWhileWaiting) const;
     void HandlePhase(QuorumPhase curPhase, QuorumPhase nextPhase, const uint256& expectedQuorumHash, double randomSleepFactor, const StartPhaseFunc& startPhaseFunc, const WhileWaitFunc& runWhileWaiting);

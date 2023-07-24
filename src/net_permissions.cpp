@@ -3,11 +3,15 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <net_permissions.h>
-#include <util/system.h>
 #include <netbase.h>
+#include <util/error.h>
+#include <util/system.h>
+#include <util/translation.h>
 
-// The parse the following format "perm1,perm2@xxxxxx"
-bool TryParsePermissionFlags(const std::string str, NetPermissionFlags& output, size_t& readen, std::string& error)
+namespace {
+
+// Parse the following format: "perm1,perm2@xxxxxx"
+bool TryParsePermissionFlags(const std::string& str, NetPermissionFlags& output, size_t& readen, bilingual_str& error)
 {
     NetPermissionFlags flags = PF_NONE;
     const auto atSeparator = str.find('@');
@@ -46,8 +50,10 @@ bool TryParsePermissionFlags(const std::string str, NetPermissionFlags& output, 
     }
 
     output = flags;
-    error = "";
+    error = Untranslated("");
     return true;
+}
+
 }
 
 std::vector<std::string> NetPermissions::ToStrings(NetPermissionFlags flags)
@@ -61,7 +67,7 @@ std::vector<std::string> NetPermissions::ToStrings(NetPermissionFlags flags)
     return strings;
 }
 
-bool NetWhitebindPermissions::TryParse(const std::string str, NetWhitebindPermissions& output, std::string& error)
+bool NetWhitebindPermissions::TryParse(const std::string& str, NetWhitebindPermissions& output, bilingual_str& error)
 {
     NetPermissionFlags flags;
     size_t offset;
@@ -69,8 +75,8 @@ bool NetWhitebindPermissions::TryParse(const std::string str, NetWhitebindPermis
 
     const std::string strBind = str.substr(offset);
     CService addrBind;
-    if (!Lookup(strBind.c_str(), addrBind, 0, false)) {
-        error = strprintf(_("Cannot resolve -%s address: '%s'"), "whitebind", strBind);
+    if (!Lookup(strBind, addrBind, 0, false)) {
+        error = ResolveErrMsg("whitebind", strBind);
         return false;
     }
     if (addrBind.GetPort() == 0) {
@@ -80,11 +86,11 @@ bool NetWhitebindPermissions::TryParse(const std::string str, NetWhitebindPermis
 
     output.m_flags = flags;
     output.m_service = addrBind;
-    error = "";
+    error = Untranslated("");
     return true;
 }
 
-bool NetWhitelistPermissions::TryParse(const std::string str, NetWhitelistPermissions& output, std::string& error)
+bool NetWhitelistPermissions::TryParse(const std::string& str, NetWhitelistPermissions& output, bilingual_str& error)
 {
     NetPermissionFlags flags;
     size_t offset;
@@ -92,7 +98,7 @@ bool NetWhitelistPermissions::TryParse(const std::string str, NetWhitelistPermis
 
     const std::string net = str.substr(offset);
     CSubNet subnet;
-    LookupSubNet(net.c_str(), subnet);
+    LookupSubNet(net, subnet);
     if (!subnet.IsValid()) {
         error = strprintf(_("Invalid netmask specified in -whitelist: '%s'"), net);
         return false;
@@ -100,6 +106,6 @@ bool NetWhitelistPermissions::TryParse(const std::string str, NetWhitelistPermis
 
     output.m_flags = flags;
     output.m_subnet = subnet;
-    error = "";
+    error = Untranslated("");
     return true;
 }

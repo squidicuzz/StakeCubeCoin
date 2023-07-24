@@ -27,20 +27,20 @@ facilitates social contribution, easy testing and peer review.
 
 To contribute a patch, the workflow is as follows:
 
-  1. Fork repository ([only the first time](https://help.github.com/en/articles/fork-a-repo)).
+  1. Fork repository ([only for the first time](https://help.github.com/en/articles/fork-a-repo))
   1. Create topic branch
   1. Commit patches
 
 The project coding conventions in the [developer notes](doc/developer-notes.md)
-must be adhered to.
+must be followed.
 
-In general [commits should be atomic](https://en.wikipedia.org/wiki/Atomic_commit#Atomic_commit_convention)
-and diffs should be easy to read. For this reason do not mix any formatting
+In general, [commits should be atomic](https://en.wikipedia.org/wiki/Atomic_commit#Atomic_commit_convention)
+and diffs should be easy to read. For this reason, do not mix any formatting
 fixes or code moves with actual code changes.
 
 Commit messages should be verbose by default consisting of a short subject line
 (50 chars max), a blank line and detailed explanatory text as separate
-paragraph(s), unless the title alone is self-explanatory (like "Corrected typo
+paragraph(s), unless the title alone is self-explanatory (like "Correct typo
 in init.cpp") in which case a single title line is sufficient. Commit messages should be
 helpful to people reading your code in the future, so explain the reasoning for
 your decisions. Further explanation [here](https://chris.beams.io/posts/git-commit/).
@@ -57,30 +57,44 @@ about Git.
   - Push changes to your fork
   - Create pull request
 
-The title of the pull request should be prefixed by the component or area that
-the pull request affects. Valid areas as:
+Pull request titles should follow the Conventional Commits specification which
+uses the `<type>(optional scope): <description>` scheme. Please see the
+specification linked below for valid types. When making a change to a specific
+component, please specify the name of the component inside the scope. For
+example, if you are developing a new feature related to consensus, the PR title
+should look like this: `feat(consensus): amazing new feature`. Breaking changes
+should be designated by appending an exclamation point after `<type>(scope)`
+like this: `feat(rpc)!: remove deprecated rpc`.
 
-  - *Consensus* for changes to consensus critical code
-  - *Doc* for changes to the documentation
+For more details on allowed types and more information about Conventional
+Commits, please see the [Conventional Commits
   - *Qt* for changes to scc-qt
-  - *Log* Changes to log messages
-  - *Mining* for changes to the mining code
-  - *Net* or *P2P* for changes to the peer-to-peer network code
-  - *Refactor* for structural changes that do not change behavior
-  - *RPC/REST/ZMQ* for changes to the RPC, REST or ZMQ APIs
-  - *Scripts and tools* for changes to the scripts and tools
-  - *Test* for changes to the unit tests or QA tests
-  - *Utils and libraries* for changes to the utils and libraries
-  - *Wallet* for changes to the wallet code
+typical types, the `backport` type should be used for bitcoin backport PRs. For
+all available types and scopes, please see the
+[.github/semantic.yml](.github/semantic.yml) file. Commonly used scopes ones
+include:
+
+  - *consensus* for changes to consensus critical code
+  - *log* Changes to log messages
+  - *mining* for changes to the mining code
+  - *net* for changes to the peer-to-peer network code
+  - *qt* for changes to dash-qt
+  - *rest* for changes to the REST APIs
+  - *rpc* for changes to the RPC APIs
+  - *scripts* for changes to the scripts and tools
+  - *utils* for changes to the utils and libraries
+  - *wallet* for changes to the wallet code
+  - *zmq* for changes to the ZMQ APIs
 
 Examples:
 
-    Consensus: Add new opcode for BIP-XXXX OP_CHECKAWESOMESIG
-    Net: Automatically create hidden service, listen on Tor
-    Qt: Add feed bump button
-    Log: Fix typo in log message
+    feat(consensus): add new opcode for BIP-XXXX OP_CHECKAWESOMESIG
+    feat(net): automatically create hidden service, listen on Tor
+    feat(qt): add feed bump button
+    fix(log): fix typo in log message
+    feat(rpc)!: modify gettransaction parameter type
 
-Note that translations should not be submitted as pull requests, please see
+Note that translations should not be submitted as pull requests. Please see
 [Translation Process](https://github.com/stakecube/StakeCubeCoin/blob/master/doc/translation_process.md)
 for more information on helping with translations.
 
@@ -93,7 +107,7 @@ patch does together with any justification/reasoning. You should include
 references to any discussions (for example other tickets or mailing list
 discussions).
 
-At this stage one should expect comments and review from other contributors. You
+At this stage, one should expect comments and review from other contributors. You
 can add more commits to your pull request by committing them locally and pushing
 to your fork until you have satisfied all feedback.
 
@@ -113,8 +127,8 @@ before it will be reviewed. The basic squashing workflow is shown below.
     # Save and quit.
     git push -f # (force push to GitHub)
 
-Please update the resulting commit message if needed, it should read as a
-coherent message. In most cases this means that you should not just list the
+Please update the resulting commit message if needed. It should read as a
+coherent message. In most cases, this means that you should not just list the
 interim commits.
 
 If you have problems with squashing (or other workflows with `git`), you can
@@ -167,9 +181,9 @@ in the future, they may be removed by the Repository Maintainer.
 Refactoring is a necessary part of any software project's evolution. The
 following guidelines cover refactoring pull requests for the project.
 
-There are three categories of refactoring, code only moves, code style fixes,
-code refactoring. In general refactoring pull requests should not mix these
-three kinds of activity in order to make refactoring pull requests easy to
+There are three categories of refactoring: code-only moves, code style fixes, and
+code refactoring. In general, refactoring pull requests should not mix these
+three kinds of activities in order to make refactoring pull requests easy to
 review and uncontroversial. In all cases, refactoring PRs must not change the
 behaviour of code within the pull request (bugs must be preserved as is).
 

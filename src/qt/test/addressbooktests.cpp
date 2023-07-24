@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2019 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <qt/test/addressbooktests.h>
 #include <qt/test/util.h>
 #include <test/util/setup_common.h>
@@ -12,6 +16,7 @@
 #include <key.h>
 #include <key_io.h>
 #include <wallet/wallet.h>
+#include <walletinitinterface.h>
 
 #include <QApplication>
 #include <QTimer>
@@ -50,18 +55,18 @@ void EditAddressAndSubmit(
  * In each case, verify the resulting state of the address book and optionally
  * the warning message presented to the user.
  */
-void TestAddAddressesToSendBook()
+void TestAddAddressesToSendBook(interfaces::Node& node)
 {
     TestChain100Setup test;
-    auto chain = interfaces::MakeChain();
-    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(*chain, WalletLocation(), WalletDatabase::CreateMock());
+    node.setContext(&test.m_node);
+    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(node.context()->chain.get(), "", CreateMockWalletDatabase());
     bool firstRun;
     wallet->LoadWallet(firstRun);
 
     auto build_address = [wallet]() {
         CKey key;
         key.MakeNewKey(true);
-        CTxDestination dest = key.GetPubKey().GetID();
+        CTxDestination dest = PKHash(key.GetPubKey());
 
         return std::make_pair(dest, QString::fromStdString(EncodeDestination(dest)));
     };
@@ -98,11 +103,10 @@ void TestAddAddressesToSendBook()
     check_addbook_size(2);
 
     // Initialize relevant QT models.
-    auto node = interfaces::MakeNode();
-    OptionsModel optionsModel(*node);
+    OptionsModel optionsModel(node);
     AddWallet(wallet);
-    WalletModel walletModel(std::move(node->getWallets()[0]), *node, &optionsModel);
-    RemoveWallet(wallet);
+    WalletModel walletModel(interfaces::MakeWallet(wallet), node, &optionsModel);
+    RemoveWallet(wallet, std::nullopt);
     EditAddressDialog editAddressDialog(EditAddressDialog::NewSendingAddress);
     editAddressDialog.setModel(walletModel.getAddressTableModel());
 
@@ -147,5 +151,5 @@ void AddressBookTests::addressBookTests()
         return;
     }
 #endif
-    TestAddAddressesToSendBook();
+    TestAddAddressesToSendBook(m_node);
 }

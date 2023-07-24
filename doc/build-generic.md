@@ -35,6 +35,7 @@ options. If no host is specified (as in the above example) when calling `make`, 
 local host system. 
 
 Building SCC Core
+
 ---------------------
 
 ```bash

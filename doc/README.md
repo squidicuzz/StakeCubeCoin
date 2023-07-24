@@ -36,6 +36,7 @@ The first consecutive blocks contain the coins allocated for the user coin swap 
 
 A total of 1,000 SCC is required to run a masternode;
 
+- [Dependencies](dependencies.md)
 
 Issue Tracker
 ------------
@@ -63,6 +64,9 @@ https://discord.gg/uej2FZd
 
 License
 -------
+
+This product includes software developed by the OpenSSL Project for use in the [OpenSSL Toolkit](https://www.openssl.org/). This product includes
+cryptographic software written by Eric Young ([eay@cryptsoft.com](mailto:eay@cryptsoft.com)), and UPnP software written by Thomas Bernard.
 
 StakeCubeCoin is released under the terms of the MIT license.
 See COPYING for more information or see https://opensource.org/licenses/MIT.

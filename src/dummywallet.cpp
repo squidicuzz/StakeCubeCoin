@@ -10,15 +10,17 @@ class CWallet;
 
 namespace interfaces {
 class Chain;
+class Handler;
+class Wallet;
 }
 
 class DummyWalletInit : public WalletInitInterface {
 public:
 
     bool HasWalletSupport() const override {return false;}
-    void AddWalletOptions() const override;
+    void AddWalletOptions(ArgsManager& argsman) const override;
     bool ParameterInteraction() const override {return true;}
-    void Construct(InitInterfaces& interfaces) const override {LogPrintf("No wallet support compiled in!\n");}
+    void Construct(NodeContext& node) const override {LogPrintf("No wallet support compiled in!\n");}
 
     // SCC Specific WalletInitInterface InitCoinJoinSettings
     void AutoLockMasternodeCollaterals() const override {}
@@ -26,9 +28,9 @@ public:
     bool InitAutoBackup() const override {return true;}
 };
 
-void DummyWalletInit::AddWalletOptions() const
+void DummyWalletInit::AddWalletOptions(ArgsManager& argsman) const
 {
-    gArgs.AddHiddenArgs({
+    argsman.AddHiddenArgs({
         "-avoidpartialspends",
         "-createwalletbackups=<n>",
         "-disablewallet",
@@ -38,13 +40,11 @@ void DummyWalletInit::AddWalletOptions() const
         "-rescan=<mode>",
         "-salvagewallet",
         "-spendzeroconfchange",
-        "-upgradewallet",
         "-wallet=<path>",
         "-walletbackupsdir=<dir>",
         "-walletbroadcast",
         "-walletdir=<dir>",
         "-walletnotify=<cmd>",
-        "-zapwallettxes=<mode>",
         "-discardfee=<amt>",
         "-fallbackfee=<amt>",
         "-mintxfee=<amt>",
@@ -65,35 +65,14 @@ void DummyWalletInit::AddWalletOptions() const
         "-dblogsize=<n>",
         "-flushwallet",
         "-privdb",
-        "-walletrejectlongchains"
+        "-walletrejectlongchains",
+        "-unsafesqlitesync"
     });
 }
 
 const WalletInitInterface& g_wallet_init_interface = DummyWalletInit();
 
-fs::path GetWalletDir()
-{
-    throw std::logic_error("Wallet function called in non-wallet build.");
-}
-
-std::vector<fs::path> ListWalletDir()
-{
-    throw std::logic_error("Wallet function called in non-wallet build.");
-}
-
-std::vector<std::shared_ptr<CWallet>> GetWallets()
-{
-    throw std::logic_error("Wallet function called in non-wallet build.");
-}
-
-std::shared_ptr<CWallet> LoadWallet(interfaces::Chain& chain, const std::string& name, std::string& error, std::string& warning)
-{
-    throw std::logic_error("Wallet function called in non-wallet build.");
-}
-
 namespace interfaces {
-
-class Wallet;
 
 std::unique_ptr<Wallet> MakeWallet(const std::shared_ptr<CWallet>& wallet)
 {

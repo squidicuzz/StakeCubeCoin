@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2021 The Dash Core developers
+// Copyright (c) 2014-2022 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,6 +8,8 @@
 #include <chain.h>
 #include <interfaces/wallet.h>
 #include <interfaces/node.h>
+
+#include <wallet/ismine.h>
 
 #include <stdint.h>
 
@@ -108,6 +110,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(interfaces::Wal
             // Payment to self by default
             sub.type = TransactionRecord::SendToSelf;
             sub.strAddress = "";
+            for (auto it = wtx.txout_address.begin(); it != wtx.txout_address.end(); ++it) {
+                if (it != wtx.txout_address.begin()) sub.strAddress += ", ";
+                sub.strAddress += EncodeDestination(*it);
+            }
 
             if(mapValue["DS"] == "1")
             {
@@ -205,7 +211,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(interfaces::Wal
                     continue;
                 }
 
-                if (!boost::get<CNoDestination>(&wtx.txout_address[nOut]))
+                if (!std::get_if<CNoDestination>(&wtx.txout_address[nOut]))
                 {
                     // Sent to SCC Address
                     sub.type = TransactionRecord::SendToAddress;

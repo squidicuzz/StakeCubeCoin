@@ -21,7 +21,7 @@ Configuration
 ---------------------------------
 
 At a bare minimum, sccd requires that the rpcpassword setting be set
-when running as a daemon.  If the configuration file does not exist or this
+set the `rpcauth` setting in the `dash.conf` configuration file to override
 setting is not set, sccd will shut down promptly after startup.
 
 This password does not have to be remembered or typed as it is mostly used

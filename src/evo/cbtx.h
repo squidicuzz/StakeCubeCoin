@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 The Dash Core developers
+// Copyright (c) 2017-2022 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,10 +13,15 @@ class CBlockIndex;
 class CCoinsViewCache;
 class CValidationState;
 
+namespace llmq {
+class CQuorumBlockProcessor;
+}// namespace llmq
+
 // coinbase transaction
 class CCbTx
 {
 public:
+    static constexpr auto SPECIALTX_TYPE = TRANSACTION_COINBASE;
     static constexpr uint16_t CURRENT_VERSION = 2;
 
     uint16_t nVersion{CURRENT_VERSION};
@@ -50,8 +55,8 @@ public:
 
 bool CheckCbTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValidationState& state);
 
-bool CheckCbTxMerkleRoots(const CBlock& block, const CBlockIndex* pindex, CValidationState& state, const CCoinsViewCache& view);
+bool CheckCbTxMerkleRoots(const CBlock& block, const CBlockIndex* pindex, const llmq::CQuorumBlockProcessor& quorum_block_processor, CValidationState& state, const CCoinsViewCache& view);
 bool CalcCbTxMerkleRootMNList(const CBlock& block, const CBlockIndex* pindexPrev, uint256& merkleRootRet, CValidationState& state, const CCoinsViewCache& view);
-bool CalcCbTxMerkleRootQuorums(const CBlock& block, const CBlockIndex* pindexPrev, uint256& merkleRootRet, CValidationState& state);
+bool CalcCbTxMerkleRootQuorums(const CBlock& block, const CBlockIndex* pindexPrev, const llmq::CQuorumBlockProcessor& quorum_block_processor, uint256& merkleRootRet, CValidationState& state);
 
 #endif // BITCOIN_EVO_CBTX_H

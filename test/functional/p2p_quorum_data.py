@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2021 The Dash Core developers
+# Copyright (c) 2021-2022 The Dash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -14,7 +14,6 @@ from test_framework.test_framework import SCCTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
-    connect_nodes,
     force_finish_mnsync,
     wait_until,
 )
@@ -127,12 +126,12 @@ class QuorumDataMessagesTest(SCCTestFramework):
         self.set_scc_test_params(4, 3, fast_dip3_enforcement=True, extra_args=extra_args)
 
     def restart_mn(self, mn, reindex=False):
-        args = self.extra_args[mn.nodeIdx] + ['-masternodeblsprivkey=%s' % mn.keyOperator]
+        args = self.extra_args[mn.node.index] + ['-masternodeblsprivkey=%s' % mn.keyOperator]
         if reindex:
             args.append('-reindex')
-        self.restart_node(mn.nodeIdx, args)
+        self.restart_node(mn.node.index, args)
         force_finish_mnsync(mn.node)
-        connect_nodes(mn.node, 0)
+        self.connect_nodes(mn.node.index, 0)
         self.sync_blocks()
 
     def run_test(self):
@@ -238,7 +237,7 @@ class QuorumDataMessagesTest(SCCTestFramework):
             p2p_mn1 = p2p_connection(mn1.node)
             id_p2p_mn1 = get_mininode_id(mn1.node)
             mnauth(mn1.node, id_p2p_mn1, fake_mnauth_1[0], fake_mnauth_1[1])
-            qgetdata_invalid_type = msg_qgetdata(quorum_hash_int, 103, 0x01, protx_hash_int)
+            qgetdata_invalid_type = msg_qgetdata(quorum_hash_int, 105, 0x01, protx_hash_int)
             qgetdata_invalid_block = msg_qgetdata(protx_hash_int, 100, 0x01, protx_hash_int)
             qgetdata_invalid_quorum = msg_qgetdata(int(mn1.node.getblockhash(0), 16), 100, 0x01, protx_hash_int)
             qgetdata_invalid_no_member = msg_qgetdata(quorum_hash_int, 100, 0x02, quorum_hash_int)
@@ -371,7 +370,7 @@ class QuorumDataMessagesTest(SCCTestFramework):
             for extra_args in [[], ["-watchquorums"]]:
                 self.restart_node(0, self.extra_args[0] + extra_args)
                 for i in range(self.num_nodes - 1):
-                    connect_nodes(node0, i + 1)
+                    self.connect_nodes(0, i + 1)
                 p2p_node0 = p2p_connection(node0)
                 p2p_mn2 = p2p_connection(mn2.node)
                 id_p2p_node0 = get_mininode_id(node0)
@@ -395,8 +394,8 @@ class QuorumDataMessagesTest(SCCTestFramework):
                                     "0000000000000000000000000000000000000000000000000000000000000000")
 
         # Enable DKG and disable ChainLocks
-        self.nodes[0].spork("SPORK_17_QUORUM_DKG_ENABLED", 0)
-        self.nodes[0].spork("SPORK_19_CHAINLOCKS_ENABLED", 4070908800)
+        self.nodes[0].sporkupdate("SPORK_17_QUORUM_DKG_ENABLED", 0)
+        self.nodes[0].sporkupdate("SPORK_19_CHAINLOCKS_ENABLED", 4070908800)
 
         self.wait_for_sporks_same()
         quorum_hash = self.mine_quorum()

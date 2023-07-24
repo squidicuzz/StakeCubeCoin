@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 The Dash Core developers
+// Copyright (c) 2018-2022 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,6 +11,8 @@
 
 #include <functional>
 #include <set>
+
+#include <llmq/dkgsessionhandler.h>
 
 class CDataStream;
 class CInv;
@@ -51,7 +53,7 @@ public:
     Consensus::LLMQType llmqType{Consensus::LLMQType::LLMQ_NONE};
     uint256 quorumHash;
     uint32_t quorumHeight{0};
-    uint8_t phase{0};
+    QuorumPhase phase{0};
 
     union {
         struct
@@ -72,7 +74,7 @@ public:
 public:
     CDKGDebugSessionStatus() : statusBitset(0) {}
 
-    UniValue ToJson(int detailLevel) const;
+    UniValue ToJson(int quorumIndex, int detailLevel) const;
 };
 
 class CDKGDebugStatus
@@ -80,7 +82,8 @@ class CDKGDebugStatus
 public:
     int64_t nTime{0};
 
-    std::map<Consensus::LLMQType, CDKGDebugSessionStatus> sessions;
+    std::map<std::pair<Consensus::LLMQType, int>, CDKGDebugSessionStatus> sessions;
+    //std::map<Consensus::LLMQType, CDKGDebugSessionStatus> sessions;
 
 public:
     UniValue ToJson(int detailLevel) const;
@@ -97,14 +100,12 @@ public:
 
     void GetLocalDebugStatus(CDKGDebugStatus& ret) const;
 
-    void ResetLocalSessionStatus(Consensus::LLMQType llmqType);
-    void InitLocalSessionStatus(const Consensus::LLMQParams& llmqParams, const uint256& quorumHash, int quorumHeight);
+    void ResetLocalSessionStatus(Consensus::LLMQType llmqType, int quorumIndex);
+    void InitLocalSessionStatus(const Consensus::LLMQParams& llmqParams, int quorumIndex, const uint256& quorumHash, int quorumHeight);
 
-    void UpdateLocalSessionStatus(Consensus::LLMQType llmqType, std::function<bool(CDKGDebugSessionStatus& status)>&& func);
-    void UpdateLocalMemberStatus(Consensus::LLMQType llmqType, size_t memberIdx, std::function<bool(CDKGDebugMemberStatus& status)>&& func);
+    void UpdateLocalSessionStatus(Consensus::LLMQType llmqType, int quorumIndex, std::function<bool(CDKGDebugSessionStatus& status)>&& func);
+    void UpdateLocalMemberStatus(Consensus::LLMQType llmqType, int quorumIndex, size_t memberIdx, std::function<bool(CDKGDebugMemberStatus& status)>&& func);
 };
-
-extern CDKGDebugManager* quorumDKGDebugManager;
 
 } // namespace llmq
 

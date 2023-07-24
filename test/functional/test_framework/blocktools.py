@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2015-2016 The Bitcoin Core developers
+# Copyright (c) 2015-2018 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Utilities for manipulating blocks and transactions."""
@@ -19,9 +19,13 @@ from io import BytesIO
 
 MAX_BLOCK_SIGOPS = 20000
 
-def create_block(hashprev, coinbase, ntime=None):
+# Genesis block time (regtest)
+TIME_GENESIS_BLOCK = 1417713337
+
+def create_block(hashprev, coinbase, ntime=None, *, version=1):
     """Create a block (with regtest difficulty)."""
     block = CBlock()
+    block.nVersion = version
     if ntime is None:
         import time
         block.nTime = int(time.time() + 600)
@@ -66,7 +70,7 @@ def create_coinbase(height, pubkey=None, dip4_activated=False):
     coinbase.calc_sha256()
     return coinbase
 
-def create_tx_with_script(prevtx, n, script_sig=b"", amount=1, script_pub_key=CScript()):
+def create_tx_with_script(prevtx, n, script_sig=b"", *, amount, script_pub_key=CScript()):
     """Return one-input, one-output transaction object
        spending the prevtx's n-th output with the given amount.
 
@@ -79,26 +83,24 @@ def create_tx_with_script(prevtx, n, script_sig=b"", amount=1, script_pub_key=CS
     tx.calc_sha256()
     return tx
 
-def create_transaction(node, txid, to_address, amount):
+def create_transaction(node, txid, to_address, *, amount):
     """ Return signed transaction spending the first output of the
         input txid. Note that the node must be able to sign for the
         output that is being spent, and the node must not be running
         multiple wallets.
     """
-    raw_tx = create_raw_transaction(node, txid, to_address, amount)
+    raw_tx = create_raw_transaction(node, txid, to_address, amount=amount)
     tx = CTransaction()
     tx.deserialize(BytesIO(hex_str_to_bytes(raw_tx)))
     return tx
 
-def create_raw_transaction(node, txid, to_address, amount):
+def create_raw_transaction(node, txid, to_address, *, amount):
     """ Return raw signed transaction spending the first output of the
         input txid. Note that the node must be able to sign for the
         output that is being spent, and the node must not be running
         multiple wallets.
     """
-    inputs = [{"txid": txid, "vout": 0}]
-    outputs = {to_address: amount}
-    rawtx = node.createrawtransaction(inputs, outputs)
+    rawtx = node.createrawtransaction(inputs=[{"txid": txid, "vout": 0}], outputs={to_address: amount})
     signresult = node.signrawtransactionwithwallet(rawtx)
     assert_equal(signresult["complete"], True)
     return signresult['hex']

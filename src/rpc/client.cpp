@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2021 The Dash Core developers
+// Copyright (c) 2014-2022 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -27,11 +27,14 @@ public:
 static const CRPCConvertParam vRPCConvertParams[] =
 {
     { "setmocktime", 0, "timestamp" },
+    { "mockscheduler", 0, "delta_time" },
+    { "utxoupdatepsbt", 1, "descriptors" },
 #if ENABLE_MINER
-    { "generate", 0, "nblocks" },
-    { "generate", 1, "maxtries" },
     { "generatetoaddress", 0, "nblocks" },
     { "generatetoaddress", 2, "maxtries" },
+    { "generatetodescriptor", 0, "num_blocks" },
+    { "generatetodescriptor", 2, "maxtries" },
+    { "generateblock", 1, "transactions" },
 #endif // ENABLE_MINER
     { "getnetworkhashps", 0, "nblocks" },
     { "getnetworkhashps", 1, "height" },
@@ -40,6 +43,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "sendtoaddress", 5, "use_is" },
     { "sendtoaddress", 6, "use_cj" },
     { "sendtoaddress", 7, "conf_target" },
+    { "sendtoaddress", 9, "avoid_reuse" },
     { "settxfee", 0, "amount" },
     { "burn", 0, "amount" },
     { "burn", 1, "data" },
@@ -59,6 +63,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getbalance", 1, "minconf" },
     { "getbalance", 2, "addlocked" },
     { "getbalance", 3, "include_watchonly" },
+    { "getbalance", 4, "avoid_reuse" },
     { "getchaintips", 0, "count" },
     { "getchaintips", 1, "branchlen" },
     { "getblockhash", 0, "height" },
@@ -84,8 +89,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "sendmany", 6, "use_is" },
     { "sendmany", 7, "use_cj" },
     { "sendmany", 8, "conf_target" },
-    { "deriveaddresses", 1, "begin" },
-    { "deriveaddresses", 2, "end" },
+    { "deriveaddresses", 1, "range" },
     { "scantxoutset", 1, "scanobjects" },
     { "addmultisigaddress", 0, "nrequired" },
     { "addmultisigaddress", 1, "keys" },
@@ -111,12 +115,10 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "signrawtransactionwithkey", 1, "privkeys" },
     { "signrawtransactionwithkey", 2, "prevtxs" },
     { "signrawtransactionwithwallet", 1, "prevtxs" },
-    { "sendrawtransaction", 1, "allowhighfees" },
     { "sendrawtransaction", 1, "maxfeerate" },
     { "sendrawtransaction", 2, "instantsend" },
     { "sendrawtransaction", 3, "bypasslimits" },
     { "testmempoolaccept", 0, "rawtxs" },
-    { "testmempoolaccept", 1, "allowhighfees" },
     { "testmempoolaccept", 1, "maxfeerate" },
     { "combinerawtransaction", 0, "txs" },
     { "fundrawtransaction", 1, "options" },
@@ -162,11 +164,12 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setnetworkactive", 0, "state" },
     { "setcoinjoinrounds", 0, "rounds" },
     { "setcoinjoinamount", 0, "amount" },
+    { "setwalletflag", 1, "value" },
     { "getmempoolancestors", 1, "verbose" },
     { "getmempooldescendants", 1, "verbose" },
     { "logging", 0, "include" },
     { "logging", 1, "exclude" },
-    { "spork", 1, "value" },
+    { "sporkupdate", 1, "value" },
     { "voteraw", 1, "tx_index" },
     { "voteraw", 5, "time" },
     { "getblockhashes", 0, "high"},
@@ -182,6 +185,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getspecialtxes", 3, "skip" },
     { "getspecialtxes", 4, "verbosity" },
     { "disconnectnode", 1, "nodeid" },
+    { "upgradewallet", 0, "version" },
     // Echo with conversion (For testing only)
     { "echojson", 0, "arg0" },
     { "echojson", 1, "arg1" },
@@ -197,6 +201,12 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "rescanblockchain", 1, "stop_height"},
     { "createwallet", 1, "disable_private_keys"},
     { "createwallet", 2, "blank"},
+    { "createwallet", 4, "avoid_reuse"},
+    { "upgradetohd", 3, "rescan"},
+    { "createwallet", 5, "load_on_startup"},
+    { "loadwallet", 1, "load_on_startup"},
+    { "unloadwallet", 1, "load_on_startup"},
+    { "upgradetohd", 3, "rescan"},
     { "getnodeaddresses", 0, "count"},
     { "stop", 0, "wait" },
 };

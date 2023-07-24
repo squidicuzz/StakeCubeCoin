@@ -8,9 +8,13 @@ architectures:
 packages:
 - "faketime"
 - "xorriso"
+- "python3-pip"
 remotes:
 - "url": "https://github.com/LiquidsLabs/StakeCubeCoin-detached-sigs.git"
   "dir": "signature"
+- "url": "https://github.com/achow101/signapple.git"
+  "dir": "signapple"
+  "commit": "8a945a2e7583be2665cf3a6a89d665b70ecd1ab6"
 files:
 - "scc-osx-unsigned.tar.gz"
 script: |
@@ -31,11 +35,18 @@ script: |
     chmod +x ${WRAP_DIR}/${prog}
   done
 
-  UNSIGNED=scc-osx-unsigned.tar.gz
-  SIGNED=scc-osx-signed.dmg
+  # Install signapple
+  cd signapple
+  python3 -m pip install -U pip setuptools
+  python3 -m pip install .
+  export PATH="$HOME/.local/bin":$PATH
+  cd ..
 
-  tar -xf ${UNSIGNED}
+  UNSIGNED_TARBALL=dashcore-osx-unsigned.tar.gz
+  UNSIGNED_APP=dist/Dash-Qt.app
+
+  tar -xf ${UNSIGNED_TARBALL}
   OSX_VOLNAME="$(cat osx_volname)"
-  ./detached-sig-apply.sh ${UNSIGNED} signature/osx
+  ./detached-sig-apply.sh ${UNSIGNED_APP} signature/osx/dist
   ${WRAP_DIR}/xorrisofs -D -l -V "${OSX_VOLNAME}" -no-pad -r -dir-mode 0755 -o uncompressed.dmg signed-app
   ${WRAP_DIR}/dmg dmg uncompressed.dmg ${OUTDIR}/${SIGNED}

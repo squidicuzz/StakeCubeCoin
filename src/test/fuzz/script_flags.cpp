@@ -2,6 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <pubkey.h>
 #include <script/interpreter.h>
 #include <streams.h>
 #include <version.h>
@@ -11,7 +12,12 @@
 /** Flags that are not forbidden by an assert */
 static bool IsValidFlagCombination(unsigned flags);
 
-void test_one_input(const std::vector<uint8_t>& buffer)
+void initialize_script_flags()
+{
+    static const ECCVerifyHandle verify_handle;
+}
+
+FUZZ_TARGET_INIT(script_flags, initialize_script_flags)
 {
     CDataStream ds(buffer, SER_NETWORK, INIT_PROTO_VERSION);
     try {
@@ -24,6 +30,7 @@ void test_one_input(const std::vector<uint8_t>& buffer)
 
     try {
         const CTransaction tx(deserialize, ds);
+        const PrecomputedTransactionData txdata(tx);
 
         unsigned int verify_flags;
         ds >> verify_flags;
@@ -33,7 +40,6 @@ void test_one_input(const std::vector<uint8_t>& buffer)
         unsigned int fuzzed_flags;
         ds >> fuzzed_flags;
 
-        std::vector<CTxOut> spent_outputs;
         for (unsigned i = 0; i < tx.vin.size(); ++i) {
             CTxOut prevout;
             ds >> prevout;
@@ -41,13 +47,7 @@ void test_one_input(const std::vector<uint8_t>& buffer)
                 // prevouts should be consensus-valid
                 prevout.nValue = 1;
             }
-            spent_outputs.push_back(prevout);
-        }
-        PrecomputedTransactionData txdata;
-        txdata.Init(tx, std::move(spent_outputs));
 
-        for (unsigned i = 0; i < tx.vin.size(); ++i) {
-            const CTxOut& prevout = txdata.m_spent_outputs.at(i);
             const TransactionSignatureChecker checker{&tx, i, prevout.nValue, txdata};
 
             ScriptError serror;

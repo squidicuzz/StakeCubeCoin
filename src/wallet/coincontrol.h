@@ -11,7 +11,7 @@
 #include <primitives/transaction.h>
 #include <script/standard.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 enum class CoinType
 {
@@ -25,6 +25,9 @@ enum class CoinType
     MIN_COIN_TYPE = ALL_COINS,
     MAX_COIN_TYPE = ONLY_COINJOIN_COLLATERAL,
 };
+
+//! Default for -avoidpartialspends
+static constexpr bool DEFAULT_AVOIDPARTIALSPENDS = false;
 
 /** Coin Control Features. */
 class CCoinControl
@@ -40,13 +43,15 @@ public:
     //! Override automatic min/max checks on fee, m_feerate must be set if true
     bool fOverrideFeeRate;
     //! Override the wallet's m_pay_tx_fee if set
-    boost::optional<CFeeRate> m_feerate;
+    std::optional<CFeeRate> m_feerate;
     //! Override the discard feerate estimation with m_discard_feerate in CreateTransaction if set
-    boost::optional<CFeeRate> m_discard_feerate;
+    std::optional<CFeeRate> m_discard_feerate;
     //! Override the default confirmation target if set
-    boost::optional<unsigned int> m_confirm_target;
+    std::optional<unsigned int> m_confirm_target;
     //! Avoid partial use of funds sent to a given address
     bool m_avoid_partial_spends;
+    //! Forbids inclusion of dirty (previously used) addresses
+    bool m_avoid_address_reuse;
     //! Fee estimation mode to control arguments to estimateSmartFee
     FeeEstimateMode m_fee_mode;
     //! Minimum chain depth value for coin availability

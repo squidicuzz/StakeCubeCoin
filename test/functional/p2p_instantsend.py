@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-# Copyright (c) 2018-2021 The Dash Core developers
+# Copyright (c) 2018-2022 The Dash Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 from test_framework.test_framework import SCCTestFramework
-from test_framework.util import assert_equal, assert_raises_rpc_error, isolate_node, reconnect_isolated_node
+from test_framework.util import assert_equal, assert_raises_rpc_error
 
 '''
 p2p_instantsend.py
@@ -21,7 +21,7 @@ class InstantSendTest(SCCTestFramework):
         self.sender_idx = 3
 
     def run_test(self):
-        self.nodes[0].spork("SPORK_17_QUORUM_DKG_ENABLED", 0)
+        self.nodes[0].sporkupdate("SPORK_17_QUORUM_DKG_ENABLED", 0)
         self.wait_for_sporks_same()
         self.mine_quorum()
 
@@ -43,7 +43,7 @@ class InstantSendTest(SCCTestFramework):
         # create doublespending transaction, but don't relay it
         dblspnd_tx = self.create_raw_tx(sender, isolated, 0.5, 1, 100)
         # isolate one node from network
-        isolate_node(isolated)
+        self.isolate_node(self.isolated_idx)
         # instantsend to receiver
         receiver_addr = receiver.getnewaddress()
         is_id = sender.sendtoaddress(receiver_addr, 0.9)
@@ -60,13 +60,13 @@ class InstantSendTest(SCCTestFramework):
         isolated.generate(1)
         wrong_block = isolated.getbestblockhash()
         # connect isolated block to network
-        reconnect_isolated_node(isolated, 0)
+        self.reconnect_isolated_node(self.isolated_idx, 0)
         # check doublespend block is rejected by other nodes
         timeout = 10
-        for i in range(0, self.num_nodes):
-            if i == self.isolated_idx:
+        for idx, node in enumerate(self.nodes):
+            if idx == self.isolated_idx:
                 continue
-            res = self.nodes[i].waitforblock(wrong_block, timeout)
+            res = node.waitforblock(wrong_block, timeout)
             assert res['hash'] != wrong_block
             # wait for long time only for first node
             timeout = 1
@@ -98,13 +98,13 @@ class InstantSendTest(SCCTestFramework):
         # create doublespending transaction, but don't relay it
         dblspnd_tx = self.create_raw_tx(sender, isolated, 0.5, 1, 100)
         # isolate one node from network
-        isolate_node(isolated)
+        self.isolate_node(self.isolated_idx)
         # send doublespend transaction to isolated node
         dblspnd_txid = isolated.sendrawtransaction(dblspnd_tx['hex'])
         assert dblspnd_txid in set(isolated.getrawmempool())
         # let isolated node rejoin the network
         # The previously isolated node should NOT relay the doublespending TX
-        reconnect_isolated_node(isolated, 0)
+        self.reconnect_isolated_node(self.isolated_idx, 0)
         for node in connected_nodes:
             assert_raises_rpc_error(-5, "No such mempool or blockchain transaction", node.getrawtransaction, dblspnd_txid)
         # Instantsend to receiver. The previously isolated node won't accept the tx but it should

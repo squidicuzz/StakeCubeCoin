@@ -12,7 +12,6 @@ src/scc-cli
 src/scc-tx
 src/scc-wallet
 src/qt/scc-qt
-src/test/fuzz
 !src/test/fuzz/*.*
 src/test/test_scc_fuzzy
 src/test/test_scc
@@ -84,6 +83,7 @@ libconftest.dylib*
 
 # Only ignore unexpected patches
 *.patch
+!contrib/guix/patches/*.patch
 !depends/patches/**/*.patch
 
 #libtool object files
@@ -161,3 +161,9 @@ dist/
 *.background.tiff
 
 /guix-build-*
+
+# cppcheck cache-directory
+.cppcheck/*
+
+# flake8 cache location
+.cache/*

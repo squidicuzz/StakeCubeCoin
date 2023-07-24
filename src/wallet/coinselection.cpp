@@ -10,7 +10,7 @@
 #include <llmq/instantsend.h>
 #include <coinjoin/coinjoin.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 // Descending order comparator
 struct {
@@ -25,7 +25,7 @@ struct {
  * set that can pay for the spending target and does not exceed the spending target by more than the
  * cost of creating and spending a change output. The algorithm uses a depth-first search on a binary
  * tree. In the binary tree, each node corresponds to the inclusion or the omission of a UTXO. UTXOs
- * are sorted by their effective values and the trees is explored deterministically per the inclusion
+ * are sorted by their effective values and the tree is explored deterministically per the inclusion
  * branch first. At each node, the algorithm checks whether the selection is within the target range.
  * While the selection has not reached the target range, more UTXOs are included. When a selection's
  * value exceeds the target range, the complete subtree deriving from this selection can be omitted.
@@ -35,7 +35,7 @@ struct {
  * The search continues to search for better solutions after one solution has been found. The best
  * solution is chosen by minimizing the waste metric. The waste metric is defined as the cost to
  * spend the current inputs at the given fee rate minus the long term expected cost to spend the
- * inputs, plus the amount the selection exceeds the spending target:
+ * inputs, plus the amount by which the selection exceeds the spending target:
  *
  * waste = selectionTotal - target + inputs × (currentFeeRate - longTermFeeRate)
  *
@@ -252,7 +252,7 @@ bool KnapsackSolver(const CAmount& nTargetValue, std::vector<OutputGroup>& group
     nValueRet = 0;
 
     // List of values less than target
-    boost::optional<OutputGroup> lowest_larger;
+    std::optional<OutputGroup> lowest_larger;
     std::vector<OutputGroup> applicable_groups;
     CAmount nTotalLower = 0;
 

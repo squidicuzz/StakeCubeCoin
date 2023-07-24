@@ -4,24 +4,26 @@ FROM ubuntu:focal
 ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe/London"
 
 # Build and base stuff
-# (zlib1g-dev and libssl-dev are needed for the Qt host binary builds, but should not be used by target binaries)
+# (zlib1g-dev is needed for the Qt host binary builds, but should not be used by target binaries)
 ENV APT_ARGS="-y --no-install-recommends --no-upgrade"
 RUN dpkg --add-architecture i386
 RUN apt-get update && apt-get install $APT_ARGS \
     autotools-dev \
     automake \
     autoconf \
+    bison \
     build-essential \
     bsdmainutils \
     curl \
     ccache \
+    clang \
     cmake \
     git \
     g++ \
+    gettext \
     wget \
     unzip \
     libtool \
-    libssl-dev \
     m4 \
     pkg-config \
     python3 \
@@ -37,11 +39,13 @@ RUN pip3 install \
     jinja2 \
     pyzmq \
     vulture==2.3 \
-    yq
+    yq \
+    multiprocess
 
 # scc_hash
 RUN git clone --depth 1 --no-tags https://github.com/stakecube/StakeCubeCoin_hash
 RUN cd scc_hash && python3 setup.py install
+RUN cd dash_hash && pip3 install -r requirements.txt .
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -76,7 +80,7 @@ RUN apt-get update && apt-get install $APT_ARGS \
     xorriso \
     && rm -rf /var/lib/apt/lists/*
 
-ARG CPPCHECK_VERSION=2.4
+ARG CPPCHECK_VERSION=2.9
 RUN curl -sL "https://github.com/danmar/cppcheck/archive/${CPPCHECK_VERSION}.tar.gz" | tar -xvzf - --directory /tmp/
 RUN cd /tmp/cppcheck-${CPPCHECK_VERSION} && mkdir build && cd build && cmake .. && cmake --build . -j 8
 ENV PATH "/tmp/cppcheck-${CPPCHECK_VERSION}/build/bin:${PATH}"
@@ -99,12 +103,14 @@ RUN \
   exit 0
 
 RUN mkdir /scc-src && \
+  mkdir -p /src/dash && \
   mkdir -p /cache/ccache && \
   mkdir /cache/depends && \
   mkdir /cache/sdk-sources && \
   chown $USER_ID:$GROUP_ID /scc-src && \
-  chown $USER_ID:$GROUP_ID /cache && \
-  chown $USER_ID:$GROUP_ID /cache -R
+  chown ${USER_ID}:${GROUP_ID} -R /src && \
+  chown ${USER_ID}:${GROUP_ID} /cache && \
+  chown ${USER_ID}:${GROUP_ID} -R /cache
 
 WORKDIR /scc-src
 

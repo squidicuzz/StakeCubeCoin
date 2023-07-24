@@ -1,15 +1,22 @@
+// Copyright (c) 2017-2019 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <fs.h>
 
 #ifndef WIN32
+#include <cstring>
 #include <fcntl.h>
 #include <string>
 #include <sys/file.h>
 #include <sys/utsname.h>
+#include <unistd.h>
 #else
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
 #include <codecvt>
+#include <limits>
 #include <windows.h>
 #endif
 
@@ -27,7 +34,8 @@ FILE *fopen(const fs::path& p, const char *mode)
 
 #ifndef WIN32
 
-static std::string GetErrorReason() {
+static std::string GetErrorReason()
+{
     return std::strerror(errno);
 }
 
@@ -128,10 +136,10 @@ std::string get_filesystem_error_message(const fs::filesystem_error& e)
 #else
     // Convert from Multi Byte to utf-16
     std::string mb_string(e.what());
-    int size = MultiByteToWideChar(CP_ACP, 0, mb_string.c_str(), mb_string.size(), nullptr, 0);
+    int size = MultiByteToWideChar(CP_ACP, 0, mb_string.data(), mb_string.size(), nullptr, 0);
 
     std::wstring utf16_string(size, L'\0');
-    MultiByteToWideChar(CP_ACP, 0, mb_string.c_str(), mb_string.size(), &*utf16_string.begin(), size);
+    MultiByteToWideChar(CP_ACP, 0, mb_string.data(), mb_string.size(), &*utf16_string.begin(), size);
     // Convert from utf-16 to utf-8
     return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>().to_bytes(utf16_string);
 #endif
@@ -229,7 +237,11 @@ void ofstream::close()
 }
 #else // __GLIBCXX__
 
+#if BOOST_VERSION >= 107700
+static_assert(sizeof(*BOOST_FILESYSTEM_C_STR(fs::path())) == sizeof(wchar_t),
+#else
 static_assert(sizeof(*fs::path().BOOST_FILESYSTEM_C_STR) == sizeof(wchar_t),
+#endif // BOOST_VERSION >= 107700
     "Warning: This build is using boost::filesystem ofstream and ifstream "
     "implementations which will fail to open paths containing multibyte "
     "characters. You should delete this static_assert to ignore this warning, "
