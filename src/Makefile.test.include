@@ -512,43 +512,43 @@ CLEANFILES += $(CLEAN_BITCOIN_TEST)
 scc_test: $(TEST_BINARY)
 
 scc_test_check: $(TEST_BINARY) FORCE
-	$(MAKE) check-TESTS TESTS=$^
+  $(MAKE) check-TESTS TESTS=$^
 
 scc_test_clean : FORCE
-	rm -f $(CLEAN_BITCOIN_TEST) $(test_test_scc_OBJECTS) $(TEST_BINARY)
+  rm -f $(CLEAN_BITCOIN_TEST) $(test_test_scc_OBJECTS) $(TEST_BINARY)
 
 check-local: $(BITCOIN_TESTS:.cpp=.cpp.test)
 if BUILD_BITCOIN_TX
-	@echo "Running test/util/bitcoin-util-test.py..."
-	$(PYTHON) $(top_builddir)/test/util/bitcoin-util-test.py
+  @echo "Running test/util/bitcoin-util-test.py..."
+  $(PYTHON) $(top_builddir)/test/util/bitcoin-util-test.py
 endif
-	@echo "Running test/util/rpcauth-test.py..."
-	$(PYTHON) $(top_builddir)/test/util/rpcauth-test.py
-	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C secp256k1 check
+  @echo "Running test/util/rpcauth-test.py..."
+  $(PYTHON) $(top_builddir)/test/util/rpcauth-test.py
+  $(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C secp256k1 check
 if EMBEDDED_UNIVALUE
-	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C univalue check
+  $(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C univalue check
 endif
 
 %.cpp.test: %.cpp
-	@echo Running tests: `cat $< | grep -E "(BOOST_FIXTURE_TEST_SUITE\\(|BOOST_AUTO_TEST_SUITE\\()" | cut -d '(' -f 2 | cut -d ',' -f 1 | cut -d ')' -f 1` from $<
-	$(AM_V_at)$(TEST_BINARY) --catch_system_errors=no -l test_suite -t "`cat $< | grep -E "(BOOST_FIXTURE_TEST_SUITE\\(|BOOST_AUTO_TEST_SUITE\\()" | cut -d '(' -f 2 | cut -d ',' -f 1 | cut -d ')' -f 1`" > $<.log 2>&1 || (cat $<.log && false)
+  @echo Running tests: `cat $< | grep -E "(BOOST_FIXTURE_TEST_SUITE\\(|BOOST_AUTO_TEST_SUITE\\()" | cut -d '(' -f 2 | cut -d ',' -f 1 | cut -d ')' -f 1` from $<
+  $(AM_V_at)$(TEST_BINARY) --catch_system_errors=no -l test_suite -t "`cat $< | grep -E "(BOOST_FIXTURE_TEST_SUITE\\(|BOOST_AUTO_TEST_SUITE\\()" | cut -d '(' -f 2 | cut -d ',' -f 1 | cut -d ')' -f 1`" > $<.log 2>&1 || (cat $<.log && false)
 
 test/data/%.json.h: test/data/%.json
-	@$(MKDIR_P) $(@D)
-	@{ \
-	 echo "namespace json_tests{" && \
-	 echo "static unsigned const char $(*F)[] = {" && \
-	 $(HEXDUMP) -v -e '8/1 "0x%02x, "' -e '"\n"' $< | $(SED) -e 's/0x  ,//g' && \
-	 echo "};};"; \
-	} > "$@.new" && mv -f "$@.new" "$@"
-	@echo "Generated $@"
+  @$(MKDIR_P) $(@D)
+  @{ \
+   echo "namespace json_tests{" && \
+   echo "static unsigned const char $(*F)[] = {" && \
+   $(HEXDUMP) -v -e '8/1 "0x%02x, "' -e '"\n"' $< | $(SED) -e 's/0x  ,//g' && \
+   echo "};};"; \
+  } > "$@.new" && mv -f "$@.new" "$@"
+  @echo "Generated $@"
 
 test/data/%.raw.h: test/data/%.raw
-	@$(MKDIR_P) $(@D)
-	@{ \
-	 echo "namespace raw_tests{" && \
-	 echo "static unsigned const char $(*F)[] = {" && \
-	 $(HEXDUMP) -v -e '8/1 "0x%02x, "' -e '"\n"' $< | $(SED) -e 's/0x  ,//g' && \
-	 echo "};};"; \
-	} > "$@.new" && mv -f "$@.new" "$@"
-	@echo "Generated $@"
+  @$(MKDIR_P) $(@D)
+  @{ \
+   echo "namespace raw_tests{" && \
+   echo "static unsigned const char $(*F)[] = {" && \
+   $(HEXDUMP) -v -e '8/1 "0x%02x, "' -e '"\n"' $< | $(SED) -e 's/0x  ,//g' && \
+   echo "};};"; \
+  } > "$@.new" && mv -f "$@.new" "$@"
+  @echo "Generated $@"
