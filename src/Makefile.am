@@ -509,15 +509,16 @@ libscc_wallet_a_SOURCES = \
   wallet/coinselection.cpp
   $(BITCOIN_CORE_H)
 
+if USE_SQLITE
+  libscc_wallet_a_SOURCES += wallet/sqlite.cpp
+endif
+if USE_BDB
+  libscc_wallet_a_SOURCES += wallet/bdb.cpp wallet/salvage.cpp
+endif
+
 libscc_wallet_tool_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libscc_wallet_tool_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libscc_wallet_tool_a_SOURCES = \
-  wallet/bdb.cpp \
-  wallet/salvage.cpp
-
-libbitcoin_wallet_tool_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libbitcoin_wallet_tool_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libbitcoin_wallet_tool_a_SOURCES = \
   wallet/wallettool.cpp \
   $(BITCOIN_CORE_H)
 
@@ -633,12 +634,6 @@ crypto_libscc_crypto_shani_a_CPPFLAGS = $(AM_CPPFLAGS)
 crypto_libscc_crypto_shani_a_CXXFLAGS += $(SHANI_CXXFLAGS)
 crypto_libscc_crypto_shani_a_CPPFLAGS += -DENABLE_SHANI
 crypto_libscc_crypto_shani_a_SOURCES = crypto/sha256_shani.cpp
-
-crypto_libbitcoin_crypto_arm_shani_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-crypto_libbitcoin_crypto_arm_shani_a_CPPFLAGS = $(AM_CPPFLAGS)
-crypto_libbitcoin_crypto_arm_shani_a_CXXFLAGS += $(ARM_SHANI_CXXFLAGS)
-crypto_libbitcoin_crypto_arm_shani_a_CPPFLAGS += -DENABLE_ARM_SHANI
-crypto_libbitcoin_crypto_arm_shani_a_SOURCES = crypto/sha256_arm_shani.cpp
 
 # consensus: shared between all executables that validate any consensus rules.
 libscc_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(PIC_FLAGS)
