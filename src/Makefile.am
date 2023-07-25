@@ -600,7 +600,7 @@ crypto_libscc_crypto_shani_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 crypto_libscc_crypto_shani_a_CPPFLAGS = $(AM_CPPFLAGS)
 crypto_libscc_crypto_shani_a_CXXFLAGS += $(SHANI_CXXFLAGS)
 crypto_libscc_crypto_shani_a_CPPFLAGS += -DENABLE_SHANI
-crypto_libscc_crypto_shani_a_SOURCES = crypto/sha256_shani.cpp
+crypto_libscc_crypto_shani_a_SOURCES = crypto/sha256_x86_shani.cpp
 
 # consensus: shared between all executables that validate any consensus rules.
 libscc_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(PIC_FLAGS)
