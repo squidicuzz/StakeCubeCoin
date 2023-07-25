@@ -424,7 +424,7 @@ UniValue burn(const JSONRPCRequest& request)
                     {"data", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The optional data to include, up-to " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes."},
                 },
                 RPCResult{
-                    "\"txid\"        (string) The transaction id.\n"
+                    RPCResult::Type::STR_HEX, "txid", "The transaction id."
                 },
                 RPCExamples{
             "\nCreate a simple burn transaction of 1 SCC\n"
