@@ -624,8 +624,6 @@ public:
 
     void DoMaintenance();
 
-    void DoMaintenance();
-
 private:
     void CleanupCache(int nHeight) EXCLUSIVE_LOCKS_REQUIRED(cs);
 };
