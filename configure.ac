@@ -551,7 +551,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
     __m128i k = _mm_set1_epi32(2);
     return _mm_extract_epi32(_mm_sha256rnds2_epu32(i, i, k), 0);
   ]])],
- [ AC_MSG_RESULT(yes); enable_x86_shani=yes; AC_DEFINE(ENABLE_X86_SHANI, 1, [Define this symbol to build code that uses x86 SHA-NI intrinsics]) ],
+ [ AC_MSG_RESULT(yes); enable_shani=yes; AC_DEFINE(enable_shani, 1, [Define this symbol to build code that uses x86 SHA-NI intrinsics]) ],
  [ AC_MSG_RESULT(no)]
 )
 CXXFLAGS="$TEMP_CXXFLAGS"
@@ -1720,7 +1720,8 @@ AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
 AM_CONDITIONAL([ENABLE_SSE42],[test x$enable_sse42 = xyes])
 AM_CONDITIONAL([ENABLE_SSE41],[test x$enable_sse41 = xyes])
 AM_CONDITIONAL([ENABLE_AVX2],[test x$enable_avx2 = xyes])
-AM_CONDITIONAL([ENABLE_X86_SHANI],[test x$enable_x86_shani = xyes])
+AM_CONDITIONAL([enable_shani],[test x$enable_shani = xyes])
+AM_CONDITIONAL([ENABLE_SHANI],[test x$enable_shani = xyes])
 AM_CONDITIONAL([ENABLE_ARM_CRC],[test x$enable_arm_crc = xyes])
 AM_CONDITIONAL([ENABLE_ARM_SHANI], [test "$enable_arm_shani" = "yes"])
 AM_CONDITIONAL([USE_ASM],[test x$use_asm = xyes])

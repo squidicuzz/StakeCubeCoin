@@ -612,7 +612,7 @@ std::string SHA256AutoDetect()
         have_x86_shani = (ebx >> 29) & 1;
     }
 
-#if defined(ENABLE_X86_SHANI) && !defined(BUILD_BITCOIN_INTERNAL)
+#if defined(ENABLE_SHANI) && !defined(BUILD_BITCOIN_INTERNAL)
     if (have_x86_shani) {
         Transform = sha256_x86_shani::Transform;
         TransformD64 = TransformD64Wrapper<sha256_x86_shani::Transform>;
