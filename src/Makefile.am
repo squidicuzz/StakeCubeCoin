@@ -77,6 +77,9 @@ LIBBITCOIN_CRYPTO_SHANI = crypto/libscc_crypto_shani.a
 LIBBITCOIN_CRYPTO += $(LIBBITCOIN_CRYPTO_SHANI)
 endif
 
+$(LIBDASHBLS):
+	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D)
+
 $(LIBSECP256K1): $(wildcard secp256k1/src/*.h) $(wildcard secp256k1/src/*.c) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
 
@@ -758,6 +761,7 @@ sccd_LDADD = \
   $(LIBBITCOIN_ZMQ) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \
+  $(LIBDASHBLS) \
   $(LIBLEVELDB) \
   $(LIBLEVELDB_SSE42) \
   $(LIBMEMENV) \
@@ -799,6 +803,7 @@ scc_tx_LDADD = \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \
+  $(LIBDASHBLS) \
   $(LIBSECP256K1)
 
 scc_tx_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(CRYPTO_LIBS) $(BLS_LIBS) $(GMP_LIBS)
@@ -826,6 +831,7 @@ scc_wallet_LDADD = \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBBITCOIN_ZMQ) \
+  $(LIBDASHBLS) \
   $(LIBLEVELDB) \
   $(LIBLEVELDB_SSE42) \
   $(LIBMEMENV) \
@@ -845,7 +851,7 @@ if GLIBC_BACK_COMPAT
 endif
 
 libsccconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS) $(LIBTOOL_APP_LDFLAGS)
-libsccconsensus_la_LIBADD = $(LIBSECP256K1) $(BLS_LIBS) $(GMP_LIBS) $(BOOST_LIBS)
+libsccconsensus_la_LIBADD = $(LIBDASHBLS) $(LIBSECP256K1) $(BLS_LIBS) $(GMP_LIBS) $(BOOST_LIBS)
 libsccconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL
 libsccconsensus_la_CPPFLAGS += -I$(srcdir)/dashbls/include -I$(srcdir)/dashbls/depends/relic/include -I$(srcdir)/dashbls/depends/minialloc/include
 libsccconsensus_la_CPPFLAGS += -I$(srcdir)/immer
@@ -882,7 +888,13 @@ CLEANFILES += wallet/test/*.gcda wallet/test/*.gcno
 CLEANFILES += zmq/*.gcda zmq/*.gcno
 CLEANFILES += obj/build.h
 
-EXTRA_DIST = $(CTAES_DIST)
+IMMER_DIST = immer/immer
+LIBDASHBLS_DIST = dashbls
+
+EXTRA_DIST = \
+  $(CTAES_DIST)   \
+  $(IMMER_DIST)   \
+  $(LIBDASHBLS_DIST)
 
 config/scc-config.h: config/stamp-h1
 	@$(MAKE) -C $(top_builddir) $(subdir)/$(@)
