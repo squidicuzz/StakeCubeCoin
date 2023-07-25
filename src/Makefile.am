@@ -701,7 +701,7 @@ libscc_util_a_SOURCES = \
   interfaces/handler.cpp \
   logging.cpp \
   random.cpp \
-  rpc/protocol.cpp \
+  #rpc/protocol.cpp \
   stacktraces.cpp \
   support/cleanse.cpp \
   sync.cpp \
