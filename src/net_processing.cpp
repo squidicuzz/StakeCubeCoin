@@ -2627,7 +2627,7 @@ void PeerLogicValidation::ProcessMessage(
                                    strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
             //}
             pfrom.fDisconnect = true;
-            return false;
+            return;
         }
 
         if (!vRecv.empty())
