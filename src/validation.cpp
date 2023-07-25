@@ -1045,7 +1045,8 @@ CAmount GetBlockSubsidy(int nPrevHeight)
     return nSubsidy;
 }
 
-CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
+//// TODO: improve and fix this
+CAmount GetMasternodePayment(int nHeight, CAmount blockValue, int nReallocActivationHeight)
 {
     // MN payments start at block 200
     return nHeight > 200 ? blockValue * 0.7 : 0;
