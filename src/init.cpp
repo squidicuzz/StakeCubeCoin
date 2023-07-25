@@ -2061,7 +2061,6 @@ bool AppInitMain(const CoreContext& context, NodeContext& node, interfaces::Bloc
                 }
 
                 if (!fDisableGovernance && !args.GetBoolArg("-txindex", DEFAULT_TXINDEX) && chainparams.NetworkIDString() != CBaseChainParams::REGTEST) { // TODO remove this when pruning is fixed. See https://github.com/dashpay/dash/pull/1817 and https://github.com/dashpay/dash/pull/1743
-                   && chainparams.NetworkIDString() != CBaseChainParams::REGTEST) { // TODO remove this when pruning is fixed. See https://github.com/stakecube/StakeCubeCoin/pull/1817 and https://github.com/stakecube/StakeCubeCoin/pull/1743
                     return InitError(_("Transaction index can't be disabled with governance validation enabled. Either start with -disablegovernance command line switch or enable transaction index."));
                 }
 
