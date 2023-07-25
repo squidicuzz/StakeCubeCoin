@@ -732,7 +732,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
 
     std::string chain = gArgs.GetChainName();
     if (chain != CBaseChainParams::TESTNET) {
-        if (connman.GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
+        if (node.connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
             throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
 
         if (::ChainstateActive().IsInitialBlockDownload() && ::ChainActive().Height() != 491408)
@@ -1125,7 +1125,7 @@ UniValue pprpcsb(const JSONRPCRequest& request)
     // Process block
     submitblock_StateCatcher sc(blockHash);
     RegisterValidationInterface(&sc);
-    bool fAccepted = ProcessNewBlock(Params(), blockptr, true, nullptr);
+    bool fAccepted = EnsureChainman(request.context).ProcessNewBlock(Params(), blockptr, true, nullptr);
     UnregisterValidationInterface(&sc);
     if (fBlockPresent)
     {
