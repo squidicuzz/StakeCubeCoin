@@ -66,7 +66,10 @@
 #include <string>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
+
+#if defined(NDEBUG)
 # error "SCC Core cannot be compiled without assertions."
+#endif
 
 #define MICRO 0.000001
 #define MILLI 0.001

@@ -17,6 +17,8 @@ struct LLMQContext;
 
 extern CCriticalSection cs_main;
 
+/** Default for BIP61 (sending reject messages) */
+static constexpr bool DEFAULT_ENABLE_BIP61 = false;
 /** Default for -maxorphantxsize, maximum size in megabytes the orphan map can grow before entries are removed */
 static const unsigned int DEFAULT_MAX_ORPHAN_TRANSACTIONS_SIZE = 10; // this allows around 100 TXs of max size (and many more of normal size)
 /** Default number of orphan+recently-replaced txn to keep around for block reconstruction */
