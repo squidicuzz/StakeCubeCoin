@@ -1333,6 +1333,7 @@ std::string CopyrightHolders(const std::string& strPrefix, unsigned int nStartYe
         strCopyrightHolders += "\n" + strPrefix + strprintf(" %u-%u ", 2018, nEndYear) + "The SCC Core developers";
     }
     // Check for untranslated substitution to make sure SCC Core copyright is not removed by accident
+    if (copyright_devs.find("Dash Core") == std::string::npos) {
         strCopyrightHolders += "\n" + strPrefix + strprintf(" %u-%u ", 2014, nEndYear) + "The Dash Core developers";
     }
     // Check for untranslated substitution to make sure Bitcoin Core copyright is not removed by accident
