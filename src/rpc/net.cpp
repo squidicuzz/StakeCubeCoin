@@ -346,7 +346,7 @@ static UniValue getaddednodeinfo(const JSONRPCRequest& request)
                         {
                             {RPCResult::Type::STR, "addednode", "The node IP address or name (as provided to addnode)"},
                             {RPCResult::Type::BOOL, "connected", "If connected"},
-            "         \"address\" : \"192.168.0.201:40000\",  (string) The scc server IP and port we're connected to\n"
+                            {RPCResult::Type::ARR, "addresses", "Only when connected = true",
                             {
                                 {RPCResult::Type::OBJ, "", "",
                                 {
@@ -424,7 +424,7 @@ static UniValue getnettotals(const JSONRPCRequest& request)
                    {RPCResult::Type::NUM, "bytes_left_in_cycle", "Bytes left in current time cycle"},
                    {RPCResult::Type::NUM, "time_left_in_cycle", "Seconds left in current time cycle"},
                 }},
-                    }
+            }
         },
         RPCExamples{
             HelpExampleCli("getnettotals", "")
