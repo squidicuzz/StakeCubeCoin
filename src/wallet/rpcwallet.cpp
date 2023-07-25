@@ -4227,7 +4227,7 @@ static const CRPCCommand commands[] =
 { //  category              name                        actor (function)           argNames
     //  --------------------- ------------------------    -----------------------    ----------
     { "hidden",             "instantsendtoaddress",             &instantsendtoaddress,          {} },
-    { "hidden",             "burn",                             &burn,                          {"amount","text"} },
+    //{ "hidden",             "burn",                             &burn,                          {"amount","text"} },
     { "rawtransactions",    "fundrawtransaction",               &fundrawtransaction,            {"hexstring","options"} },
     { "wallet",             "abandontransaction",               &abandontransaction,            {"txid"} },
     { "wallet",             "abortrescan",                      &abortrescan,                   {} },
