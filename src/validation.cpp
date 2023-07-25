@@ -3821,7 +3821,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
 
     // once ProgPow always ProgPow
     if (pindexPrev && pindexPrev->nTime >= consensusParams.nPPSwitchTime && block.nTime < consensusParams.nPPSwitchTime)
-        return state.Invalid(false, REJECT_INVALID, "bad-blk-progpow-state", "Cannot go back from ProgPOW");
+        return state.Invalid(REJECT_INVALID, false, "bad-blk-progpow-state", "Cannot go back from ProgPOW");
 
     if (block.IsProgPow() && block.nHeight != nHeight)
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-progpow", "ProgPOW height doesn't match chain height");
