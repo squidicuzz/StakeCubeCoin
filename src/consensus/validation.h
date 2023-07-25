@@ -92,23 +92,32 @@ private:
         MODE_INVALID, //!< network rule violation (DoS value may be set)
         MODE_ERROR,   //!< run-time error
     } mode;
+    int nDoS;
     ValidationInvalidReason m_reason;
     std::string strRejectReason;
     unsigned int chRejectCode;
+    bool corruptionPossible;
     std::string strDebugMessage;
 public:
-    CValidationState() : mode(MODE_VALID), m_reason(ValidationInvalidReason::NONE), chRejectCode(0) {}
-    bool Invalid(ValidationInvalidReason reasonIn, bool ret = false,
-            unsigned int chRejectCodeIn=0, const std::string &strRejectReasonIn="",
-            const std::string &strDebugMessageIn="") {
-        m_reason = reasonIn;
+    CValidationState() : mode(MODE_VALID), nDoS(0), chRejectCode(0), corruptionPossible(false) {}
+    bool DoS(int level, bool ret = false,
+             unsigned int chRejectCodeIn=0, const std::string &strRejectReasonIn="",
+             bool corruptionIn=false,
+             const std::string &strDebugMessageIn="") {
         chRejectCode = chRejectCodeIn;
         strRejectReason = strRejectReasonIn;
+        corruptionPossible = corruptionIn;
         strDebugMessage = strDebugMessageIn;
         if (mode == MODE_ERROR)
             return ret;
+        nDoS += level;
         mode = MODE_INVALID;
         return ret;
+    }
+    bool Invalid(bool ret = false,
+                 unsigned int _chRejectCode=0, const std::string &_strRejectReason="",
+                 const std::string &_strDebugMessage="") {
+        return DoS(0, ret, _chRejectCode, _strRejectReason, false, _strDebugMessage);
     }
     bool Error(const std::string& strRejectReasonIn) {
         if (mode == MODE_VALID)
@@ -124,6 +133,9 @@ public:
     }
     bool IsError() const {
         return mode == MODE_ERROR;
+    }
+    bool CorruptionPossible() const {
+        return corruptionPossible;
     }
     ValidationInvalidReason GetReason() const { return m_reason; }
     unsigned int GetRejectCode() const { return chRejectCode; }

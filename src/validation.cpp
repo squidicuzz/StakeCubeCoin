@@ -106,6 +106,10 @@ bool CBlockIndexWorkComparator::operator()(const CBlockIndex* pa, const CBlockIn
     return false;
 }
 
+namespace {
+BlockManager g_blockman;
+} // anon namespace
+
 ChainstateManager g_chainman;
 
 CChainState& ChainstateActive()
@@ -1132,6 +1136,16 @@ bool CChainState::IsInitialBlockDownload() const
 }
 
 static CBlockIndex *pindexBestForkTip = nullptr, *pindexBestForkBase = nullptr;
+
+BlockMap& BlockIndex()
+{
+    return g_blockman.m_block_index;
+}
+
+PrevBlockMap& PrevBlockIndex()
+{
+    return g_blockman.m_prev_block_index;
+}
 
 static void AlertNotify(const std::string& strMessage)
 {
