@@ -218,6 +218,13 @@ static bool getScriptFromDescriptor(const std::string& descriptor, CScript& scri
                 --nMaxTries;
             }
         }*/
+
+        FlatSigningProvider provider;
+        std::vector<CScript> scripts;
+        if (!desc->Expand(0, key_provider, scripts, provider)) {
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("Cannot derive script without private keys"));
+        }
+
         // Combo descriptors can have 2 or 4 scripts, so we can't just check scripts.size() == 1
         //CHECK_NONFATAL(scripts.size() > 0 && scripts.size() <= 4);
 
