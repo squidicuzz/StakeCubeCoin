@@ -199,7 +199,7 @@ BITCOIN_CORE_H = \
   interfaces/wallet.h \
   key.h \
   key_io.h \
-  keystore.h \
+  #keystore.h \
   dbwrapper.h \
   limitedmap.h \
   llmq/quorums.h \
@@ -658,7 +658,7 @@ libscc_common_a_SOURCES = \
   hdchain.cpp \
   key.cpp \
   key_io.cpp \
-  keystore.cpp \
+  #keystore.cpp \
   merkleblock.cpp \
   netaddress.cpp \
   netbase.cpp \
