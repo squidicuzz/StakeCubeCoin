@@ -2623,8 +2623,8 @@ void PeerLogicValidation::ProcessMessage(
             LogPrint(BCLog::NET, "peer=%d using obsolete version %i; disconnecting\n", pfrom.GetId(), nVersion);
             //// FIXME: bip61 usage???
             //if (enable_bip61) {
-                m_connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::VERSION, msg_type, REJECT_OBSOLETE,
-                                   strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
+            //    m_connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::VERSION, msg_type, REJECT_OBSOLETE,
+            //                       strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
             //}
             pfrom.fDisconnect = true;
             return;
