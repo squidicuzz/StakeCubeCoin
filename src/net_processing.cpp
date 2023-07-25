@@ -60,7 +60,6 @@
 
 #include <statsd_client.h>
 
-# error "SCC Core cannot be compiled without assertions."
 /** Maximum number of in-flight objects from a peer */
 static constexpr int32_t MAX_PEER_OBJECT_IN_FLIGHT = 100;
 /** Maximum number of announced objects from a peer */
@@ -2621,12 +2620,12 @@ void PeerLogicValidation::ProcessMessage(
 
         if (pindexBestHeader->nHeight >= Params().GetConsensus().nPPSwitchHeight && nVersion < MIN_PP_PROTO_VERSION) {
             // disconnect from peers older than this proto version
-            LogPrint(BCLog::NET, "peer=%d using obsolete version %i; disconnecting\n", pfrom->GetId(), nVersion);
+            LogPrint(BCLog::NET, "peer=%d using obsolete version %i; disconnecting\n", pfrom.GetId(), nVersion);
             if (enable_bip61) {
-                connman->PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                m_connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
                                    strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
             }
-            pfrom->fDisconnect = true;
+            pfrom.fDisconnect = true;
             return false;
         }
 
