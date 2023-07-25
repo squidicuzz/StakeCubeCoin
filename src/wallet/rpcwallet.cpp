@@ -349,6 +349,7 @@ static CTransactionRef SendMoney(CWallet* const pwallet, const CTxDestination& a
     return tx;
 }
 
+/*
 static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPubKeyIn, CAmount nValue)
 {
     // Check amount
@@ -394,14 +395,16 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
 
     mapValue_t mapValue;
     CValidationState state;
-    if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} /* orderForm */, state)) {
+    if (!pwallet->CommitTransaction(tx, std::move(mapValue), {} , state)) { // orderForm
         strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
 
     return tx;
 }
+*/
 
+/*
 UniValue burn(const JSONRPCRequest& request)
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
@@ -466,6 +469,7 @@ UniValue burn(const JSONRPCRequest& request)
     CTransactionRef tx = BurnMoney(pwallet, scriptPubKey, nAmount);
     return tx->GetHash().GetHex();
 }
+*/
 
 static UniValue sendtoaddress(const JSONRPCRequest& request)
 {
