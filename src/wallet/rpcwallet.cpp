@@ -354,7 +354,7 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
     // Check amount
     if (nValue <= 0)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid amount");
-    
+
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
     pwallet->BlockUntilSyncedToCurrentChain();
@@ -413,7 +413,6 @@ UniValue burn(const JSONRPCRequest& request)
     EnsureWalletIsUnlocked(pwallet);
 
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
-        throw std::runtime_error(
             RPCHelpMan{"burn",
                 "Create a burn transaction and optionally write custom data into the burn transaction, \n"
                 "<amount> is real and is rounded to the nearest oleg (ex: 0.00000001).\n"
@@ -437,7 +436,7 @@ UniValue burn(const JSONRPCRequest& request)
             "\nAs a JSON-RPC call\n"
             + HelpExampleRpc("burn", "1, \"Hello world!\"")
                 },
-            }.ToString());
+            }.Check(request);
 
     CScript scriptPubKey;
 
