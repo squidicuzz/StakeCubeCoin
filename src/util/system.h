@@ -223,11 +223,6 @@ public:
     const std::list<SectionInfo> GetUnrecognizedSections() const;
 
     /**
-     * Return the map of all the args passed via cmd line
-     */
-    const std::map<std::string, std::vector<std::string>> GetCommandLineArgs() const;
-
-    /**
      * Return the map of all the args passed via the command line
      */
     const std::map<std::string, std::vector<util::SettingsValue>> GetCommandLineArgs() const;
