@@ -2621,10 +2621,11 @@ void PeerLogicValidation::ProcessMessage(
         if (pindexBestHeader->nHeight >= Params().GetConsensus().nPPSwitchHeight && nVersion < MIN_PP_PROTO_VERSION) {
             // disconnect from peers older than this proto version
             LogPrint(BCLog::NET, "peer=%d using obsolete version %i; disconnecting\n", pfrom.GetId(), nVersion);
-            if (enable_bip61) {
+            //// FIXME: bip61 usage???
+            //if (enable_bip61) {
                 m_connman.PushMessage(pfrom, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
                                    strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION)));
-            }
+            //}
             pfrom.fDisconnect = true;
             return false;
         }
