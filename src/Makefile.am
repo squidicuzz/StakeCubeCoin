@@ -930,7 +930,7 @@ config/scc-config.h: config/stamp-h1
 	$(IMMER_DIST)	 \
 	$(LIBDASHBLS_DIST)
 
-config/bitcoin-config.h: config/stamp-h1
+config/scc-config.h: config/stamp-h1
 	@$(MAKE) -C $(top_builddir) $(subdir)/$(@)
 config/stamp-h1: $(top_srcdir)/$(subdir)/config/scc-config.h.in $(top_builddir)/config.status
 	$(AM_V_at)$(MAKE) -C $(top_builddir) $(subdir)/$(@)
