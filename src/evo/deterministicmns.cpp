@@ -603,6 +603,10 @@ void CDeterministicMNList::RemoveMN(const uint256& proTxHash)
         }
     }
 
+    mnMap = mnMap.erase(proTxHash);
+    mnInternalIdMap = mnInternalIdMap.erase(dmn->GetInternalId());
+}
+
 bool CDeterministicMNManager::ProcessBlock(const CBlock& block, const CBlockIndex* pindex, CValidationState& _state, const CCoinsViewCache& view, bool fJustCheck)
 {
     AssertLockHeld(cs_main);
