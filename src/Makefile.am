@@ -426,7 +426,7 @@ libscc_server_a_SOURCES = \
   rpc/net.cpp \
   rpc/rawtransaction.cpp \
   rpc/evo.cpp \
-  rpc/rpcquorums.cpp \
+  rpc/quorums.cpp \
   rpc/server.cpp \
   rpc/coinjoin.cpp \
   script/sigcache.cpp \
