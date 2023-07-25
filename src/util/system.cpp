@@ -383,11 +383,6 @@ bool ArgsManager::ParseParameters(int argc, const char* const argv[], std::strin
 std::optional<unsigned int> ArgsManager::GetArgFlags(const std::string& name) const
 {
     LOCK(cs_args);
-    return m_command_line_args;
-}
-
-{
-    LOCK(cs_args);
     for (const auto& arg_map : m_available_args) {
         const auto search = arg_map.second.find(name);
         if (search != arg_map.second.end()) {
