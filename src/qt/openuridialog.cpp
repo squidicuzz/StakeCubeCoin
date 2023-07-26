@@ -19,6 +19,7 @@ OpenURIDialog::OpenURIDialog(QWidget *parent) :
     GUIUtil::updateFonts();
     GUIUtil::disableMacFocusRect(this);
     ui->uriEdit->setPlaceholderText("scc:");
+    //ui->uriEdit->setText("scc:?r=" + QUrl::toPercentEncoding(fileUri.toString()));
 }
 
 OpenURIDialog::~OpenURIDialog()
@@ -42,5 +43,3 @@ void OpenURIDialog::accept()
         ui->uriEdit->setValid(false);
     }
 }
-
-    ui->uriEdit->setText("scc:?r=" + QUrl::toPercentEncoding(fileUri.toString()));
