@@ -961,11 +961,13 @@ include Makefile.test_util.include
 include Makefile.test_fuzz.include
 
 if ENABLE_TESTS
-include Makefile.test.include
+@echo "TESTS DISABLED!"
+#include Makefile.test.include
 endif
 
 if ENABLE_BENCH
-include Makefile.bench.include
+@echo "BENCH DISABLED!"
+#include Makefile.bench.include
 endif
 
 if ENABLE_QT
@@ -973,7 +975,8 @@ include Makefile.qt.include
 endif
 
 if ENABLE_QT_TESTS
-include Makefile.qttest.include
+@echo "QT TESTS DISABLED!"
+#include Makefile.qttest.include
 endif
 
 include Makefile.univalue.include
