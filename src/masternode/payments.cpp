@@ -257,9 +257,12 @@ bool CMasternodePayments::GetMasternodeTxOuts(int nBlockHeight, CAmount blockRew
     // make sure it's not filled yet
     voutMasternodePaymentsRet.clear();
 
-    if(!GetBlockTxOuts(nBlockHeight, blockReward, voutMasternodePaymentsRet)) {
-        LogPrintf("CMasternodePayments::%s -- no payee (deterministic masternode list empty)\n", __func__);
-        return false;
+    std::string chain = gArgs.GetChainName();
+    if (chain == CBaseChainParams::MAIN) {
+        if(!GetBlockTxOuts(nBlockHeight, blockReward, voutMasternodePaymentsRet)) {
+            LogPrintf("CMasternodePayments::%s -- no payee (deterministic masternode list empty)\n", __func__);
+            return false;
+        }
     }
 
     for (const auto& txout : voutMasternodePaymentsRet) {
