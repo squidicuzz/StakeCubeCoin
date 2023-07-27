@@ -13,6 +13,7 @@
 #include <tinyformat.h>
 #include <util/ranges.h>
 #include <util/system.h>
+#include <util/underlying.h>
 #include <util/strencodings.h>
 #include <versionbitsinfo.h>
 
