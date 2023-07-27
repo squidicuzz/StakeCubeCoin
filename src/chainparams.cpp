@@ -1108,7 +1108,10 @@ public:
         params->threshold = threshold;
         params->dkgBadVotesThreshold = threshold;
     }
-    void UpdateLLMQTestParametersFromArgs(const ArgsManager& args);
+
+    void UpdateLLMQTestParametersFromArgs(const ArgsManager& args, const Consensus::LLMQType llmqType);
+    void UpdateLLMQInstantSendFromArgs(const ArgsManager& args);
+    void UpdateLLMQInstantSendDIP0024FromArgs(const ArgsManager& args);
 };
 
 void CRegTestParams::UpdateVersionBitsParametersFromArgs(const ArgsManager& args)
