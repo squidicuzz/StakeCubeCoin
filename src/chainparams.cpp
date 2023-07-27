@@ -335,7 +335,7 @@ public:
         // SCC BIP44 coin type is '522'
         nExtCoinType = 522;
 
-        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
+        vFixedSeeds = std::vector<SeedSpec6>(std::begin(pnSeed6_main), std::end(pnSeed6_main));
 
         // long living quorum params
         AddLLMQ(Consensus::LLMQType::LLMQ_50_60);
@@ -1063,14 +1063,12 @@ public:
     }
     void UpdateLLMQTestParametersFromArgs(const ArgsManager& args);
 };
-
 void CRegTestParams::UpdateVersionBitsParametersFromArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-vbparams")) return;
 
     for (const std::string& strDeployment : args.GetArgs("-vbparams")) {
-        std::vector<std::string> vDeploymentParams;
-        boost::split(vDeploymentParams, strDeployment, boost::is_any_of(":"));
+        std::vector<std::string> vDeploymentParams = SplitString(strDeployment, ':');
         if (vDeploymentParams.size() != 3 && vDeploymentParams.size() != 5 && vDeploymentParams.size() != 7) {
             throw std::runtime_error("Version bits parameters malformed, expecting "
                     "<deployment>:<start>:<end> or "
@@ -1121,8 +1119,7 @@ void CRegTestParams::UpdateDIP3ParametersFromArgs(const ArgsManager& args)
     if (!args.IsArgSet("-dip3params")) return;
 
     std::string strParams = args.GetArg("-dip3params", "");
-    std::vector<std::string> vParams;
-    boost::split(vParams, strParams, boost::is_any_of(":"));
+    std::vector<std::string> vParams = SplitString(strParams, ':');
     if (vParams.size() != 2) {
         throw std::runtime_error("DIP3 parameters malformed, expecting <activation>:<enforcement>");
     }
@@ -1142,8 +1139,7 @@ void CRegTestParams::UpdateDIP8ParametersFromArgs(const ArgsManager& args)
     if (!args.IsArgSet("-dip8params")) return;
 
     std::string strParams = args.GetArg("-dip8params", "");
-    std::vector<std::string> vParams;
-    boost::split(vParams, strParams, boost::is_any_of(":"));
+    std::vector<std::string> vParams = SplitString(strParams, ':');
     if (vParams.size() != 1) {
         throw std::runtime_error("DIP8 parameters malformed, expecting <activation>");
     }
@@ -1160,8 +1156,7 @@ void CRegTestParams::UpdateBudgetParametersFromArgs(const ArgsManager& args)
     if (!args.IsArgSet("-budgetparams")) return;
 
     std::string strParams = args.GetArg("-budgetparams", "");
-    std::vector<std::string> vParams;
-    boost::split(vParams, strParams, boost::is_any_of(":"));
+    std::vector<std::string> vParams = SplitString(strParams, ':');
     if (vParams.size() != 3) {
         throw std::runtime_error("Budget parameters malformed, expecting <masternode>:<budget>:<superblock>");
     }
@@ -1179,25 +1174,76 @@ void CRegTestParams::UpdateBudgetParametersFromArgs(const ArgsManager& args)
     UpdateBudgetParameters(nMasternodePaymentsStartBlock, nBudgetPaymentsStartBlock, nSuperblockStartBlock);
 }
 
-void CRegTestParams::UpdateLLMQTestParametersFromArgs(const ArgsManager& args)
+void CRegTestParams::UpdateLLMQTestParametersFromArgs(const ArgsManager& args, const Consensus::LLMQType llmqType)
 {
-    if (!args.IsArgSet("-llmqtestparams")) return;
+    assert(llmqType == Consensus::LLMQType::LLMQ_TEST || llmqType == Consensus::LLMQType::LLMQ_TEST_INSTANTSEND);
 
-    std::string strParams = args.GetArg("-llmqtestparams", "");
-    std::vector<std::string> vParams;
-    boost::split(vParams, strParams, boost::is_any_of(":"));
+    std::string cmd_param{"-llmqtestparams"}, llmq_name{"LLMQ_TEST"};
+    if (llmqType == Consensus::LLMQType::LLMQ_TEST_INSTANTSEND) {
+        cmd_param = "-llmqtestinstantsendparams";
+        llmq_name = "LLMQ_TEST_INSTANTSEND";
+    }
+
+    if (!args.IsArgSet(cmd_param)) return;
+
+    std::string strParams = args.GetArg(cmd_param, "");
+    std::vector<std::string> vParams = SplitString(strParams, ':');
     if (vParams.size() != 2) {
-        throw std::runtime_error("LLMQ_TEST parameters malformed, expecting <size>:<threshold>");
+        throw std::runtime_error(strprintf("%s parameters malformed, expecting <size>:<threshold>", llmq_name));
     }
     int size, threshold;
     if (!ParseInt32(vParams[0], &size)) {
-        throw std::runtime_error(strprintf("Invalid LLMQ_TEST size (%s)", vParams[0]));
+        throw std::runtime_error(strprintf("Invalid %s size (%s)", llmq_name, vParams[0]));
     }
     if (!ParseInt32(vParams[1], &threshold)) {
-        throw std::runtime_error(strprintf("Invalid LLMQ_TEST threshold (%s)", vParams[1]));
+        throw std::runtime_error(strprintf("Invalid %s threshold (%s)", llmq_name, vParams[1]));
     }
-    LogPrintf("Setting LLMQ_TEST parameters to size=%ld, threshold=%ld\n", size, threshold);
-    UpdateLLMQTestParameters(size, threshold);
+    LogPrintf("Setting %s parameters to size=%ld, threshold=%ld\n", llmq_name, size, threshold);
+    UpdateLLMQTestParameters(size, threshold, llmqType);
+}
+
+void CRegTestParams::UpdateLLMQInstantSendFromArgs(const ArgsManager& args)
+{
+    if (!args.IsArgSet("-llmqinstantsend")) return;
+
+    const auto& llmq_params_opt = GetLLMQ(consensus.llmqTypeInstantSend);
+    assert(llmq_params_opt.has_value());
+
+    std::string strLLMQType = gArgs.GetArg("-llmqinstantsend", std::string(llmq_params_opt->name));
+
+    Consensus::LLMQType llmqType = Consensus::LLMQType::LLMQ_NONE;
+    for (const auto& params : consensus.llmqs) {
+        if (params.name == strLLMQType) {
+            llmqType = params.type;
+        }
+    }
+    if (llmqType == Consensus::LLMQType::LLMQ_NONE) {
+        throw std::runtime_error("Invalid LLMQ type specified for -llmqinstantsend.");
+    }
+    LogPrintf("Setting llmqinstantsend to size=%ld\n", ToUnderlying(llmqType));
+    UpdateLLMQInstantSend(llmqType);
+}
+
+void CRegTestParams::UpdateLLMQInstantSendDIP0024FromArgs(const ArgsManager& args)
+{
+    if (!args.IsArgSet("-llmqinstantsenddip0024")) return;
+
+    const auto& llmq_params_opt = GetLLMQ(consensus.llmqTypeDIP0024InstantSend);
+    assert(llmq_params_opt.has_value());
+
+    std::string strLLMQType = gArgs.GetArg("-llmqinstantsenddip0024", std::string(llmq_params_opt->name));
+
+    Consensus::LLMQType llmqType = Consensus::LLMQType::LLMQ_NONE;
+    for (const auto& params : consensus.llmqs) {
+        if (params.name == strLLMQType) {
+            llmqType = params.type;
+        }
+    }
+    if (llmqType == Consensus::LLMQType::LLMQ_NONE) {
+        throw std::runtime_error("Invalid LLMQ type specified for -llmqinstantsenddip0024.");
+    }
+    LogPrintf("Setting llmqinstantsenddip0024 to size=%ld\n", ToUnderlying(llmqType));
+    UpdateLLMQDIP0024InstantSend(llmqType);
 }
 
 void CDevNetParams::UpdateDevnetSubsidyAndDiffParametersFromArgs(const ArgsManager& args)
@@ -1215,11 +1261,17 @@ void CDevNetParams::UpdateDevnetLLMQChainLocksFromArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-llmqchainlocks")) return;
 
-    std::string strLLMQType = gArgs.GetArg("-llmqchainlocks", std::string(GetLLMQ(consensus.llmqTypeChainLocks).name));
+    const auto& llmq_params_opt = GetLLMQ(consensus.llmqTypeChainLocks);
+    assert(llmq_params_opt.has_value());
+
+    std::string strLLMQType = gArgs.GetArg("-llmqchainlocks", std::string(llmq_params_opt->name));
 
     Consensus::LLMQType llmqType = Consensus::LLMQType::LLMQ_NONE;
     for (const auto& params : consensus.llmqs) {
         if (params.name == strLLMQType) {
+            if (params.useRotation) {
+                throw std::runtime_error("LLMQ type specified for -llmqchainlocks must NOT use rotation");
+            }
             llmqType = params.type;
         }
     }
@@ -1234,11 +1286,17 @@ void CDevNetParams::UpdateDevnetLLMQInstantSendFromArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-llmqinstantsend")) return;
 
-    std::string strLLMQType = gArgs.GetArg("-llmqinstantsend", std::string(GetLLMQ(consensus.llmqTypeInstantSend).name));
+    const auto& llmq_params_opt = GetLLMQ(consensus.llmqTypeInstantSend);
+    assert(llmq_params_opt.has_value());
+
+    std::string strLLMQType = gArgs.GetArg("-llmqinstantsend", std::string(llmq_params_opt->name));
 
     Consensus::LLMQType llmqType = Consensus::LLMQType::LLMQ_NONE;
     for (const auto& params : consensus.llmqs) {
         if (params.name == strLLMQType) {
+            if (params.useRotation) {
+                throw std::runtime_error("LLMQ type specified for -llmqinstantsend must NOT use rotation");
+            }
             llmqType = params.type;
         }
     }
@@ -1249,13 +1307,78 @@ void CDevNetParams::UpdateDevnetLLMQInstantSendFromArgs(const ArgsManager& args)
     UpdateDevnetLLMQInstantSend(llmqType);
 }
 
+void CDevNetParams::UpdateDevnetLLMQInstantSendDIP0024FromArgs(const ArgsManager& args)
+{
+    if (!args.IsArgSet("-llmqinstantsenddip0024")) return;
+
+    const auto& llmq_params_opt = GetLLMQ(consensus.llmqTypeDIP0024InstantSend);
+    assert(llmq_params_opt.has_value());
+
+    std::string strLLMQType = gArgs.GetArg("-llmqinstantsenddip0024", std::string(llmq_params_opt->name));
+
+    Consensus::LLMQType llmqType = Consensus::LLMQType::LLMQ_NONE;
+    for (const auto& params : consensus.llmqs) {
+        if (params.name == strLLMQType) {
+            if (!params.useRotation) {
+                throw std::runtime_error("LLMQ type specified for -llmqinstantsenddip0024 must use rotation");
+            }
+            llmqType = params.type;
+        }
+    }
+    if (llmqType == Consensus::LLMQType::LLMQ_NONE) {
+        throw std::runtime_error("Invalid LLMQ type specified for -llmqinstantsenddip0024.");
+    }
+    LogPrintf("Setting llmqinstantsenddip0024 to size=%ld\n", static_cast<uint8_t>(llmqType));
+    UpdateDevnetLLMQDIP0024InstantSend(llmqType);
+}
+
+void CDevNetParams::UpdateDevnetLLMQPlatformFromArgs(const ArgsManager& args)
+{
+    if (!args.IsArgSet("-llmqplatform")) return;
+
+    const auto& llmq_params_opt = GetLLMQ(consensus.llmqTypePlatform);
+    assert(llmq_params_opt.has_value());
+
+    std::string strLLMQType = gArgs.GetArg("-llmqplatform", std::string(llmq_params_opt->name));
+
+    Consensus::LLMQType llmqType = Consensus::LLMQType::LLMQ_NONE;
+    for (const auto& params : consensus.llmqs) {
+        if (params.name == strLLMQType) {
+            llmqType = params.type;
+        }
+    }
+    if (llmqType == Consensus::LLMQType::LLMQ_NONE) {
+        throw std::runtime_error("Invalid LLMQ type specified for -llmqplatform.");
+    }
+    LogPrintf("Setting llmqplatform to size=%ld\n", static_cast<uint8_t>(llmqType));
+    UpdateDevnetLLMQPlatform(llmqType);
+}
+
+void CDevNetParams::UpdateDevnetPowTargetSpacingFromArgs(const ArgsManager& args)
+{
+    if (!args.IsArgSet("-powtargetspacing")) return;
+
+    std::string strPowTargetSpacing = gArgs.GetArg("-powtargetspacing", "");
+
+    int64_t powTargetSpacing;
+    if (!ParseInt64(strPowTargetSpacing, &powTargetSpacing)) {
+        throw std::runtime_error(strprintf("Invalid parsing of powTargetSpacing (%s)", strPowTargetSpacing));
+    }
+
+    if (powTargetSpacing < 1) {
+        throw std::runtime_error(strprintf("Invalid value of powTargetSpacing (%s)", strPowTargetSpacing));
+    }
+
+    LogPrintf("Setting powTargetSpacing to %ld\n", powTargetSpacing);
+    UpdateDevnetPowTargetSpacing(powTargetSpacing);
+}
+
 void CDevNetParams::UpdateLLMQDevnetParametersFromArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-llmqdevnetparams")) return;
 
     std::string strParams = args.GetArg("-llmqdevnetparams", "");
-    std::vector<std::string> vParams;
-    boost::split(vParams, strParams, boost::is_any_of(":"));
+    std::vector<std::string> vParams = SplitString(strParams, ':');
     if (vParams.size() != 2) {
         throw std::runtime_error("LLMQ_DEVNET parameters malformed, expecting <size>:<threshold>");
     }

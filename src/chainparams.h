@@ -113,6 +113,7 @@ public:
     int MinSporkKeys() const { return nMinSporkKeys; }
     bool BIP9CheckMasternodesUpgraded() const { return fBIP9CheckMasternodesUpgraded; }
     std::optional<Consensus::LLMQParams> GetLLMQ(Consensus::LLMQType llmqType) const;
+    bool HasLLMQ(Consensus::LLMQType llmqType) const;
 
 protected:
     CChainParams() {}
@@ -129,6 +130,7 @@ protected:
     std::string strNetworkID;
     CBlock genesis;
     CBlock devnetGenesis;
+    int devnetVersion;
     std::vector<SeedSpec6> vFixedSeeds;
     bool fDefaultConsistencyChecks;
     bool fRequireStandard;
