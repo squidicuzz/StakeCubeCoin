@@ -517,6 +517,15 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nThresholdMin = 60; // 60% of 100
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nFalloffCoeff = 5; // this corresponds to 10 periods
 
+        // Deployment of Quorum Rotation DIP and decreased proposal fee
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].bit = 7;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nStartTime = 1649980800; // Friday, April 15, 2022 0:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nTimeout = 999999999999ULL;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nWindowSize = 100;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nThresholdStart = 80; // 80% of 100
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nThresholdMin = 60;   // 60% of 100
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nFalloffCoeff = 5;      // this corresponds to 10 periods
+
         // Deployment of Deployment of Basic BLS, AssetLocks, EHF
         consensus.vDeployments[Consensus::DEPLOYMENT_V19].bit = 8;
         consensus.vDeployments[Consensus::DEPLOYMENT_V19].nStartTime = 1678838400;     // Wed, March 15, 2023 0:00:00
@@ -547,7 +556,7 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("361a210a8b44c51526bd08d50cfe2d272d9b1e65837d6e4c456d327106334e48"));
 
         vFixedSeeds.clear();
-        vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
+        vFixedSeeds = std::vector<SeedSpec6>(std::begin(pnSeed6_test), std::end(pnSeed6_test));
 
         vSeeds.clear();
         // TODO: Testnet Seeds
@@ -707,6 +716,23 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nThresholdStart = 80;
         consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nThresholdMin = 60;
         consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nFalloffCoeff = 5; // this corresponds to 10 periods
+
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].bit = 7;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nStartTime = 1625097600; // July 1st, 2021
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nTimeout = 999999999999ULL;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nWindowSize = 100;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nThresholdStart = 80; // 80% of 100
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nThresholdMin = 60;   // 60% of 100
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nFalloffCoeff = 5;    // this corresponds to 10 periods
+
+        // Deployment of Deployment of Basic BLS, AssetLocks, EHF
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].bit = 8;
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nStartTime = 1661990400; // Sep 1st, 2022
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nTimeout = 999999999999ULL;
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nWindowSize = 100;
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nThresholdStart = 80; // 80% of 100
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nThresholdMin = 60;   // 60% of 100
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nFalloffCoeff = 5;     // this corresponds to 10 periods
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000000000000000000");
@@ -914,6 +940,24 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nThresholdMin = 60;
         consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nFalloffCoeff = 5;
 
+        // Deployment of Quorum Rotation DIP and decreased proposal fee
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].bit = 7;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nStartTime = 0;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nTimeout = 999999999999ULL;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nWindowSize = 300;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nThresholdStart = 240; // 80% of 300
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nThresholdMin = 180;   // 60% of 300
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0024].nFalloffCoeff = 5;     // this corresponds to 10 periods
+
+        // Deployment of Deployment of Basic BLS, AssetLocks, EHF
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].bit = 8;
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nStartTime = 0;
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nTimeout = 999999999999ULL;
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nWindowSize = 300;
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nThresholdStart = 240; // 80% of 300
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nThresholdMin = 180;   // 60% of 300
+        consensus.vDeployments[Consensus::DEPLOYMENT_V19].nFalloffCoeff = 5;     // this corresponds to 10 periods
+
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("00");
 
@@ -994,7 +1038,10 @@ public:
         consensus.llmqTypePlatform = Consensus::LLMQType::LLMQ_TEST;
         consensus.llmqTypeMnhf = Consensus::LLMQType::LLMQ_TEST;
 
-        UpdateLLMQTestParametersFromArgs(args);
+        UpdateLLMQTestParametersFromArgs(args, Consensus::LLMQType::LLMQ_TEST);
+        UpdateLLMQTestParametersFromArgs(args, Consensus::LLMQType::LLMQ_TEST_INSTANTSEND);
+        UpdateLLMQInstantSendFromArgs(args);
+        //UpdateLLMQInstantSendDIP0024FromArgs(args);
     }
 
     /**
@@ -1063,6 +1110,7 @@ public:
     }
     void UpdateLLMQTestParametersFromArgs(const ArgsManager& args);
 };
+
 void CRegTestParams::UpdateVersionBitsParametersFromArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-vbparams")) return;
@@ -1224,7 +1272,7 @@ void CRegTestParams::UpdateLLMQInstantSendFromArgs(const ArgsManager& args)
     UpdateLLMQInstantSend(llmqType);
 }
 
-void CRegTestParams::UpdateLLMQInstantSendDIP0024FromArgs(const ArgsManager& args)
+/*void CRegTestParams::UpdateLLMQInstantSendDIP0024FromArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-llmqinstantsenddip0024")) return;
 
@@ -1244,7 +1292,7 @@ void CRegTestParams::UpdateLLMQInstantSendDIP0024FromArgs(const ArgsManager& arg
     }
     LogPrintf("Setting llmqinstantsenddip0024 to size=%ld\n", ToUnderlying(llmqType));
     UpdateLLMQDIP0024InstantSend(llmqType);
-}
+}*/
 
 void CDevNetParams::UpdateDevnetSubsidyAndDiffParametersFromArgs(const ArgsManager& args)
 {
@@ -1307,7 +1355,7 @@ void CDevNetParams::UpdateDevnetLLMQInstantSendFromArgs(const ArgsManager& args)
     UpdateDevnetLLMQInstantSend(llmqType);
 }
 
-void CDevNetParams::UpdateDevnetLLMQInstantSendDIP0024FromArgs(const ArgsManager& args)
+/*void CDevNetParams::UpdateDevnetLLMQInstantSendDIP0024FomArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-llmqinstantsenddip0024")) return;
 
@@ -1330,9 +1378,9 @@ void CDevNetParams::UpdateDevnetLLMQInstantSendDIP0024FromArgs(const ArgsManager
     }
     LogPrintf("Setting llmqinstantsenddip0024 to size=%ld\n", static_cast<uint8_t>(llmqType));
     UpdateDevnetLLMQDIP0024InstantSend(llmqType);
-}
+}*/
 
-void CDevNetParams::UpdateDevnetLLMQPlatformFromArgs(const ArgsManager& args)
+/*void CDevNetParams::UpdateDevnetLLMQPlatformFromArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-llmqplatform")) return;
 
@@ -1352,9 +1400,9 @@ void CDevNetParams::UpdateDevnetLLMQPlatformFromArgs(const ArgsManager& args)
     }
     LogPrintf("Setting llmqplatform to size=%ld\n", static_cast<uint8_t>(llmqType));
     UpdateDevnetLLMQPlatform(llmqType);
-}
+}*/
 
-void CDevNetParams::UpdateDevnetPowTargetSpacingFromArgs(const ArgsManager& args)
+/*void CDevNetParams::UpdateDevnetPowTargetSpacingFromArgs(const ArgsManager& args)
 {
     if (!args.IsArgSet("-powtargetspacing")) return;
 
@@ -1371,7 +1419,7 @@ void CDevNetParams::UpdateDevnetPowTargetSpacingFromArgs(const ArgsManager& args
 
     LogPrintf("Setting powTargetSpacing to %ld\n", powTargetSpacing);
     UpdateDevnetPowTargetSpacing(powTargetSpacing);
-}
+}*/
 
 void CDevNetParams::UpdateLLMQDevnetParametersFromArgs(const ArgsManager& args)
 {
