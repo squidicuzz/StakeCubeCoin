@@ -2848,11 +2848,11 @@ void PeerLogicValidation::ProcessMessage(
         if (pfrom.fSuccessfullyConnected) {
             // Disconnect peers that send SENDADDRV2 message after VERACK; this
             // must be negotiated between VERSION and VERACK.
-            pfrom.fDisconnect = true;
-            return;
+            //pfrom.fDisconnect = true;
+            //return;
         }
-        pfrom.m_wants_addrv2 = true;
-        return;
+        //pfrom.m_wants_addrv2 = true;
+        //return;
     }
 
     if (!pfrom.fSuccessfullyConnected) {
