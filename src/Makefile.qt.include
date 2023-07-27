@@ -41,10 +41,10 @@ QT_MOC_CPP = \
   qt/moc_createwalletdialog.cpp \
   qt/moc_bantablemodel.cpp \
   qt/moc_scc.cpp \
-  qt/moc_sccaddressvalidator.cpp \
-  qt/moc_sccamountfield.cpp \
-  qt/moc_sccgui.cpp \
-  qt/moc_sccunits.cpp \
+  qt/moc_bitcoinaddressvalidator.cpp \
+  qt/moc_bitcoinamountfield.cpp \
+  qt/moc_bitcoingui.cpp \
+  qt/moc_bitcoinunits.cpp \
   qt/moc_clientmodel.cpp \
   qt/moc_coincontroldialog.cpp \
   qt/moc_coincontroltreewidget.cpp \
@@ -94,7 +94,7 @@ BITCOIN_MM = \
   qt/macos_appnap.mm
 
 QT_MOC = \
-  qt/sccamountfield.moc \
+  qt/bitcoinamountfield.moc \
   qt/intro.moc \
   qt/overviewpage.moc \
   qt/rpcconsole.moc
@@ -121,10 +121,10 @@ BITCOIN_QT_H = \
   qt/askpassphrasedialog.h \
   qt/bantablemodel.h \
   qt/scc.h \
-  qt/sccaddressvalidator.h \
-  qt/sccamountfield.h \
-  qt/sccgui.h \
-  qt/sccunits.h \
+  qt/bitcoinaddressvalidator.h \
+  qt/bitcoinamountfield.h \
+  qt/bitcoingui.h \
+  qt/bitcoinunits.h \
   qt/clientmodel.h \
   qt/coincontroldialog.h \
   qt/coincontroltreewidget.h \
@@ -212,10 +212,10 @@ BITCOIN_QT_BASE_CPP = \
   qt/appearancewidget.cpp \
   qt/bantablemodel.cpp \
   qt/scc.cpp \
-  qt/sccaddressvalidator.cpp \
-  qt/sccamountfield.cpp \
-  qt/sccgui.cpp \
-  qt/sccunits.cpp \
+  qt/bitcoinaddressvalidator.cpp \
+  qt/bitcoinamountfield.cpp \
+  qt/bitcoingui.cpp \
+  qt/bitcoinunits.cpp \
   qt/clientmodel.cpp \
   qt/csvmodelwriter.cpp \
   qt/guiutil.cpp \
