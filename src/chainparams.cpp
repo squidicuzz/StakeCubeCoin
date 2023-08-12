@@ -460,7 +460,7 @@ public:
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // SCC: 1 day
         consensus.nPowTargetSpacing = 2 * 60; // SCC: 2 minutes
-        consensus.fPowAllowMinDifficultyBlocks = false;
+        consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nPowKGWHeight = 2; // nPowKGWHeight >= nPowDGWHeight means "no KGW"
         consensus.nPowDGWHeight = 1; // TODO: make sure to drop all spork6 related code on next testnet reset
@@ -468,7 +468,7 @@ public:
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         /** Prog PoW **/
-        consensus.nPPSwitchHeight = INT_MAX;
+        consensus.nPPSwitchHeight = 1300;
         consensus.nPPSwitchTime = 1665238500;      // Sat Oct 08 2022 14:15:00 GMT+0000
         consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
 
