@@ -468,7 +468,7 @@ public:
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         /** Prog PoW **/
-        consensus.nPPSwitchHeight = 1300;
+        consensus.nPPSwitchHeight = INT_MAX;
         consensus.nPPSwitchTime = 1665238500;      // Sat Oct 08 2022 14:15:00 GMT+0000
         consensus.nInitialPPDifficulty = 0x1d016e81;    // 10MH/s
 
@@ -581,6 +581,9 @@ public:
         AddLLMQ(Consensus::LLMQType::LLMQ_400_60);
         AddLLMQ(Consensus::LLMQType::LLMQ_400_85);
         AddLLMQ(Consensus::LLMQType::LLMQ_100_67);
+        AddLLMQ(Consensus::LLMQType::LLMQ_60_75);
+        AddLLMQ(Consensus::LLMQType::LLMQ_25_67);
+        AddLLMQ(Consensus::LLMQType::LLMQ_TEST);
         consensus.llmqTypeChainLocks = Consensus::LLMQType::LLMQ_50_60;
         consensus.llmqTypeInstantSend = Consensus::LLMQType::LLMQ_50_60;
         consensus.llmqTypePlatform = Consensus::LLMQType::LLMQ_100_67;
