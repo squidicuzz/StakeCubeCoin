@@ -213,7 +213,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     // Fill in header
     pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
     UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-    if (nHeight == 491409) {
+    if (nHeight == 491409 && chainparams.NetworkIDString() == CBaseChainParams::MAIN) {
         pblock->nBits          = chainparams.GetConsensus().nInitialPPDifficulty;
     } else {
         pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
