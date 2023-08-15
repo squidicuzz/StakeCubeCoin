@@ -273,6 +273,12 @@ bool CSporkManager::GetSporkByHash(const uint256& hash, CSporkMessage& sporkRet)
     return true;
 }
 
+void CSporkManager::ClearSporkAddresses()
+{
+    LOCK(cs);
+    setSporkPubKeyIDs.clear();
+}
+
 bool CSporkManager::SetSporkAddress(const std::string& strAddress)
 {
     LOCK(cs);

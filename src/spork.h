@@ -285,6 +285,12 @@ public:
     bool GetSporkByHash(const uint256& hash, CSporkMessage &sporkRet) const;
 
     /**
+     * ClearSporkAddresses is used to clear the spork listing due to a change.
+     * use wisely.
+     */
+    void ClearSporkAddresses();
+
+    /**
      * SetSporkAddress is used to set a public key ID which will be used to
      * verify spork signatures.
      *
