@@ -250,6 +250,15 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nThresholdMin   = 2420; // 60% of 4032
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nFalloffCoeff   = 5; // this corresponds to 10 periods
 
+        // Deployment of decreased proposal fee, script addresses for Governance Proposals
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].bit             = 7;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nStartTime      = 1635724800; // Nov 1st, 2021
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nTimeout        = 999999999999ULL;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nWindowSize     = 100;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nThresholdStart = 80;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nThresholdMin   = 60;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nFalloffCoeff   = 5; // this corresponds to 10 periods
+
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000902015d2c183b40ba9");  // Blk 484,917
 
@@ -396,13 +405,25 @@ public:
                 {412200, uint256S("0000000000001bf066316f9a8da865f3e16f4770d3a36fd007253d0c07599c65")},
                 {432200, uint256S("0000000000004914b4bf906e1e1b869338cdd61b249cab868d4b8640e1dee35c")},
                 {452200, uint256S("0000000000001aacd70727211dbac4a888d34f423497da206d1cad9492ec4594")},
-                {472200, uint256S("00000000000003163bd40055b06f813615f104e2f67f910bc5814d731f9afa20")}
+                {472200, uint256S("00000000000003163bd40055b06f813615f104e2f67f910bc5814d731f9afa20")},
+                // Historical refs
+                {500000, uint256S("000000000001020e80eb983cc1f16f22676544c3f89ca374c8f92f260d89800a")},
+                {550000, uint256S("00000000005333d7f47a5ea1275e14edf813a69259e7cc0d023c7cd655fb2517")},
+                {550500, uint256S("000000000061cc0cf09219cad0b6ea9843a593d58d50130e9ca5aed254bdb4e7")},
+                {551500, uint256S("0000000000832d63fb60c46529eb1bca584b0a019e18a18cb2255abf745d3671")},
+                // Post team re-org
+                {555000, uint256S("0000000001a965f5f2bd59b114f53d0d61f21649a686c675028639cdad64c665")},
+                {600000, uint256S("00000000004428e377917ebf1b5e256baed842139c57f4c199712ae2607284db")},
+                {650000, uint256S("0000000002a791bd190def7536560777a6105f6a682c6bbab899a3781b2b44b3")},
+                {700000, uint256S("000000000361299a95ea6a73d9a202a94893b3ec4fb441330740e20f9748cf36")},
+                {703355, uint256S("0000000002354cfaeb716435d7cfa632651f32ea22ef9796d25b893e264b2ea5")},
+                {703363, uint256S("00000000013b1c713a1ae71e6328f0f21efa08c7b8432d40bce681e4588645c4")}
             }
         };
 
         chainTxData = ChainTxData{
-            1647874171, // * UNIX timestamp of last known number of transactions (Block 1)
-            646614,     // * total number of transactions between genesis and that timestamp
+            1692077442, // * UNIX timestamp of last known number of transactions (Block 1)
+            703363,     // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.0153      // * estimated number of transactions per second after that timestamp
         };
@@ -501,6 +522,15 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nThresholdStart = 80; // 80% of 100
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nThresholdMin = 60; // 60% of 100
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0020].nFalloffCoeff = 5; // this corresponds to 10 periods
+
+        // Deployment of decreased proposal fee, script addresses for Governance Proposals
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].bit = 7;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nStartTime = 1635724800; // Nov 1st, 2021
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nTimeout = 999999999999ULL;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nWindowSize = 100;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nThresholdStart = 80;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nThresholdMin = 60;
+        consensus.vDeployments[Consensus::DEPLOYMENT_GOV_FEE].nFalloffCoeff = 5; // this corresponds to 10 periods
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("00"); // 470000
