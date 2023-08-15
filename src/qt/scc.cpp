@@ -11,8 +11,8 @@
 #include <qt/bitcoingui.h>
 
 #include <chainparams.h>
-#include <qt/clientmodel.h>
 #include <fs.h>
+#include <qt/clientmodel.h>
 #include <qt/guiconstants.h>
 #include <qt/guiutil.h>
 #include <qt/intro.h>
@@ -36,11 +36,9 @@
 #include <ui_interface.h>
 #include <uint256.h>
 #include <util/system.h>
+#include <util/translation.h>
 
 #include <memory>
-#include <stdint.h>
-
-#include <boost/thread.hpp>
 
 #include <QApplication>
 #include <QDebug>
@@ -425,7 +423,7 @@ static void SetupUIArgs()
     gArgs.AddArg("-splash", strprintf(QObject::tr("Show splash screen on startup (default: %u)").toStdString(), DEFAULT_SPLASHSCREEN), ArgsManager::ALLOW_ANY, OptionsCategory::GUI);
     gArgs.AddArg("-uiplatform", strprintf("Select platform to customize UI for (one of windows, macosx, other; default: %s)", BitcoinGUI::DEFAULT_UIPLATFORM), ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::GUI);
     gArgs.AddArg("-debug-ui", "Updates the UI's stylesheets in realtime with changes made to the css files in -custom-css-dir and forces some widgets to show up which are usually only visible under certain circumstances. (default: 0)", ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::GUI);
-    gArgs.AddArg("-windowtitle=<name>", _("Sets a window title which is appended to \"SCC Core - \""), ArgsManager::ALLOW_ANY, OptionsCategory::GUI);
+    gArgs.AddArg("-windowtitle=<name>", _("Sets a window title which is appended to \"SCC Core - \"").translated, ArgsManager::ALLOW_ANY, OptionsCategory::GUI);
 }
 
 int GuiMain(int argc, char* argv[])
@@ -480,8 +478,11 @@ int GuiMain(int argc, char* argv[])
     SetupUIArgs();
     std::string error;
     if (!node->parseParameters(argc, argv, error)) {
-        QMessageBox::critical(nullptr, QObject::tr(PACKAGE_NAME),
-            QObject::tr("Error parsing command line arguments: %1.").arg(QString::fromStdString(error)));
+        node->initError(strprintf("Error parsing command line arguments: %s\n", error));
+        // Create a message box, because the gui has neither been created nor has subscribed to core signals
+        QMessageBox::critical(nullptr, PACKAGE_NAME,
+            // message can not be translated because translations have not been initialized
+            QString::fromStdString("Error parsing command line arguments: %1.").arg(QString::fromStdString(error)));
         return EXIT_FAILURE;
     }
 
@@ -500,7 +501,7 @@ int GuiMain(int argc, char* argv[])
     if (gArgs.IsArgSet("-printcrashinfo")) {
         auto crashInfo = GetCrashInfoStrFromSerializedStr(gArgs.GetArg("-printcrashinfo", ""));
         std::cout << crashInfo << std::endl;
-        QMessageBox::critical(0, QObject::tr(PACKAGE_NAME), QString::fromStdString(crashInfo));
+        QMessageBox::critical(0, PACKAGE_NAME, QString::fromStdString(crashInfo));
         return EXIT_SUCCESS;
     }
 
@@ -524,12 +525,14 @@ int GuiMain(int argc, char* argv[])
     /// - Do not call GetDataDir(true) before this step finishes
     if (!fs::is_directory(GetDataDir(false)))
     {
-        QMessageBox::critical(nullptr, QObject::tr(PACKAGE_NAME),
+        node->initError(strprintf("Specified data directory \"%s\" does not exist.\n", gArgs.GetArg("-datadir", "")));
+        QMessageBox::critical(nullptr, PACKAGE_NAME,
             QObject::tr("Error: Specified data directory \"%1\" does not exist.").arg(QString::fromStdString(gArgs.GetArg("-datadir", ""))));
         return EXIT_FAILURE;
     }
     if (!node->readConfigFiles(error)) {
-        QMessageBox::critical(nullptr, QObject::tr(PACKAGE_NAME),
+        node->initError(strprintf("Error reading configuration file: %s\n", error));
+        QMessageBox::critical(nullptr, PACKAGE_NAME,
             QObject::tr("Error: Cannot parse configuration file: %1.").arg(QString::fromStdString(error)));
         return EXIT_FAILURE;
     }
@@ -544,7 +547,8 @@ int GuiMain(int argc, char* argv[])
     try {
         node->selectParams(gArgs.GetChainName());
     } catch(std::exception &e) {
-        QMessageBox::critical(nullptr, QObject::tr(PACKAGE_NAME), QObject::tr("Error: %1").arg(e.what()));
+        node->initError(strprintf("%s\n", e.what()));
+        QMessageBox::critical(nullptr, PACKAGE_NAME, QObject::tr("Error: %1").arg(e.what()));
         return EXIT_FAILURE;
     }
 #ifdef ENABLE_WALLET
@@ -589,7 +593,7 @@ int GuiMain(int argc, char* argv[])
     app.parameterSetup();
     // Load custom application fonts and setup font management
     if (!GUIUtil::loadFonts()) {
-        QMessageBox::critical(0, QObject::tr(PACKAGE_NAME),
+        QMessageBox::critical(0, PACKAGE_NAME,
                               QObject::tr("Error: Failed to load application fonts."));
         return EXIT_FAILURE;
     }
@@ -602,7 +606,7 @@ int GuiMain(int argc, char* argv[])
         try {
             family = GUIUtil::fontFamilyFromString(strFamily);
         } catch (const std::exception& e) {
-            QMessageBox::critical(0, QObject::tr(PACKAGE_NAME),
+            QMessageBox::critical(0, PACKAGE_NAME,
                                   QObject::tr("Error: Specified font-family invalid. Valid values: %1.").arg("SystemDefault, Montserrat"));
             return EXIT_FAILURE;
         }
@@ -612,7 +616,7 @@ int GuiMain(int argc, char* argv[])
     if (gArgs.IsArgSet("-font-weight-normal")) {
         QFont::Weight weight;
         if (!GUIUtil::weightFromArg(gArgs.GetArg("-font-weight-normal", GUIUtil::weightToArg(GUIUtil::getFontWeightNormal())), weight)) {
-            QMessageBox::critical(0, QObject::tr(PACKAGE_NAME),
+            QMessageBox::critical(0, PACKAGE_NAME,
                                   QObject::tr("Error: Specified font-weight-normal invalid. Valid range %1 to %2.").arg(0).arg(8));
             return EXIT_FAILURE;
         }
@@ -622,7 +626,7 @@ int GuiMain(int argc, char* argv[])
     if (gArgs.IsArgSet("-font-weight-bold")) {
         QFont::Weight weight;
         if (!GUIUtil::weightFromArg(gArgs.GetArg("-font-weight-bold", GUIUtil::weightToArg(GUIUtil::getFontWeightBold())), weight)) {
-            QMessageBox::critical(0, QObject::tr(PACKAGE_NAME),
+            QMessageBox::critical(0, PACKAGE_NAME,
                                   QObject::tr("Error: Specified font-weight-bold invalid. Valid range %1 to %2.").arg(0).arg(8));
             return EXIT_FAILURE;
         }
@@ -633,7 +637,7 @@ int GuiMain(int argc, char* argv[])
         const int nScaleMin = -100, nScaleMax = 100;
         int nScale = gArgs.GetArg("-font-scale", GUIUtil::getFontScale());
         if (nScale < nScaleMin || nScale > nScaleMax) {
-            QMessageBox::critical(0, QObject::tr(PACKAGE_NAME),
+            QMessageBox::critical(0, PACKAGE_NAME,
                                   QObject::tr("Error: Specified font-scale invalid. Valid range %1 to %2.").arg(nScaleMin).arg(nScaleMax));
             return EXIT_FAILURE;
         }
@@ -647,7 +651,7 @@ int GuiMain(int argc, char* argv[])
         QString strFile;
 
         if (!fs::is_directory(customDir)) {
-            QMessageBox::critical(0, QObject::tr(PACKAGE_NAME),
+            QMessageBox::critical(0, PACKAGE_NAME,
                                   QObject::tr("Error: Invalid -custom-css-dir path.") + "\n\n" + strCustomDir);
             return EXIT_FAILURE;
         }
@@ -667,7 +671,7 @@ int GuiMain(int argc, char* argv[])
             for (const auto& strMissingFile : vecRequiredFiles) {
                 strMissingFiles += strMissingFile + "\n";
             }
-            QMessageBox::critical(0, QObject::tr(PACKAGE_NAME),
+            QMessageBox::critical(0, PACKAGE_NAME,
                                   QObject::tr("Error: %1 CSS file(s) missing in -custom-css-dir path.").arg(vecRequiredFiles.size()) + "\n\n" + strMissingFiles);
             return EXIT_FAILURE;
         }
@@ -676,7 +680,7 @@ int GuiMain(int argc, char* argv[])
     }
     // Validate -debug-ui
     if (gArgs.GetBoolArg("-debug-ui", false)) {
-        QMessageBox::warning(0, QObject::tr(PACKAGE_NAME),
+        QMessageBox::warning(0, PACKAGE_NAME,
                                 "Warning: UI debug mode (-debug-ui) enabled" + QString(gArgs.IsArgSet("-custom-css-dir") ? "." : " without a custom css directory set with -custom-css-dir."));
     }
 
@@ -693,7 +697,7 @@ int GuiMain(int argc, char* argv[])
         if (app.baseInitialize()) {
             app.requestInitialize();
 #if defined(Q_OS_WIN)
-            WinShutdownMonitor::registerShutdownBlockReason(QObject::tr("%1 didn't yet exit safely...").arg(QObject::tr(PACKAGE_NAME)), (HWND)app.getMainWinId());
+            WinShutdownMonitor::registerShutdownBlockReason(QObject::tr("%1 didn't yet exit safely...").arg(PACKAGE_NAME), (HWND)app.getMainWinId());
 #endif
             app.exec();
             app.requestShutdown();

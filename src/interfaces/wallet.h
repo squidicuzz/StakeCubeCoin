@@ -8,7 +8,6 @@
 #include <amount.h>                    // For CAmount
 #include <fs.h>                        // For fs::path
 #include <pubkey.h>                    // For CKeyID and CScriptID (definitions needed in CTxDestination instantiation)
-#include <script/ismine.h>             // For isminefilter, isminetype
 #include <script/standard.h>           // For CTxDestination
 #include <support/allocators/secure.h> // For SecureString
 #include <ui_interface.h>              // For ChangeType
@@ -26,7 +25,10 @@ class CCoinControl;
 class CFeeRate;
 class CKey;
 class CWallet;
+enum isminetype : unsigned int;
 enum class FeeReason;
+typedef uint8_t isminefilter;
+struct bilingual_str;
 struct CRecipient;
 
 namespace interfaces {
@@ -94,7 +96,7 @@ public:
     virtual bool backupWallet(const std::string& filename) = 0;
 
     //! Automatically backup up wallet.
-    virtual bool autoBackupWallet(const fs::path& wallet_path, std::string& strBackupWarningRet, std::string& strBackupErrorRet) = 0;
+    virtual bool autoBackupWallet(const fs::path& wallet_path, bilingual_str& error_string, std::vector<bilingual_str>& warnings) = 0;
 
     //! Get the number of keys since the last auto backup
     virtual int64_t getKeysLeftSinceAutoBackup() = 0;
@@ -163,13 +165,12 @@ public:
         bool sign,
         int& change_pos,
         CAmount& fee,
-        std::string& fail_reason) = 0;
+        bilingual_str& fail_reason) = 0;
 
     //! Commit transaction.
-    virtual bool commitTransaction(CTransactionRef tx,
+    virtual void commitTransaction(CTransactionRef tx,
         WalletValueMap value_map,
-        WalletOrderForm order_form,
-        std::string& reject_reason) = 0;
+        WalletOrderForm order_form) = 0;
 
     //! Return whether transaction can be abandoned.
     virtual bool transactionCanBeAbandoned(const uint256& txid) = 0;

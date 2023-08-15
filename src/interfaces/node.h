@@ -5,10 +5,11 @@
 #ifndef BITCOIN_INTERFACES_NODE_H
 #define BITCOIN_INTERFACES_NODE_H
 
-#include <addrdb.h>     // For banmap_t
 #include <amount.h>     // For CAmount
 #include <net.h>        // For CConnman::NumConnections
+#include <net_types.h>  // For banmap_t
 #include <netaddress.h> // For Network
+#include <support/allocators/secure.h> // For SecureString
 
 #include <functional>
 #include <memory>
@@ -28,7 +29,9 @@ class Coin;
 class RPCTimerInterface;
 class UniValue;
 class proxyType;
+struct bilingual_str;
 struct CNodeStateStats;
+enum class WalletCreationStatus;
 
 namespace interfaces {
 class Handler;
@@ -102,6 +105,9 @@ class Node
 public:
     virtual ~Node() {}
 
+    //! Send init error.
+    virtual void initError(const std::string& message) = 0;
+
     //! Set command line arguments.
     virtual bool parseParameters(int argc, const char* const argv[], std::string& error) = 0;
 
@@ -160,7 +166,7 @@ public:
     virtual void setupServerArgs() = 0;
 
     //! Map port.
-    virtual void mapPort(bool use_upnp) = 0;
+    virtual void mapPort(bool use_upnp, bool use_natpmp) = 0;
 
     //! Get proxy.
     virtual bool getProxy(Network net, proxyType& proxy_info) = 0;
@@ -262,7 +268,7 @@ public:
     //! Attempts to load a wallet from file or directory.
     //! The loaded wallet is also notified to handlers previously registered
     //! with handleLoadWallet.
-    virtual std::unique_ptr<Wallet> loadWallet(const std::string& name, std::string& error, std::string& warning) = 0;
+    virtual std::unique_ptr<Wallet> loadWallet(const std::string& name, bilingual_str& error, std::vector<bilingual_str>& warnings) = 0;
 
     //! Return interface for accessing evo related handler.
     virtual EVO& evo() = 0;
@@ -278,6 +284,9 @@ public:
 
     //! Return interface for accessing coinjoin related handler.
     virtual CoinJoin::Options& coinJoinOptions() = 0;
+
+    //! Create a wallet from file
+    virtual WalletCreationStatus createWallet(const SecureString& passphrase, uint64_t wallet_creation_flags, const std::string& name, bilingual_str& error, std::vector<bilingual_str>& warnings, std::unique_ptr<Wallet>& result) = 0;
 
     //! Register handler for init messages.
     using InitMessageFn = std::function<void(const std::string& message)>;

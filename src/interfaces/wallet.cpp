@@ -6,12 +6,10 @@
 
 #include <amount.h>
 #include <coinjoin/client.h>
-#include <consensus/validation.h>
 #include <interfaces/chain.h>
 #include <interfaces/handler.h>
 #include <policy/fees.h>
 #include <primitives/transaction.h>
-#include <script/ismine.h>
 #include <script/standard.h>
 #include <support/allocators/secure.h>
 #include <sync.h>
@@ -20,6 +18,7 @@
 #include <util/system.h>
 #include <validation.h>
 #include <wallet/fees.h>
+#include <wallet/ismine.h>
 #include <wallet/rpcwallet.h>
 #include <wallet/load.h>
 #include <wallet/wallet.h>
@@ -174,9 +173,9 @@ public:
     }
     void abortRescan() override { m_wallet->AbortRescan(); }
     bool backupWallet(const std::string& filename) override { return m_wallet->BackupWallet(filename); }
-    bool autoBackupWallet(const fs::path& wallet_path, std::string& strBackupWarningRet, std::string& strBackupErrorRet) override
+    bool autoBackupWallet(const fs::path& wallet_path, bilingual_str& error_string, std::vector<bilingual_str>& warnings) override
     {
-        return m_wallet->AutoBackupWallet(wallet_path, strBackupWarningRet, strBackupErrorRet);
+        return m_wallet->AutoBackupWallet(wallet_path, error_string, warnings);
     }
     int64_t getKeysLeftSinceAutoBackup() override { return m_wallet->nKeysLeftSinceAutoBackup; }
     std::string getWalletName() override { return m_wallet->GetName(); }
@@ -277,7 +276,7 @@ public:
         bool sign,
         int& change_pos,
         CAmount& fee,
-        std::string& fail_reason) override
+        bilingual_str& fail_reason) override
     {
         auto locked_chain = m_wallet->chain().lock();
         LOCK(m_wallet->cs_wallet);
@@ -289,20 +288,14 @@ public:
         }
         return tx;
     }
-    bool commitTransaction(CTransactionRef tx,
+    void commitTransaction(CTransactionRef tx,
         WalletValueMap value_map,
-        WalletOrderForm order_form,
-        std::string& reject_reason) override
+        WalletOrderForm order_form) override
     {
         auto locked_chain = m_wallet->chain().lock();
         LOCK(m_wallet->cs_wallet);
         CReserveKey m_key(m_wallet.get());
-        CValidationState state;
-        if (!m_wallet->CommitTransaction(std::move(tx), std::move(value_map), std::move(order_form), state)) {
-            reject_reason = state.GetRejectReason();
-            return false;
-        }
-        return true;
+        m_wallet->CommitTransaction(std::move(tx), std::move(value_map), std::move(order_form));
     }
     bool transactionCanBeAbandoned(const uint256& txid) override { return m_wallet->TransactionCanBeAbandoned(txid); }
     bool abandonTransaction(const uint256& txid) override
@@ -376,7 +369,7 @@ public:
         LOCK(m_wallet->cs_wallet);
         auto mi = m_wallet->mapWallet.find(txid);
         if (mi != m_wallet->mapWallet.end()) {
-            num_blocks = locked_chain->getHeight().value_or(-1);
+            num_blocks = locked_chain->getHeight().get_value_or(-1);
             in_mempool = mi->second.InMempool();
             order_form = mi->second.vOrderForm;
             tx_status = MakeWalletTxStatus(*locked_chain, mi->second);
@@ -411,7 +404,7 @@ public:
             return false;
         }
         balances = getBalances();
-        num_blocks = locked_chain->getHeight().value_or(-1);
+        num_blocks = locked_chain->getHeight().get_value_or(-1);
         return true;
     }
     CAmount getBalance() override

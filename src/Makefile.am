@@ -76,9 +76,13 @@ if ENABLE_AVX2
 LIBBITCOIN_CRYPTO_AVX2 = crypto/libscc_crypto_avx2.a
 LIBBITCOIN_CRYPTO += $(LIBBITCOIN_CRYPTO_AVX2)
 endif
-if ENABLE_SHANI
-LIBBITCOIN_CRYPTO_SHANI = crypto/libscc_crypto_shani.a
-LIBBITCOIN_CRYPTO += $(LIBBITCOIN_CRYPTO_SHANI)
+if ENABLE_X86_SHANI
+LIBBITCOIN_CRYPTO_X86_SHANI = crypto/libscc_crypto_x86_shani.a
+LIBBITCOIN_CRYPTO += $(LIBBITCOIN_CRYPTO_X86_SHANI)
+endif
+if ENABLE_ARM_SHANI
+LIBBITCOIN_CRYPTO_ARM_SHANI = crypto/libscc_crypto_arm_shani.a
+LIBBITCOIN_CRYPTO += $(LIBBITCOIN_CRYPTO_ARM_SHANI)
 endif
 
 $(LIBSECP256K1): $(wildcard secp256k1/src/*.h) $(wildcard secp256k1/src/*.c) $(wildcard secp256k1/include/*)
@@ -221,6 +225,7 @@ BITCOIN_CORE_H = \
   llmq/params.h \
   logging.h \
   logging/timer.h \
+  mapport.h \
   masternode/node.h \
   masternode/meta.h \
   masternode/payments.h \
@@ -233,6 +238,7 @@ BITCOIN_CORE_H = \
   net.h \
   net_permissions.h \
   net_processing.h \
+  net_types.h \
   netaddress.h \
   netbase.h \
   netfulfilledman.h \
@@ -255,14 +261,14 @@ BITCOIN_CORE_H = \
   rpc/client.h \
   rpc/mining.h \
   rpc/protocol.h \
-  rpc/server.h \
   rpc/rawtransaction_util.h \
   rpc/register.h \
+  rpc/request.h \
+  rpc/server.h \
   rpc/util.h \
   saltedhasher.h \
   scheduler.h \
   script/descriptor.h \
-  script/ismine.h \
   script/sigcache.h \
   script/sign.h \
   script/standard.h \
@@ -290,6 +296,7 @@ BITCOIN_CORE_H = \
   unordered_lru_cache.h \
   util/bip32.h \
   util/bytevectorhash.h \
+  util/check.h \
   util/error.h \
   util/fees.h \
   util/spanparsing.h \
@@ -304,6 +311,7 @@ BITCOIN_CORE_H = \
   util/string.h \
   util/time.h \
   util/threadnames.h \
+  util/translation.h \
   util/vector.h \
   util/url.h \
   util/validation.h \
@@ -312,13 +320,16 @@ BITCOIN_CORE_H = \
   versionbits.h \
   versionbitsinfo.h \
   walletinitinterface.h \
+  wallet/bdb.h \
   wallet/coincontrol.h \
   wallet/crypter.h \
   wallet/db.h \
   wallet/fees.h \
+  wallet/ismine.h \
   wallet/load.h \
   wallet/psbtwallet.h \
   wallet/rpcwallet.h \
+  wallet/salvage.h \
   wallet/wallet.h \
   wallet/walletdb.h \
   wallet/wallettool.h \
@@ -342,7 +353,7 @@ libscc_util_a-clientversion.$(OBJEXT): obj/build.h
 # Contains code accessing mempool and chain state that is meant to be separated
 # from wallet and gui code (see node/README.md). Shared code should go in
 # libscc_common or libscc_util libraries, instead.
-libscc_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+libscc_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(NATPMP_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libscc_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libscc_server_a_SOURCES = \
   addrdb.cpp \
@@ -356,6 +367,7 @@ libscc_server_a_SOURCES = \
   coinjoin/options.cpp \
   coinjoin/server.cpp \
   consensus/tx_verify.cpp \
+  dbwrapper.cpp \
   dsnotificationinterface.cpp \
   evo/cbtx.cpp \
   evo/deterministicmns.cpp \
@@ -376,7 +388,6 @@ libscc_server_a_SOURCES = \
   interfaces/chain.cpp \
   interfaces/node.cpp \
   init.cpp \
-  dbwrapper.cpp \
   governance/governance.cpp \
   governance/classes.cpp \
   governance/object.cpp \
@@ -397,6 +408,7 @@ libscc_server_a_SOURCES = \
   llmq/signing.cpp \
   llmq/signing_shares.cpp \
   llmq/utils.cpp \
+  mapport.cpp \
   masternode/node.cpp \
   masternode/meta.cpp \
   masternode/payments.cpp \
@@ -469,14 +481,17 @@ libscc_wallet_a_SOURCES = \
   coinjoin/options.cpp \
   coinjoin/util.cpp \
   interfaces/wallet.cpp \
+  wallet/bdb.cpp \
   wallet/coincontrol.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/fees.cpp \
+  wallet/ismine.cpp \
   wallet/load.cpp \
   wallet/psbtwallet.cpp \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
+  wallet/salvage.cpp \
   wallet/wallet.cpp \
   wallet/walletdb.cpp \
   wallet/walletutil.cpp \
@@ -594,11 +609,17 @@ crypto_libscc_crypto_base_a_SOURCES += \
   crypto/sph_skein.h \
   crypto/sph_types.h
 
-crypto_libscc_crypto_shani_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-crypto_libscc_crypto_shani_a_CPPFLAGS = $(AM_CPPFLAGS)
-crypto_libscc_crypto_shani_a_CXXFLAGS += $(SHANI_CXXFLAGS)
-crypto_libscc_crypto_shani_a_CPPFLAGS += -DENABLE_SHANI
-crypto_libscc_crypto_shani_a_SOURCES = crypto/sha256_shani.cpp
+crypto_libscc_crypto_x86_shani_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+crypto_libscc_crypto_x86_shani_a_CPPFLAGS = $(AM_CPPFLAGS)
+crypto_libscc_crypto_x86_shani_a_CXXFLAGS += $(X86_SHANI_CXXFLAGS)
+crypto_libscc_crypto_x86_shani_a_CPPFLAGS += -DENABLE_X86_SHANI
+crypto_libscc_crypto_x86_shani_a_SOURCES = crypto/sha256_x86_shani.cpp
+
+crypto_libscc_crypto_arm_shani_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+crypto_libscc_crypto_arm_shani_a_CPPFLAGS = $(AM_CPPFLAGS)
+crypto_libscc_crypto_arm_shani_a_CXXFLAGS += $(ARM_SHANI_CXXFLAGS)
+crypto_libscc_crypto_arm_shani_a_CPPFLAGS += -DENABLE_ARM_SHANI
+crypto_libscc_crypto_arm_shani_a_SOURCES = crypto/sha256_arm_shani.cpp
 
 # consensus: shared between all executables that validate any consensus rules.
 libscc_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(PIC_FLAGS)
@@ -670,7 +691,6 @@ libscc_common_a_SOURCES = \
   saltedhasher.cpp \
   scheduler.cpp \
   script/descriptor.cpp \
-  script/ismine.cpp \
   script/sign.cpp \
   script/standard.cpp \
   versionbitsinfo.cpp \
@@ -699,7 +719,7 @@ libscc_util_a_SOURCES = \
   interfaces/handler.cpp \
   logging.cpp \
   random.cpp \
-  rpc/protocol.cpp \
+  rpc/request.cpp \
   stacktraces.cpp \
   support/cleanse.cpp \
   sync.cpp \
@@ -733,6 +753,8 @@ endif
 libscc_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libscc_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libscc_cli_a_SOURCES = \
+  compat/stdin.h \
+  compat/stdin.cpp \
   rpc/client.cpp \
   $(BITCOIN_CORE_H)
 
@@ -766,7 +788,7 @@ sccd_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-sccd_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(BLS_LIBS) $(GMP_LIBS)
+sccd_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(NATPMP_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(BLS_LIBS) $(GMP_LIBS)
 
 # scc-cli binary #
 scc_cli_SOURCES = scc-cli.cpp
@@ -835,7 +857,7 @@ scc_wallet_LDADD = \
   $(LIBSECP256K1) \
   $(LIBUNIVALUE)
 
-scc_wallet_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTO_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(MINIUPNPC_LIBS) $(ZMQ_LIBS) $(BLS_LIBS) $(GMP_LIBS)
+scc_wallet_LDADD += $(BACKTRACE_LIB) $(BOOST_LIBS) $(BDB_LIBS) $(CRYPTO_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(MINIUPNPC_LIBS) $(NATPMP_LIBS) $(ZMQ_LIBS) $(BLS_LIBS) $(GMP_LIBS)
 #
 
 # sccconsensus library #

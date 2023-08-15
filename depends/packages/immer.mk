@@ -1,6 +1,6 @@
 package=immer
 $(package)_version=v0.6.2
-$(package)_download_path=https://github.com/arximboldi/immer/archive
+$(package)_download_path=https://github.com/arximboldi/immer/archive/refs/tags
 $(package)_download_file=$($(package)_version).tar.gz
 $(package)_file_name=$(package)-$($(package)_download_file)
 $(package)_sha256_hash=c3bb8847034437dee64adacb04e1e0163ae640b596c582eb4c0aa1d7c6447cd7

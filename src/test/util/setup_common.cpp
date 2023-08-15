@@ -24,6 +24,7 @@
 #include <util/memory.h>
 #include <util/strencodings.h>
 #include <util/time.h>
+#include <util/translation.h>
 #include <validation.h>
 #include <validationinterface.h>
 
@@ -77,6 +78,7 @@ BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
     SelectParams(chainName);
     SeedInsecureRand();
     gArgs.ForceSetArg("-printtoconsole", "0");
+    if (G_TEST_LOG_FUN) LogInstance().PushBackCallback(G_TEST_LOG_FUN);
     InitLogging();
     LogInstance().StartLogging();
     SHA256AutoDetect();

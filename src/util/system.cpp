@@ -12,6 +12,8 @@
 #include <stacktraces.h>
 #include <util/getuniquepath.h>
 #include <util/strencodings.h>
+#include <util/string.h>
+#include <util/translation.h>
 
 
 #if (defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__DragonFly__))
@@ -45,11 +47,6 @@
 #pragma warning(disable:4805)
 #pragma warning(disable:4717)
 #endif
-
-#ifdef _WIN32_WINNT
-#undef _WIN32_WINNT
-#endif
-#define _WIN32_WINNT 0x0501
 
 #ifdef _WIN32_IE
 #undef _WIN32_IE
@@ -329,7 +326,7 @@ public:
             LogPrintf("Warning: parsed potentially confusing double-negative %s=%s\n", key, val);
             val = "1";
         } else {
-            error = strprintf("Negating of %s is meaningless and therefore forbidden", key.c_str());
+            error = strprintf("Negating of %s is meaningless and therefore forbidden", key);
             return false;
         }
     }
@@ -441,7 +438,7 @@ bool ArgsManager::ParseParameters(int argc, const char* const argv[], std::strin
             }
             m_command_line_args[key].push_back(val);
         } else {
-            error = strprintf("Invalid parameter %s", key.c_str());
+            error = strprintf("Invalid parameter %s", key);
             return false;
         }
     }
@@ -738,7 +735,7 @@ void PrintExceptionContinue(const std::exception_ptr pex, const char* pszExcepti
 {
     std::string message = strprintf("\"%s\" raised an exception\n%s", pszExceptionOrigin, GetPrettyExceptionStr(pex));
     LogPrintf("\n\n************************\n%s\n", message);
-    tfm::format(std::cerr, "\n\n************************\n%s\n", message.c_str());
+    tfm::format(std::cerr, "\n\n************************\n%s\n", message);
 }
 
 fs::path GetDefaultDataDir()
@@ -848,16 +845,6 @@ fs::path GetConfigFile(const std::string& confPath)
     return AbsPathForConfigVal(fs::path(confPath), false);
 }
 
-static std::string TrimString(const std::string& str, const std::string& pattern)
-{
-    std::string::size_type front = str.find_first_not_of(pattern);
-    if (front == std::string::npos) {
-        return std::string();
-    }
-    std::string::size_type end = str.find_last_not_of(pattern);
-    return str.substr(front, end - front + 1);
-}
-
 static bool GetConfigOptions(std::istream& stream, const std::string& filepath, std::string& error, std::vector<std::pair<std::string, std::string>>& options, std::list<SectionInfo>& sections)
 {
     std::string str, prefix;
@@ -921,7 +908,7 @@ bool ArgsManager::ReadConfigStream(std::istream& stream, const std::string& file
             if (ignore_invalid_keys) {
                 LogPrintf("Ignoring unknown configuration value %s\n", option.first);
             } else {
-                error = strprintf("Invalid configuration value %s", option.first.c_str());
+                error = strprintf("Invalid configuration value %s", option.first);
                 return false;
             }
         }
@@ -975,7 +962,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
                     if (!ReadConfigStream(include_config, to_include, error, ignore_invalid_keys)) {
                         return false;
                     }
-                    LogPrintf("Included configuration file %s\n", to_include.c_str());
+                    LogPrintf("Included configuration file %s\n", to_include);
                 } else {
                     error = "Failed to include configuration file " + to_include;
                     return false;
@@ -995,7 +982,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
                 }
             }
             for (const std::string& to_include : includeconf) {
-                tfm::format(std::cerr, "warning: -includeconf cannot be used from included files; ignoring -includeconf=%s\n", to_include.c_str());
+                tfm::format(std::cerr, "warning: -includeconf cannot be used from included files; ignoring -includeconf=%s\n", to_include);
             }
         }
     } else {
@@ -1009,7 +996,7 @@ bool ArgsManager::ReadConfigFiles(std::string& error, bool ignore_invalid_keys)
     // If datadir is changed in .conf file:
     ClearDatadirCache();
     if (!fs::is_directory(GetDataDir(false))) {
-        error = strprintf("specified data directory \"%s\" does not exist.", gArgs.GetArg("-datadir", "").c_str());
+        error = strprintf("specified data directory \"%s\" does not exist.", gArgs.GetArg("-datadir", ""));
         return false;
     }
     return true;
@@ -1224,7 +1211,7 @@ void RenameThreadPool(ctpl::thread_pool& tp, const char* baseName)
 
     for (int i = 0; i < tp.size(); i++) {
         futures[i] = tp.push([baseName, i, cond, mutex, &doneCnt](int threadId) {
-            util::ThreadRename(strprintf("%s-%d", baseName, i).c_str());
+            util::ThreadRename(strprintf("%s-%d", baseName, i));
             std::unique_lock<std::mutex> l(*mutex);
             doneCnt++;
             cond->wait(l);
@@ -1267,7 +1254,7 @@ void SetupEnvironment()
 #endif
     // On most POSIX systems (e.g. Linux, but not BSD) the environment's locale
     // may be invalid, in which case the "C.UTF-8" locale is used as fallback.
-#if !defined(WIN32) && !defined(MAC_OSX) && !defined(__FreeBSD__) && !defined(__OpenBSD__)
+#if !defined(WIN32) && !defined(MAC_OSX) && !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__NetBSD__)
     try {
         std::locale(""); // Raises a runtime error if current locale is invalid
     } catch (const std::runtime_error&) {
@@ -1309,7 +1296,9 @@ int GetNumCores()
 
 std::string CopyrightHolders(const std::string& strPrefix, unsigned int nStartYear, unsigned int nEndYear)
 {
-    std::string strCopyrightHolders = strPrefix + strprintf(" %u-%u ", nStartYear, nEndYear) + strprintf(_(COPYRIGHT_HOLDERS), _(COPYRIGHT_HOLDERS_SUBSTITUTION));
+//    std::string strCopyrightHolders = strPrefix + strprintf(" %u-%u ", nStartYear, nEndYear) + strprintf(_(COPYRIGHT_HOLDERS).translated, _(COPYRIGHT_HOLDERS_SUBSTITUTION));
+    const auto copyright_devs = strprintf(_(COPYRIGHT_HOLDERS).translated, COPYRIGHT_HOLDERS_SUBSTITUTION);
+    std::string strCopyrightHolders = strPrefix + strprintf(" %u-%u ", nStartYear, nEndYear) + copyright_devs;
 
     // Check for untranslated substitution to make sure SCC Core copyright is not removed by accident
     if (strprintf(COPYRIGHT_HOLDERS, COPYRIGHT_HOLDERS_SUBSTITUTION).find("SCC Core") == std::string::npos) {
@@ -1320,7 +1309,7 @@ std::string CopyrightHolders(const std::string& strPrefix, unsigned int nStartYe
         strCopyrightHolders += "\n" + strPrefix + strprintf(" %u-%u ", 2014, nEndYear) + "The Dash Core developers";
     }
     // Check for untranslated substitution to make sure Bitcoin Core copyright is not removed by accident
-    if (strprintf(COPYRIGHT_HOLDERS, COPYRIGHT_HOLDERS_SUBSTITUTION).find("Bitcoin Core") == std::string::npos) {
+    if (copyright_devs.find("Bitcoin Core") == std::string::npos) {
         strCopyrightHolders += "\n" + strPrefix + strprintf(" %u-%u ", 2009, nEndYear) + "The Bitcoin Core developers";
     }
     return strCopyrightHolders;

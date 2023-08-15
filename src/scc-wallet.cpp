@@ -9,8 +9,9 @@
 #include <chainparams.h>
 #include <chainparamsbase.h>
 #include <logging.h>
-#include <util/system.h>
 #include <util/strencodings.h>
+#include <util/system.h>
+#include <util/translation.h>
 #include <wallet/wallettool.h>
 
 const std::function<std::string(const char*)> G_TRANSLATION_FUN = nullptr;
@@ -31,6 +32,7 @@ static void SetupWalletToolArgs()
     // Hidden
     gArgs.AddArg("-h", "", ArgsManager::ALLOW_ANY, OptionsCategory::HIDDEN);
     gArgs.AddArg("-help", "", ArgsManager::ALLOW_ANY, OptionsCategory::HIDDEN);
+    gArgs.AddArg("salvage", "Attempt to recover private keys from a corrupt wallet", ArgsManager::ALLOW_ANY, OptionsCategory::COMMANDS);
 }
 
 static bool WalletAppInit(int argc, char* argv[])

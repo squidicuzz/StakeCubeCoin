@@ -1,3 +1,7 @@
+// Copyright (c) 2015-2019 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <qt/test/wallettests.h>
 #include <qt/test/util.h>
 
@@ -105,7 +109,7 @@ void TestGUI()
         test.CreateAndProcessBlock({}, GetScriptForRawPubKey(test.coinbaseKey.GetPubKey()));
     }
     auto chain = interfaces::MakeChain();
-    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(*chain, WalletLocation(), WalletDatabase::CreateMock());
+    std::shared_ptr<CWallet> wallet = std::make_shared<CWallet>(*chain, WalletLocation(), CreateMockWalletDatabase());
     AddWallet(wallet);
     bool firstRun;
     wallet->LoadWallet(firstRun);

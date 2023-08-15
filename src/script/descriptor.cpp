@@ -36,7 +36,7 @@ namespace {
 //       xpubs use other characters too, but already have their own checksum
 //       mechanism.
 //     * Function names like "multi()" use other characters, but mistakes in
-//       these would generally result in an unparseable descriptor.
+//       these would generally result in an unparsable descriptor.
 //   * A case error always counts as 1 symbol error.
 //   * Any other 1 character substitution error counts as 1 or 2 symbol errors.
 // * Any 1 symbol error is always detected.
@@ -590,7 +590,7 @@ enum class ParseScriptContext {
         }
         uint32_t p;
         if (!ParseUInt32(std::string(elem.begin(), elem.end()), &p)) {
-            error = strprintf("Key path value '%s' is not a valid uint32", std::string(elem.begin(), elem.end()).c_str());
+            error = strprintf("Key path value '%s' is not a valid uint32", std::string(elem.begin(), elem.end()));
             return false;
         } else if (p > 0x7FFFFFFFUL) {
             error = strprintf("Key path value %u is out of range", p);
@@ -727,7 +727,7 @@ std::unique_ptr<DescriptorImpl> ParseScript(Span<const char>& sp, ParseScriptCon
         uint32_t thres;
         std::vector<std::unique_ptr<PubkeyProvider>> providers;
         if (!ParseUInt32(std::string(threshold.begin(), threshold.end()), &thres)) {
-            error = strprintf("Multi threshold '%s' is not valid", std::string(threshold.begin(), threshold.end()).c_str());
+            error = strprintf("Multi threshold '%s' is not valid", std::string(threshold.begin(), threshold.end()));
             return nullptr;
         }
         size_t script_size = 0;
