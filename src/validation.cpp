@@ -1950,7 +1950,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     }
 
     if ((pindex->nHeight >= 704200 && Params().NetworkIDString() == CBaseChainParams::MAIN)
-         || (pindex->nHeight >= 4455 && Params().NetworkIDString() == CBaseChainPraams::TESTNET)
+         || (pindex->nHeight >= 4455 && Params().NetworkIDString() == CBaseChainParams::TESTNET)
          || (pindex->nHeight >= 3 && Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
         // execute only above defined heights, for main and testnets.
         uint256 exp_mix_hash, final_hash;
