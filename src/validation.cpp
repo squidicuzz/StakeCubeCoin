@@ -1955,9 +1955,9 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         // execute only above defined heights, for main and testnets.
         uint256 exp_mix_hash, final_hash;
         final_hash = block.GetProgPowHashFull(exp_mix_hash);
-        LogPrintf("[DEBUG] exp_mix_hash: %s\n", exp_mix_hash);
-        LogPrintf("[DEBUG] block.mix_hash: %s\n", block.mix_hash);
-        LogPrintf("[DEBUG] final_hash: %s\n", final_hash);
+        LogPrintf("[DEBUG] exp_mix_hash: %s\n", exp_mix_hash.ToString());
+        LogPrintf("[DEBUG] block.mix_hash: %s\n", block.mix_hash.ToString());
+        LogPrintf("[DEBUG] final_hash: %s\n", final_hash.ToString());
         // performs check for valid mix_hash.
         if (exp_mix_hash != block.mix_hash) {
             LogPrintf("[DEBUG][WARN] CChainState::ConnectBlock: Accepted result as 'REJECT_INVALID' with 'invalid-mixhash' -- 'mix_hash validity failed' :: exp_mix_hash != block.mix_hash :: %s != %s\n", exp_mix_hash, block.mix_hash);
