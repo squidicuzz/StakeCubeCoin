@@ -1949,11 +1949,21 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
             return state.DoS(50, false, REJECT_INVALID, "invalid-progpow-epoch", false, "invalid epoch number");
     }
 
-    /*uint256 exp_mix_hash{}, final_hash;
-    final_hash = block.GetProgPowHashFull(exp_mix_hash);
-    if (exp_mix_hash != block.mix_hash) {
-        return state.DoS(50, false, REJECT_INVALID, "invalid-mixhash", false, "mix_hash validity failed");
-    }*/
+    if ((pindex->nHeight > 704200 && chainparams.NetworkIDString() == CBaseChainParams::MAIN)
+         || (pindex->nHeight > 4455 && chainparams.NetworkIDString() == CBaseChainPraams::TESTNET)
+         || (pindex->nHeight > 3 && chainparams.NetworkIDString() == CBaseChainParams::REGTEST)) {
+        // execute only above defined heights, for main and testnets.
+        uint256 exp_mix_hash{}, final_hash;
+        final_hash = block.GetProgPowHashFull(exp_mix_hash);
+        LogPrintf("[DEBUG] exp_mix_hash: %s\n", exp_mix_hash);
+        LogPrintf("[DEBUG] block.mix_hash: %s\n", block.mix_hash);
+        LogPrintf("[DEBUG] final_hash: %s\n", final_hash);
+        // performs check for valid mix_hash.
+        if (exp_mix_hash != block.mix_hash) {
+            LogPrintf("[DEBUG][WARN] CChainState::ConnectBlock: Accepted result as 'REJECT_INVALID' with 'invalid-mixhash' -- 'mix_hash validity failed' :: exp_mix_hash != block.mix_hash :: %s != %s\n", exp_mix_hash, block.mix_hash);
+            //return state.DoS(50, false, REJECT_INVALID, "invalid-mixhash", false, "mix_hash validity failed"); // reject invalid block
+        }
+    }
 
     // verify that the view's current state corresponds to the previous block
     uint256 hashPrevBlock = pindex->pprev == nullptr ? uint256() : pindex->pprev->GetBlockHash();
