@@ -1949,9 +1949,9 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
             return state.DoS(50, false, REJECT_INVALID, "invalid-progpow-epoch", false, "invalid epoch number");
     }
 
-    if ((pindex->nHeight >= 704200 && Params().NetworkIDString() == CBaseChainParams::MAIN)
-         || (pindex->nHeight >= 4455 && Params().NetworkIDString() == CBaseChainParams::TESTNET)
-         || (pindex->nHeight >= 3 && Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
+    if ((block.nHeight >= 704200 && Params().NetworkIDString() == CBaseChainParams::MAIN)
+         || (block.nHeight >= 4455 && Params().NetworkIDString() == CBaseChainParams::TESTNET)
+         || (block.nHeight >= 3 && Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
         // execute only above defined heights, for main and testnets.
         uint256 exp_mix_hash, final_hash;
         final_hash = block.GetProgPowHashFull(exp_mix_hash);
