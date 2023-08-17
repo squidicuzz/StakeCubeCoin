@@ -849,11 +849,6 @@ UniValue pprpcsb(const JSONRPCRequest& request)
     uint256 act_mix_hash = uint256S(mix_hex);
     uint256 exp_mix_hash{};
     uint256 final_hash = blockptr->GetProgPowHashFull(exp_mix_hash);
-////SQDEBUG
-    LogPrintf("[DEBUG] act_mix_hash: %s\n", act_mix_hash.ToString());
-    LogPrintf("[DEBUG] exp_mix_hash: %s\n", exp_mix_hash.ToString());
-    LogPrintf("[DEBUG] final_hash: %s\n", final_hash.ToString());
-////SQDEBUG
     if (act_mix_hash != exp_mix_hash)
     {
         throw JSONRPCError(RPC_INVALID_PARAMS, "Bad solution : mismatching mix_hash");
@@ -869,13 +864,11 @@ UniValue pprpcsb(const JSONRPCRequest& request)
     blockptr->mix_hash = exp_mix_hash;
     uint256 blockHash = blockptr->GetHash();
 
-////SQDEBUG
-    LogPrintf("[DEBUG] blockHash: %s\n", blockHash.ToString());
+    // Check final_hash against block hash
     if (blockHash != final_hash) {
-        LogPrintf("[DEBUG] [ERROR] blockHash != final_hash\n");
-        return "bad-final_hash";
+        LogPrintf("[DEBUG][ERROR] blockHash != final_hash :: %s != %s\n", blockHash.ToString(), final_hash.ToString());
+        return "bad-final-hash";
     }
-////SQDEBUG
 
     bool fBlockPresent{false};
     {
