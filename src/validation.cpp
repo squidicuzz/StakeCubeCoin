@@ -1956,21 +1956,28 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         uint32_t tip_nHeight = ::ChainActive().Tip()->nHeight;
         LogPrintf("[DEBUG] block.nHeight: %u\n", block.nHeight);
         LogPrintf("[DEBUG] tip_nHeight: %u\n", tip_nHeight);
+        uint256 exp_mix_hash, final_hash;
+        final_hash = block.GetProgPowHashFull(exp_mix_hash);
+        LogPrintf("[DEBUG] exp_mix_hash: %s\n", exp_mix_hash.ToString());
+        LogPrintf("[DEBUG] block.mix_hash: %s\n", block.mix_hash.ToString());
+        LogPrintf("[DEBUG] final_hash: %s\n", final_hash.ToString());
+        LogPrintf("[DEBUG] block.hash: %s\n", block.GetHash().ToString());
         if (block.nHeight > tip_nHeight){
             LogPrintf("[DEBUG] block.nHeight > tip_nHeight\n");
             LogPrintf("[DEBUG] CChainState::ConnectBlock: This block doesn't exist yet?\n");
-        } else {
-            uint256 exp_mix_hash, final_hash;
-            final_hash = block.GetProgPowHashFull(exp_mix_hash);
-            LogPrintf("[DEBUG] exp_mix_hash: %s\n", exp_mix_hash.ToString());
-            LogPrintf("[DEBUG] block.mix_hash: %s\n", block.mix_hash.ToString());
-            LogPrintf("[DEBUG] final_hash: %s\n", final_hash.ToString());
-            LogPrintf("[DEBUG] block.hash: %s\n", block.GetHash().ToString());
             // performs check for valid mix_hash.
             if (exp_mix_hash != block.mix_hash) {
                 LogPrintf("[DEBUG][WARN] CChainState::ConnectBlock: Accepted result as 'REJECT_INVALID' with 'invalid-mixhash' -- 'mix_hash validity failed' :: exp_mix_hash != block.mix_hash :: %s != %s\n", exp_mix_hash.ToString(), block.mix_hash.ToString());
-                //return state.DoS(50, false, REJECT_INVALID, "invalid-mixhash", false, "mix_hash validity failed"); // reject invalid block
+                //return state.DoS(50, false, REJECT_INVALID, "invalid-mixhash", false, "mix_hash validity failed"); // warn invalid block???
             }
+        } else if (exp_mix_hash != block.mix_hash) {
+            LogPrintf("[DEBUG][ERROR] CChainState::ConnectBlock: Accepted result as 'REJECT_INVALID' with 'invalid-mixhash' -- 'mix_hash validity failed' :: exp_mix_hash != block.mix_hash :: %s != %s\n", exp_mix_hash.ToString(), block.mix_hash.ToString());
+            //return state.DoS(50, false, REJECT_INVALID, "invalid-mixhash", false, "mix_hash validity failed"); // reject invalid block
+        } else {
+            LogPrintf("[DEBUG][OK] block.nHeight <= tip_nHeight -- 'mix_hash validity passed'\n");
+        }
+        if (!CheckProofOfWork(final_hash, block.nBits, chainparams.GetConsensus())) {
+            LogPrintf("[DEBUG][ERROR] CheckProofOfWork: FAILED -- Invalid final_hash: %s\n", final_hash.ToString());
         }
     }
 
