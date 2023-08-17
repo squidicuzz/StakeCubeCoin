@@ -872,8 +872,8 @@ UniValue pprpcsb(const JSONRPCRequest& request)
 ////SQDEBUG
     LogPrintf("[DEBUG] blockHash: %s\n", blockHash.ToString());
     if (blockHash != final_hash) {
-        LogPrintf("[DEBUG] [ERROR] blockHash != final_hash\n")
-        return "bad-final_hash"
+        LogPrintf("[DEBUG] [ERROR] blockHash != final_hash\n");
+        return "bad-final_hash";
     }
 ////SQDEBUG
 
