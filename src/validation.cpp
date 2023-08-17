@@ -1953,9 +1953,9 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         || (block.nHeight >= 4455 && Params().NetworkIDString() == CBaseChainParams::TESTNET)
         || (block.nHeight >= 3 && Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
         // execute only above defined heights, for main and testnets.
-        uin32_t tip_nHeight = ::ChainActive().Tip()->nHeight;
-        LogPrintf("[DEBUG] block.nHeight: %s\n", block.nHeight.ToString());
-        LogPrintf("[DEBUG] tip_nHeight: %s\n", tip_nHeight.ToString());
+        uint32_t tip_nHeight = ::ChainActive().Tip()->nHeight;
+        LogPrintf("[DEBUG] block.nHeight: %u\n", block.nHeight);
+        LogPrintf("[DEBUG] tip_nHeight: %u\n", tip_nHeight);
         if (block.nHeight > tip_nHeight){
             LogPrintf("[DEBUG] block.nHeight > tip_nHeight\n");
             LogPrintf("[DEBUG] CChainState::ConnectBlock: This block doesn't exist yet?\n");
