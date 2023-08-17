@@ -1968,7 +1968,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
             LogPrintf("[DEBUG] CChainState::ConnectBlock: This block doesn't exist yet!\n");
             // performs check for valid mix_hash.
             if (exp_mix_hash != block.mix_hash && !fJustCheck) {
-                bValidMix = true;
+                bInvalidMix = true;
                 LogPrintf("[DEBUG][WARN] CChainState::ConnectBlock: Accepted result as 'REJECT_INVALID' with 'invalid-mixhash' -- 'mix_hash validity failed' :: exp_mix_hash != block.mix_hash :: %s != %s\n", exp_mix_hash.ToString(), block.mix_hash.ToString());
                 //return state.DoS(50, false, REJECT_INVALID, "invalid-mixhash", false, "mix_hash validity failed"); // warn invalid block???
             } else {
