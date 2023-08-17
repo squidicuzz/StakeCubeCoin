@@ -354,7 +354,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                         {
                             {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "address for reward in coinbase (meaningful only if block solution is later submitted with pprpcsb)\n}"}
                         },
-                        "\"reward_address\""},                    
+                        "\"reward_address\""},
                 },
                 RPCResult{
             "{\n"
@@ -596,10 +596,10 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     bool fRewardAddressSet = false;
     if (request.params.size() >= 2) {
         /* TODO!!
-        * Setup bech32 address reading, 
-        * and normal to handle the reward 
+        * Setup bech32 address reading,
+        * and normal to handle the reward
         * address param for progpow.
-        * Subsequent code is from firo 
+        * Subsequent code is from firo
         * and needs rebasing
         */
         CTxDestination rewardAddress = DecodeDestination(request.params[1].get_str());
@@ -610,7 +610,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
         CMutableTransaction coinbaseTx(*pblock->vtx[0]);
         coinbaseTx.vout[0].scriptPubKey = GetScriptForDestination(rewardAddress);
         pblock->vtx[0] = MakeTransactionRef(CTransaction(coinbaseTx));
-        
+
         fRewardAddressSet = true;
     }
 
@@ -849,6 +849,11 @@ UniValue pprpcsb(const JSONRPCRequest& request)
     uint256 act_mix_hash = uint256S(mix_hex);
     uint256 exp_mix_hash{};
     uint256 final_hash = blockptr->GetProgPowHashFull(exp_mix_hash);
+////SQDEBUG
+    LogPrintf("[DEBUG] act_mix_hash: %s\n", act_mix_hash.ToString());
+    LogPrintf("[DEBUG] exp_mix_hash: %s\n", exp_mix_hash.ToString());
+    LogPrintf("[DEBUG] final_hash: %s\n", final_hash.ToString());
+////SQDEBUG
     if (act_mix_hash != exp_mix_hash)
     {
         throw JSONRPCError(RPC_INVALID_PARAMS, "Bad solution : mismatching mix_hash");
@@ -863,6 +868,14 @@ UniValue pprpcsb(const JSONRPCRequest& request)
     // Store mix_hash
     blockptr->mix_hash = exp_mix_hash;
     uint256 blockHash = blockptr->GetHash();
+
+////SQDEBUG
+    LogPrintf("[DEBUG] blockHash: %s\n", blockHash.ToString());
+    if (blockHash != final_hash) {
+        LogPrintf("[DEBUG] [ERROR] blockHash != final_hash\n")
+        return "bad-final_hash"
+    }
+////SQDEBUG
 
     bool fBlockPresent{false};
     {
