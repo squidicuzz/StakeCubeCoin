@@ -22,17 +22,17 @@ uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
 
 uint256 CBlockHeader::GetPoWHash(int nHeight) const
 {
-    uint256 powHash, mix_hash;
+    uint256 powHash;
     std::vector<unsigned char> vch(80);
     CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
     ss << *this;
     if(nHeight == 0) {
         return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
     }
-    if (IsFirstProgPow()) {
+    /*if (IsFirstProgPow()) {
         powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
         return powHash;
-    } else if (IsProgPow()) {
+    } else*/ if (IsProgPow()) {
         powHash = progpow_hash_light(GetProgPowHeader());
         return powHash;
     } else {
@@ -82,12 +82,13 @@ uint256 CBlockHeader::GetHash() const {
     uint256 powHash;
 
     if (IsProgPow()) {
-        if(IsFirstProgPow()) {
+        /*if(IsFirstProgPow()) {
             uint256 mix_hash = Params().GetConsensus().powLimit;
             powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
         } else {
             powHash = progpow_hash_light(GetProgPowHeader());
-        }
+        }*/
+        powHash = progpow_hash_light(GetProgPowHeader());
     	return powHash;
     } else {
         std::vector<unsigned char> vch(80);
