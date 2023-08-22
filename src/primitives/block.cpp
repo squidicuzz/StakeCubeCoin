@@ -48,7 +48,7 @@ bool CBlockHeader::IsProgPow() const {
 
 bool CBlockHeader::IsFirstProgPow() const {
     //return (IsProgPow() && nTime <= (Params().GetConsensus().nPPSwitchTime + 432000)); //5 days
-    return (IsProgPow() && nHeight == 491409);
+    return (nHeight == 491409 && Params().NetworkIDString() == CBaseChainParams::MAIN);
 
 }
 
