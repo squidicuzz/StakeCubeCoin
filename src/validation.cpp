@@ -1955,6 +1955,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         // execute only above defined heights, for main and testnets.
         //uint32_t tip_nHeight = ::ChainActive().Tip()->nHeight;
         uint32_t tip_nHeight = pindex->nHeight;
+        LogPrintf("[DEBUG] fJustCheck: %s\n", fJustCheck ? "true" : "false");
         LogPrintf("[DEBUG] block.nHeight: %u\n", block.nHeight);
         LogPrintf("[DEBUG] tip_nHeight: %u\n", tip_nHeight);
         uint256 exp_mix_hash, final_hash;
@@ -1970,7 +1971,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
                 bInvalidMix = true;
                 LogPrintf("[DEBUG][WARN] CChainState::ConnectBlock: Accepted result as 'REJECT_INVALID' with 'invalid-mixhash' -- 'mix_hash validity failed' :: exp_mix_hash != block.mix_hash :: %s != %s\n", exp_mix_hash.ToString(), block.mix_hash.ToString());
             }
-        } else if (exp_mix_hash != block.mix_hash) {
+        } else if (exp_mix_hash != block.mix_hash && !fJustCheck) {
             bInvalidMix = true;
             LogPrintf("[DEBUG][ERROR] CChainState::ConnectBlock: Accepted result as 'REJECT_INVALID' with 'invalid-mixhash' -- 'mix_hash validity failed' :: exp_mix_hash != block.mix_hash :: %s != %s\n", exp_mix_hash.ToString(), block.mix_hash.ToString());
         }
