@@ -1954,7 +1954,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
         || (block.nHeight >= 3 && Params().NetworkIDString() == CBaseChainParams::REGTEST)) {
         // execute only above defined heights, for main and testnets.
         //uint32_t tip_nHeight = ::ChainActive().Tip()->nHeight;
-        uint32_t tip_nHeight = pindex.nHeight;
+        uint32_t tip_nHeight = pindex->nHeight;
         LogPrintf("[DEBUG] block.nHeight: %u\n", block.nHeight);
         LogPrintf("[DEBUG] tip_nHeight: %u\n", tip_nHeight);
         uint256 exp_mix_hash, final_hash;
