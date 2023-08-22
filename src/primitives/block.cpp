@@ -47,7 +47,9 @@ bool CBlockHeader::IsProgPow() const {
 }
 
 bool CBlockHeader::IsFirstProgPow() const {
-    return (IsProgPow() && nTime <= (Params().GetConsensus().nPPSwitchTime + 432000)); //5 days
+    //return (IsProgPow() && nTime <= (Params().GetConsensus().nPPSwitchTime + 432000)); //5 days
+    return (IsProgPow() && nHeight == 491409);
+
 }
 
 CProgPowHeader CBlockHeader::GetProgPowHeader() const {
