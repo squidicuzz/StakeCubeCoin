@@ -92,10 +92,10 @@ uint256 CBlockHeader::GetHash() const {
         LogPrintf("[DEBUG] GetHash()::progpow_hash_light: %s\n", powHash.ToString());
         LogPrintf("[DEBUG] GetHash()::mix_hash: %s\n", mix_hash.ToString());
 
-        uint256 mixHash;
+        /*uint256 mixHash;
         powHash = progpow_hash_full(GetProgPowHeader(), mixHash);
         LogPrintf("[DEBUG] GetHash()::progpow_hash_full: %s\n", powHash.ToString());
-        LogPrintf("[DEBUG] GetHash()::mixHash: %s\n", mix_hash.ToString());
+        LogPrintf("[DEBUG] GetHash()::mixHash: %s\n", mix_hash.ToString());*/
     	return powHash;
     } else {
         std::vector<unsigned char> vch(80);

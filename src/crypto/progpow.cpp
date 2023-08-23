@@ -50,7 +50,7 @@ uint256 progpow_hash_full(const CProgPowHeader& header, uint256& mix_hash)
     const auto header_h256{U256ToH256(SerializeHash(header))};
     const auto result = progpow::hash(*epochContext, header.nHeight, header_h256, header.nNonce64);
     // mix_hash = H256ToU256(result.mix_hash);
-    mix_hash = U256ToH256(header.mix_hash);
+    mix_hash = header.mix_hash;
     return H256ToU256(result.final_hash);
 }
 

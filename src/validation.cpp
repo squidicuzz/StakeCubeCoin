@@ -3661,7 +3661,7 @@ static bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state,
         if (block.IsProgPow()) {
             final_hash = block.GetProgPowHashLight();
         } else {
-            final_hash = block.GetPoWHash(nHeight);
+            final_hash = block.GetPoWHash(nHeight, true);
         }
         // Check proof of work matches claimed amount
         if (!CheckProofOfWork(final_hash, block.nBits, consensusParams))
