@@ -20,7 +20,7 @@ uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
     return GetHash();
 }
 
-uint256 CBlockHeader::GetPoWHash(int nHeight) const
+uint256 CBlockHeader::GetPoWHash(int nHeight, bool bLightCheck) const
 {
     uint256 powHash;
     uint256 mixHash;
@@ -35,9 +35,11 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const
         LogPrintf("[DEBUG] GetPoWHash()::progpow_hash_light: %s\n", powHash.ToString());
         LogPrintf("[DEBUG] GetPoWHash()::mix_hash: %s\n", mix_hash.ToString());
 
-        powHash = progpow_hash_full(GetProgPowHeader(), mixHash);
-        LogPrintf("[DEBUG] GetPoWHash()::progpow_hash_full: %s\n", powHash.ToString());
-        LogPrintf("[DEBUG] GetPoWHash()::mixHash: %s\n", mixHash.ToString());
+        if (!bLightCheck) {
+            powHash = progpow_hash_full(GetProgPowHeader(), mixHash);
+            LogPrintf("[DEBUG] GetPoWHash()::progpow_hash_full: %s\n", powHash.ToString());
+            LogPrintf("[DEBUG] GetPoWHash()::mixHash: %s\n", mixHash.ToString());
+        }
         return powHash;
     } else {
         return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());

@@ -993,7 +993,7 @@ bool ReadBlockFromDisk(CBlock& block, const FlatFilePos& pos, int nHeight, const
     }
 
     // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
+    if (!CheckProofOfWork(block.GetPoWHash(nHeight, true), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 return true;
 }

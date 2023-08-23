@@ -32,7 +32,7 @@ public:
     uint32_t nBits;
     uint32_t nNonce;
 
-    // SCC - ProgPow 
+    // SCC - ProgPow
     uint32_t nHeight;
     uint64_t nNonce64;
     uint256 mix_hash;
@@ -86,7 +86,7 @@ public:
     uint256 GetHash() const;
 
     uint256 GetHashFull(uint256& mix_hash) const;
-    uint256 GetPoWHash(int nHeight) const;
+    uint256 GetPoWHash(int nHeight, bool bLightCheck = false) const;
 
     bool IsFirstProgPow() const;
 
