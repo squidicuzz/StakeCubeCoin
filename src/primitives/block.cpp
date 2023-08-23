@@ -23,7 +23,7 @@ uint256 CBlockHeader::GetHashFull(uint256& mix_hash) const {
 uint256 CBlockHeader::GetPoWHash(int nHeight) const
 {
     uint256 powHash;
-    uint256 mix_hash;
+    uint256 mixHash;
     std::vector<unsigned char> vch(80);
     CVectorWriter ss(SER_GETHASH, PROTOCOL_VERSION, vch, 0);
     ss << *this;
@@ -31,8 +31,13 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const
         return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
     }
     if (IsProgPow()) {
-        //powHash = progpow_hash_light(GetProgPowHeader());
-        powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
+        powHash = progpow_hash_light(GetProgPowHeader());
+        LogPrintf("[DEBUG] GetPoWHash()::progpow_hash_light: %s\n", powHash.ToString());
+        LogPrintf("[DEBUG] GetPoWHash()::mix_hash: %s\n", mix_hash.ToString());
+
+        powHash = progpow_hash_full(GetProgPowHeader(), mixHash);
+        LogPrintf("[DEBUG] GetPoWHash()::progpow_hash_full: %s\n", powHash.ToString());
+        LogPrintf("[DEBUG] GetPoWHash()::mixHash: %s\n", mixHash.ToString());
         return powHash;
     } else {
         return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
@@ -81,9 +86,14 @@ uint256 CBlockHeader::GetHash() const {
     uint256 powHash;
 
     if (IsProgPow()) {
-        //powHash = progpow_hash_light(GetProgPowHeader());
-        uint256 mix_hash;
-        powHash = progpow_hash_full(GetProgPowHeader(), mix_hash);
+        powHash = progpow_hash_light(GetProgPowHeader());
+        LogPrintf("[DEBUG] GetHash()::progpow_hash_light: %s\n", powHash.ToString());
+        LogPrintf("[DEBUG] GetHash()::mix_hash: %s\n", mix_hash.ToString());
+
+        uint256 mixHash;
+        powHash = progpow_hash_full(GetProgPowHeader(), mixHash);
+        LogPrintf("[DEBUG] GetHash()::progpow_hash_full: %s\n", powHash.ToString());
+        LogPrintf("[DEBUG] GetHash()::mixHash: %s\n", mix_hash.ToString());
     	return powHash;
     } else {
         std::vector<unsigned char> vch(80);
